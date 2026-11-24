@@ -10,6 +10,17 @@ Lab.register({
     ["Why can a fast-growing profitable company run out of cash?", "Working capital grows with sales. If the cycle is 75 days, each extra $1m of sales a year needs about $1m × 75 ÷ 365 ≈ $205k more cash tied up before it comes back."],
     ["Is stretching supplier payments (higher DPO) free cash?", "Not always. Suppliers may raise prices, drop early-payment discounts, or become financially fragile. Supply chain finance schemes try to share the benefit."],
   ],
+  diy: {
+    intro: "From the accounts: revenue in H1, COGS in H2, inventory in H3, receivables in H4, payables in H5 (year-end or average balances).",
+    steps: [
+      ["Days inventory outstanding.", "=H3/H2*365"],
+      ["Days sales outstanding.", "=H4/H1*365"],
+      ["Days payables outstanding.", "=H5/H2*365"],
+      ["Cash-to-cash cycle.", "=DIO+DSO-DPO"],
+      ["Cash released by cutting inventory by one day.", "=H2/365"],
+      ["Yearly financing value of that cash at cost of capital r.", "=H2/365*r"],
+    ],
+  },
   deeper: [
     ["Cash conversion cycle — Wikipedia", "https://en.wikipedia.org/wiki/Cash_conversion_cycle", "definitions and formulas"],
     ["Days sales outstanding — Wikipedia", "https://en.wikipedia.org/wiki/Days_sales_outstanding", "measuring receivables"],

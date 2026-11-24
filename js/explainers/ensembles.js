@@ -11,6 +11,17 @@ Lab.register({
     ["Why might an equal-weight average beat 'optimal' weights estimated from past errors?", "Weights estimated from a short history are noisy, and past winners don't always stay winners. Equal weights have no estimation error. Forecasters call this the forecast combination puzzle."],
     ["A random forest is an ensemble too. What makes its trees' errors less correlated?", "Each tree sees a different bootstrap sample and a random subset of features at each split, so they make different mistakes, and the vote averages those out."],
   ],
+  diy: {
+    intro: "Forecasts from three methods in C2:E25, actuals in B2:B25.",
+    steps: [
+      ["Simple average ensemble.", "F2: =AVERAGE(C2:E2)"],
+      ["Median ensemble (robust to one bad method).", "G2: =MEDIAN(C2:E2)"],
+      ["RMSE of each method and the ensemble.", "=SQRT(SUMXMY2($B$2:$B$25,C2:C25)/24)"],
+      ["Correlation of two methods' errors: lower correlation means more gain from averaging.", "=CORREL(B2:B25-C2:C25,B2:B25-D2:D25)"],
+      ["Inverse-error weights from a past period.", "w_i: =(1/RMSE_i)/SUM(1/RMSE_1,1/RMSE_2,1/RMSE_3)\n=SUMPRODUCT(C2:E2,weights)"],
+      ["Theory check for k methods with equal error σ and error correlation ρ.", "=σ*SQRT((1+(k-1)*ρ)/k)"],
+    ],
+  },
   deeper: [
     ["FPP3: Forecast combinations", "https://otexts.com/fpp3/combinations.html", "Hyndman & Athanasopoulos on averaging forecasts, with R code"],
     ["The M4 Competition results (2020)", "https://doi.org/10.1016/j.ijforecast.2019.04.014", "most top methods were combinations"],

@@ -10,6 +10,16 @@ Lab.register({
     ["Why does a level plan sometimes need stock at the start of the year?", "If demand peaks early, producing the average falls behind before the slow months catch it up. That deficit has to be built in the previous year's quiet months and carried in as opening stock."],
     ["What does the hybrid slider represent in practice?", "A base rate the factory runs at all year, with overtime or temporary labour added only in the months when the base rate plus stock can't cover demand."],
   ],
+  diy: {
+    intro: "Monthly demand in B2:B13, capacity per month in H1, holding cost per unit-month in H2, cost per unit of rate change in H3, overtime premium in H4.",
+    steps: [
+      ["Level rate.", "H5: =AVERAGE(B2:B13)"],
+      ["Opening stock needed so stock never goes negative: cumulative demand minus cumulative level production, take the largest.", "G2: =SUM($B$2:B2)-ROWS($B$2:B2)*$H$5\n=MAX(0,MAX(G2:G13))"],
+      ["Level plan stock each month.", "C2: =opening+H5-B2\nC3: =C2+$H$5-B3"],
+      ["Chase plan: produce demand each month; rate changes.", "D2: =B2\nE3: =ABS(D3-D2)"],
+      ["Cost of a plan.", "=$H$2*SUM(stock)+$H$3*SUM(changes)+$H$4*SUMPRODUCT((production>$H$1)*(production-$H$1))"],
+    ],
+  },
   deeper: [
     ["Sales and operations planning — Wikipedia", "https://en.wikipedia.org/wiki/Sales_and_operations_planning", "the process this plan feeds"],
     ["Aggregate planning — Wikipedia", "https://en.wikipedia.org/wiki/Aggregate_planning", "level, chase and hybrid strategies"],

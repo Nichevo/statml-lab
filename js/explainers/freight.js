@@ -10,6 +10,17 @@ Lab.register({
     ["What is freight consolidation?", "Combining several smaller shipments (different products, suppliers or customers on the same lane) into fuller loads. It moves you down the per-pallet cost curve without waiting longer for any one product."],
     ["When is expediting worth it?", "When the premium per unit is less than what the shortage would cost: the lost margin, any penalty, and the risk of losing the customer. Regular expediting is usually a sign that safety stock or the forecast is wrong."],
   ],
+  diy: {
+    intro: "Weekly demand in units in H1, unit weight and value in H2:H3, carrying rate in H4, FTL price in H5, LTL rate per unit in H6.",
+    steps: [
+      ["Shipment size if you ship every n days.", "=H1*n/7"],
+      ["Cost per shipment: LTL until it costs more than a full truck.", "=MIN(H5,shipment*H6)"],
+      ["Yearly freight.", "=cost_per_shipment*365/n"],
+      ["Cycle stock and its yearly holding cost.", "=shipment/2*H3*H4"],
+      ["Total and best frequency: put n = 1 … 28 in a column and find the minimum.", "=INDEX(n_range,MATCH(MIN(total_range),total_range,0))"],
+      ["Break-even shipment size where FTL beats LTL.", "=H5/H6"],
+    ],
+  },
   deeper: [
     ["Less than truckload shipping — Wikipedia", "https://en.wikipedia.org/wiki/Less_than_truckload_shipping", "how LTL is priced"],
     ["Full truckload shipping — Wikipedia", "https://en.wikipedia.org/wiki/Full_truckload_shipping", "FTL basics"],

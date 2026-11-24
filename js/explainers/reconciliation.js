@@ -10,6 +10,16 @@ Lab.register({
     ["Why is top-down often poor for the stores?", "It splits the total by fixed historical shares, so it can't see a store that's growing or shrinking relative to the others."],
     ["What does OLS reconciliation actually do?", "It finds the coherent set of forecasts closest (in least squares) to all the base forecasts at once. Every level gets a vote, so information from the smooth total and from the detailed stores is combined."],
   ],
+  diy: {
+    intro: "Base forecasts for Total (B1), North (B2), South (B3) and stores A–D (B4:B7). Summing matrix S (7 × 4) in D1:G7.",
+    steps: [
+      ["Bottom-up: forecast the stores and add up.", "Total: =SUM(B4:B7)\nNorth: =B4+B5"],
+      ["Top-down: split the total by historical store shares in H4:H7.", "=$B$1*H4"],
+      ["OLS reconciliation: ỹ = S (SᵀS)⁻¹ Sᵀ ŷ.", "=MMULT(MMULT(MMULT(D1:G7,MINVERSE(MMULT(TRANSPOSE(D1:G7),D1:G7))),TRANSPOSE(D1:G7)),B1:B7)"],
+      ["Weighted (WLS) version: W is a diagonal matrix of 1 ÷ error variance per series.", "=MMULT(MMULT(MMULT(S,MINVERSE(MMULT(MMULT(TRANSPOSE(S),W),S))),MMULT(TRANSPOSE(S),W)),yhat)"],
+      ["Check the result adds up.", "=reconciled_total-SUM(reconciled_stores)"],
+    ],
+  },
   deeper: [
     ["FPP3 chapter 11: Forecasting hierarchical and grouped time series", "https://otexts.com/fpp3/hierarchical.html", "bottom-up, top-down, middle-out and MinT, with R code"],
     ["Wickramasuriya, Athanasopoulos & Hyndman (2019), MinT", "https://doi.org/10.1080/01621459.2018.1448825", "the paper behind optimal reconciliation"],

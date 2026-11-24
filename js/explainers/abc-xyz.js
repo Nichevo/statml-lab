@@ -10,6 +10,17 @@ Lab.register({
     ["Why is CV, not standard deviation, used for XYZ?", "SD scales with volume: a big seller has a big SD even if it's very predictable. CV = SD / mean compares variability on the same relative scale across items of any size."],
     ["Your AZ items are high value but erratic. What do you do with them?", "They need human attention: understand why they're erratic (promotions, a few big customers, projects), collaborate with sales, and consider make-to-order or agreed lead times rather than heavy safety stock."],
   ],
+  diy: {
+    intro: "One row per SKU: annual value (units × cost) in B2:B501, weekly demand for the last 52 weeks in D2:BC501.",
+    steps: [
+      ["Rank by annual value and take the running share of the total.", "C2: =SUMIF($B$2:$B$501,\">=\"&B2)/SUM($B$2:$B$501)"],
+      ["ABC class: A up to 80% of value, B up to 95%, C the rest.", "BE2: =IF(C2<=0.8,\"A\",IF(C2<=0.95,\"B\",\"C\"))"],
+      ["Coefficient of variation of weekly demand.", "BF2: =STDEV.S(D2:BC2)/AVERAGE(D2:BC2)"],
+      ["XYZ class: X below 0.5, Y up to 1.0, Z above (pick cut-offs that suit your data).", "BG2: =IF(BF2<0.5,\"X\",IF(BF2<=1,\"Y\",\"Z\"))"],
+      ["Combined class and a count for each of the 9 cells.", "BH2: =BE2&BG2\n=COUNTIF(BH2:BH501,\"AX\")"],
+      ["Share of value in each cell.", "=SUMIF(BH2:BH501,\"AX\",B2:B501)/SUM(B2:B501)"],
+    ],
+  },
   deeper: [
     ["ABC analysis — Wikipedia", "https://en.wikipedia.org/wiki/ABC_analysis", "the method and its Pareto roots"],
     ["Pareto principle — Wikipedia", "https://en.wikipedia.org/wiki/Pareto_principle", "the 80/20 pattern"],

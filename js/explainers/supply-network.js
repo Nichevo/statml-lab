@@ -10,6 +10,16 @@ Lab.register({
     ["When would you still put most of the safety stock at the stores?", "When stock costs much more to hold at the DC than at the store (rare), when the DC-to-store leg is long and unreliable, or when the DC serves only one or two stores so there's little to pool."],
     ["What does a DC 'service time' of 2 weeks mean?", "The DC promises to ship a store's order within 2 weeks. It needs less stock than a DC that ships immediately, but each store must then cover 2 more weeks itself. The optimizer searches for the cheapest promise."],
   ],
+  diy: {
+    intro: "Supplier lead time to the DC in H1, DC→store lead time in H2, DC promise to stores in H3, weekly store demand μ and σ in H4:H5, lead-time SD in H6, service z in H7.",
+    steps: [
+      ["Net replenishment time at the DC and at the store.", "DC: =MAX(0,H1-H3)\nStore: =H3+H2"],
+      ["Safety stock at a stage with net time T.", "=$H$7*SQRT(T*$H$5^2+$H$4^2*$H$6^2)"],
+      ["DC safety stock uses the pooled demand of all stores.", "σ_DC: =H5*SQRT(n_stores)"],
+      ["Total holding cost for a promise.", "=SS_DC*value_DC*carry+n_stores*SS_store*value_store*carry"],
+      ["Try promises 0 to H1 in a Data Table and pick the cheapest.", "What-If Analysis > Data Table"],
+    ],
+  },
   deeper: [
     ["Graves & Willems (2000), Optimizing strategic safety stock placement", "https://doi.org/10.1287/msom.2.1.68.23267", "the guaranteed-service model used here"],
     ["Multi-echelon inventory — overview", "https://en.wikipedia.org/wiki/Inventory_optimization", "Wikipedia on inventory optimization across networks"],

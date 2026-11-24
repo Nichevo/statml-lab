@@ -10,6 +10,17 @@ Lab.register({
     ["Skipping stocked-out weeks removes the false low values. Why can it end up even worse than using sales?", "Stockouts happen in the high-demand weeks. Skipping them keeps only the weeks where demand was below the stock, so the forecast only ever hears low numbers and ratchets down. The more often you stock out, the worse it gets."],
     ["What real-world signals help estimate lost sales?", "Out-of-stock flags and hours from store systems, web searches or page views for unavailable items, lost-order logs, rain checks, and sales of substitutes that rise when the item is missing."],
   ],
+  diy: {
+    intro: "Weekly sales in B2:B53, stock available each week in C2:C53. A week is censored if sales = stock.",
+    steps: [
+      ["Flag stocked-out weeks.", "D2: =IF(B2>=C2,1,0)"],
+      ["Naive mean (biased low) and the mean of uncensored weeks only.", "=AVERAGE(B2:B53)\n=AVERAGEIF(D2:D53,0,B2:B53)"],
+      ["Starting estimates μ and σ from uncensored weeks, in H1:H2.", "H1: =AVERAGEIF(D2:D53,0,B2:B53)\nH2: =STDEV.S(IF(D2:D53=0,B2:B53))"],
+      ["For a censored week, expected true demand given it was at least the stock S.", "a: =(C2-$H$1)/$H$2\nE2: =IF(D2=1,$H$1+$H$2*NORM.S.DIST(a,FALSE)/(1-NORM.S.DIST(a,TRUE)),B2)"],
+      ["Re-estimate μ and σ from column E and repeat steps 3–4 a few times (the EM algorithm).", "=AVERAGE(E2:E53)"],
+      ["Lost sales estimate.", "=SUM(E2:E53)-SUM(B2:B53)"],
+    ],
+  },
   deeper: [
     ["Censoring (statistics) — Wikipedia", "https://en.wikipedia.org/wiki/Censoring_(statistics)", "the general idea, also central in survival analysis"],
     ["Truncated normal distribution — Wikipedia", "https://en.wikipedia.org/wiki/Truncated_normal_distribution", "the expected value used for imputing lost sales"],

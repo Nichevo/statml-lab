@@ -10,6 +10,16 @@ Lab.register({
     ["The forecast is unbiased but you order exactly the forecast. When is that right?", "Only when Cu = Co, so the critical ratio is 0.5. Otherwise the best quantity is above the forecast (high margin) or below it (high write-off cost)."],
     ["Why does a more accurate forecast raise expected profit even if the average stays the same?", "A smaller σ means the order needs less buffer above or below the mean, and fewer units end up leftover or short. The value of accuracy is the profit gap between σ and a smaller σ."],
   ],
+  diy: {
+    intro: "Price p in H1, cost c in H2, salvage v in H3, demand mean μ in H4 and SD σ in H5.",
+    steps: [
+      ["Underage and overage costs and the critical ratio.", "H6: =H1-H2\nH7: =H2-H3\nH8: =H6/(H6+H7)"],
+      ["Best order quantity.", "H9: =H4+NORM.S.INV(H8)*H5"],
+      ["Expected sales using the loss function.", "z: =(H9-H4)/H5\nG: =NORM.S.DIST(z,FALSE)-z*(1-NORM.S.DIST(z,TRUE))\nH10: =H4-H5*G"],
+      ["Expected leftovers and profit.", "H11: =H9-H10\n=H1*H10+H3*H11-H2*H9"],
+      ["Check by simulation: 1,000 demands and average profit for a given Q.", "=NORM.INV(RAND(),$H$4,$H$5)\n=AVERAGE($H$1*MIN(Q,D)+$H$3*MAX(0,Q-D)-$H$2*Q)"],
+    ],
+  },
   deeper: [
     ["Newsvendor model — Wikipedia", "https://en.wikipedia.org/wiki/Newsvendor_model", "derivation and variants"],
     ["MIT OCW 15.762 Supply Chain Planning", "https://ocw.mit.edu/courses/15-762j-supply-chain-planning-spring-2011/", "lecture notes covering the newsvendor"],

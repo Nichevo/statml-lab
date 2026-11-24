@@ -10,6 +10,16 @@ Lab.register({
     ["Why does a level plan usually carry the most stock?", "It produces the same amount every open week, so stock builds slowly all year, not just before the shutdown. It's simplest for the plant, but the average stock is highest."],
     ["What else limits a pre-build besides cost?", "Shelf life (stock built early may expire), warehouse space at the peak, cash, and the risk the forecast is wrong. Building the wrong mix ahead of a shutdown is a classic problem."],
   ],
+  diy: {
+    intro: "Weekly demand in B2:B53, weekly capacity in C2:C53 (0 in shutdown weeks).",
+    steps: [
+      ["Stock needed at the end of each week to cover later shortfalls: work backwards from the last week.", "D53: 0\nD52: =MAX(0,D53+B53-C53)   (fill upwards)"],
+      ["Late build production.", "E2: =B2+D2-D1   (D1 = opening stock)"],
+      ["Level build: spread the pre-build over the k weeks before the shutdown.", "=B2+total_prebuild/k"],
+      ["Peak stock and holding cost.", "=MAX(D2:D53)\n=SUM(D2:D53)*unit_value*carry_rate/52"],
+      ["Check feasibility: production never above capacity.", "=SUMPRODUCT(--(E2:E53>C2:C53))"],
+    ],
+  },
   deeper: [
     ["Aggregate planning — Wikipedia", "https://en.wikipedia.org/wiki/Aggregate_planning", "level, chase and mixed strategies"],
     ["Contract manufacturer — Wikipedia", "https://en.wikipedia.org/wiki/Contract_manufacturer", "co-packers and toll manufacturing"],

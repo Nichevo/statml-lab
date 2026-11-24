@@ -10,6 +10,17 @@ Lab.register({
     ["Why must rolling-origin evaluation never shuffle the data, as ordinary cross-validation does?", "Forecasts can only use the past. Shuffling would let the model train on future months and test on past ones, which makes it look far better than it is."],
     ["A method wins the single last split but ranks third on average across 15 origins. Which result do you trust?", "The average across origins. The single split is one sample and may reflect luck in that particular year."],
   ],
+  diy: {
+    intro: "Monthly actuals in B2:B61. Forecast origins from month 36 to 59; horizon h in H1.",
+    steps: [
+      ["For each origin o (in D2 down), forecast h months ahead using only data up to o. Seasonal naive shown.", "E2: =INDEX($B$2:$B$61,D2+$H$1-12)"],
+      ["Matching actual h months after the origin.", "F2: =INDEX($B$2:$B$61,D2+$H$1)"],
+      ["Absolute error per origin.", "G2: =ABS(F2-E2)"],
+      ["Score for this method and horizon: average over origins.", "=AVERAGE(G2:G25)"],
+      ["Repeat for h = 1 to 6 with a Data Table (H1 as the column input) to see how error grows with horizon.", "What-If Analysis > Data Table"],
+      ["Excel's FORECAST.ETS for an origin uses only rows up to that origin.", "=FORECAST.ETS(D2+$H$1,OFFSET($B$2,0,0,D2),OFFSET($A$2,0,0,D2),12)"],
+    ],
+  },
   deeper: [
     ["FPP3 §5.10: Time series cross-validation", "https://otexts.com/fpp3/tscv.html", "rolling-origin evaluation, with R code"],
     ["Tashman (2000), Out-of-sample tests of forecasting accuracy", "https://doi.org/10.1016/S0169-2070(00)00065-0", "the classic review of rolling-origin designs"],

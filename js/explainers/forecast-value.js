@@ -10,6 +10,17 @@ Lab.register({
     ["The improvement could go into lower stock or into higher service. How do you choose?", "Compare the carrying cost per unit of safety stock with the margin lost per stockout. High-margin items with expensive stockouts should take it as service; cheap, slow, perishable items as lower stock."],
     ["Does a biased forecast need more safety stock?", "Bias is a different problem. Over-forecasting builds excess stock on average; under-forecasting runs it down and causes stockouts. Fix bias by correcting the forecast, not by adding buffer: safety stock is sized for random error around an unbiased forecast."],
   ],
+  diy: {
+    intro: "Inputs: MAE per week in H1, lead time L and review period R (weeks) in H2:H3, target cycle service level in H4, unit cost c in H5, carrying rate h in H6, margin per unit m in H7, weekly demand d in H8, order quantity Q in H9.",
+    steps: [
+      ["Error SD from MAE (normal errors).", "H10: =1.25*H1"],
+      ["Safety stock.", "H11: =NORM.S.INV(H4)*H10*SQRT(H2+H3)"],
+      ["Holding cost of safety stock per year.", "=H11*H5*H6"],
+      ["Expected units short per cycle using the loss function G(z).", "z: =NORM.S.INV(H4)\nG: =NORM.S.DIST(z,FALSE)-z*(1-NORM.S.DIST(z,TRUE))\n=H10*SQRT(H2+H3)*G"],
+      ["Lost margin per year.", "=units_short*(52*H8/H9)*H7"],
+      ["Value of better accuracy: recompute with the lower MAE and subtract.", "=cost_now-cost_better"],
+    ],
+  },
   deeper: [
     ["FPP3: Evaluating point forecast accuracy", "https://otexts.com/fpp3/accuracy.html", "MAE, RMSE, MAPE and how they relate"],
     ["Safety stock — Wikipedia", "https://en.wikipedia.org/wiki/Safety_stock", "the formula and its assumptions"],

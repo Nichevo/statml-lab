@@ -10,6 +10,16 @@ Lab.register({
     ["What is 'schedule nervousness'?", "Frequent, often small, changes to the plan from one planning run to the next. They ripple into materials, labour and suppliers, and can cause more cost and confusion than the forecast errors they react to."],
     ["Many companies use a frozen zone, then a 'slushy' zone, then a free zone. What's the idea?", "Frozen: no changes. Slushy: limited changes, say ±10%, or only with approval. Free: anything goes. It keeps the near term stable while still allowing some reaction before the plan freezes."],
   ],
+  diy: {
+    intro: "Weekly forecast in C2:C27, opening stock in H1, safety stock in H2, frozen weeks F in H3.",
+    steps: [
+      ["Projected stock before the planned production of week w.", "D2: =H1\nD3: =D2+E2-C2"],
+      ["Planned production: top up to forecast + safety stock.", "E2: =MAX(0,C2+$H$2-D2)"],
+      ["Inside the frozen zone the plan can't change: keep last cycle's plan.", "=IF(ROW()-1<=$H$3,old_plan,MAX(0,C2+$H$2-D2))"],
+      ["Count plan changes (nervousness) between two runs.", "=SUMPRODUCT(--(ABS(plan_new-plan_old)>0))"],
+      ["Service: weeks where projected stock fell below zero.", "=COUNTIF(D2:D27,\"<0\")"],
+    ],
+  },
   deeper: [
     ["Master production schedule — Wikipedia", "https://en.wikipedia.org/wiki/Master_production_schedule", "the plan that time fences protect"],
     ["Material requirements planning — Wikipedia", "https://en.wikipedia.org/wiki/Material_requirements_planning", "how plan changes ripple down to materials"],

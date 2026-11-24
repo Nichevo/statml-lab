@@ -10,6 +10,16 @@ Lab.register({
     ["What happens if you cool too fast?", "The search freezes early in whatever valley it's in: it behaves like greedy improvement. Cool too slowly and it wastes time wandering."],
     ["Name other metaheuristics.", "Tabu search (forbid recently undone moves), genetic algorithms (combine good solutions), large neighbourhood search (destroy and rebuild part of a solution), and ant colony optimization. Commercial routing and scheduling tools mix these."],
   ],
+  diy: {
+    intro: "Start with a route (or any solution) and its cost. Temperature T0 in H1, cooling factor α in H2.",
+    steps: [
+      ["Temperature at iteration i.", "=H1*H2^i"],
+      ["Propose a small change (e.g. a 2-opt reversal) and compute the change in cost.", "Δ: =new_cost-current_cost"],
+      ["Acceptance probability for a worse move.", "=IF(Δ<=0,1,EXP(-Δ/T))"],
+      ["Accept or reject.", "=IF(RAND()<p,\"accept\",\"reject\")"],
+      ["Cooling factor that takes T0 down to 0.001 over N iterations.", "=(0.001/H1)^(1/N)"],
+    ],
+  },
   deeper: [
     ["Simulated annealing — Wikipedia", "https://en.wikipedia.org/wiki/Simulated_annealing", "the algorithm and cooling schedules"],
     ["Metaheuristic — Wikipedia", "https://en.wikipedia.org/wiki/Metaheuristic", "the wider family"],

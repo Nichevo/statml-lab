@@ -10,6 +10,17 @@ Lab.register({
     ["Why can nearest neighbour give a poor tour?", "It's greedy: it always grabs the closest unvisited stop, which strands far-away stops until the end and forces long return legs and crossings."],
     ["Real delivery routing adds what to the TSP?", "Vehicle capacity, several vehicles, time windows, driver hours, traffic and service times. That's the vehicle routing problem (VRP). The same build-then-improve heuristics are used."],
   ],
+  diy: {
+    intro: "Stops: x in B2:B11, y in C2:C11. Route order (stop numbers) in E2:E11.",
+    steps: [
+      ["Distance matrix.", "G2: =SQRT((INDEX($B$2:$B$11,ROW()-1)-INDEX($B$2:$B$11,COLUMN()-6))^2+(INDEX($C$2:$C$11,ROW()-1)-INDEX($C$2:$C$11,COLUMN()-6))^2)"],
+      ["Leg length for the route order.", "F2: =INDEX($G$2:$P$11,E2,E3)\nF11: =INDEX($G$2:$P$11,E11,E2)   (back to start)"],
+      ["Route length.", "=SUM(F2:F11)"],
+      ["Nearest neighbour: from the current stop, the closest unvisited one.", "=MATCH(MIN(IF(unvisited,row_of_distances)),row_of_distances,0)"],
+      ["2-opt check for edges A→B and C→D: reversing the segment helps if this is negative.", "=d(A,C)+d(B,D)-d(A,B)-d(C,D)"],
+      ["Or use Solver's Evolutionary method with an 'alldifferent' constraint on E2:E11.", ""],
+    ],
+  },
   deeper: [
     ["Travelling salesman problem — Wikipedia", "https://en.wikipedia.org/wiki/Travelling_salesman_problem", "history, complexity and methods"],
     ["2-opt — Wikipedia", "https://en.wikipedia.org/wiki/2-opt", "the improvement move used here"],

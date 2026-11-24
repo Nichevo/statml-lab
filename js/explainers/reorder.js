@@ -12,6 +12,16 @@ Lab.register({
     ["Going from 95% to 99% cycle service level raises z from 1.645 to 2.326. By how much does safety stock grow?", "2.326 / 1.645 ≈ 1.41, so 41% more safety stock for 4 more points of service. Each extra point of service costs more than the last."],
     ["Lead time is 10 days on average but varies with an SD of 3 days. Which term in the safety stock formula captures that, and why can it dominate?", "The d² × σ_L² term. A 3-day delay at 40 a day is 120 units of extra demand to cover. That often outweighs the day-to-day demand noise."],
   ],
+  diy: {
+    intro: "Daily demand mean d in H1 and SD σd in H2, lead time mean L in H3 and SD σL in H4, service level in H5, annual demand D, order cost K and holding cost per unit h in H6:H8.",
+    steps: [
+      ["SD of demand over the lead time (demand and lead time both vary).", "H9: =SQRT(H3*H2^2+H1^2*H4^2)"],
+      ["Safety stock and reorder point.", "H10: =NORM.S.INV(H5)*H9\nH11: =H1*H3+H10"],
+      ["Order quantity.", "=SQRT(2*H6*H7/H8)"],
+      ["Periodic review (R days): order-up-to level.", "=H1*(R+H3)+NORM.S.INV(H5)*SQRT((R+H3)*H2^2+H1^2*H4^2)"],
+      ["Simulate: stock each day, place an order when position ≤ s.", "on_hand: =prev+arrivals-demand\norder: =IF(position<=$H$11,Q,0)"],
+    ],
+  },
   deeper: [
     ["Economic order quantity — Wikipedia", "https://en.wikipedia.org/wiki/Economic_order_quantity", "the derivation and its assumptions"],
     ["Safety stock formulas", "https://en.wikipedia.org/wiki/Safety_stock", "the variants for demand and lead-time uncertainty"],

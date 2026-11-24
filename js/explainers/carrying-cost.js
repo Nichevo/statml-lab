@@ -10,6 +10,17 @@ Lab.register({
     ["Your warehouse lease is fixed for 5 years. Should storage be in the carrying rate when you value a stock cut?", "Not in the short run. You only save storage if you can release space or avoid an extension. Use the marginal rate: the costs that actually change when stock changes."],
     ["Why use the cost of capital, not the bank interest rate?", "Money tied up in stock could otherwise be used elsewhere in the business, which is expected to earn the company's cost of capital (WACC), usually higher than a deposit rate."],
   ],
+  diy: {
+    intro: "Inputs: annual demand D in H1, order cost S in H2, unit cost c in H3, carrying rate h in H4 (e.g. 25%), safety stock units in H5.",
+    steps: [
+      ["Carrying rate from its parts.", "H4: =capital%+storage%+insurance%+obsolescence%+shrink%+handling%"],
+      ["Average inventory for order quantity Q (in H6).", "=H6/2+H5"],
+      ["Yearly carrying cost.", "=$H$4*$H$3*(H6/2+H5)"],
+      ["Yearly ordering cost.", "=$H$1/H6*$H$2"],
+      ["Economic order quantity.", "=SQRT(2*H1*H2/(H4*H3))"],
+      ["Total cost at EOQ (ordering + cycle carrying) for comparison.", "=SQRT(2*H1*H2*H4*H3)"],
+    ],
+  },
   deeper: [
     ["Carrying cost — Wikipedia", "https://en.wikipedia.org/wiki/Carrying_cost", "the components"],
     ["Weighted average cost of capital — Wikipedia", "https://en.wikipedia.org/wiki/Weighted_average_cost_of_capital", "where the capital charge comes from"],

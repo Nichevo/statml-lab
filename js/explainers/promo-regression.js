@@ -10,6 +10,16 @@ Lab.register({
     ["Why does exponential smoothing do badly in the weeks after a promotion?", "It treats the spike as a change in level and raises its forecast, just as the post-promo dip arrives. Then it overreacts again on the way down."],
     ["What's needed for a regression to estimate promo lift reliably?", "Enough past promotions, at varied discount depths, and recorded accurately. If every promotion was 20%, the model can't tell how lift changes with depth."],
   ],
+  diy: {
+    intro: "Weekly sales in B2:B157 with columns C week number, D discount %, E after-promo flag (1 in the week after), F holiday flag.",
+    steps: [
+      ["Seasonal terms for a 52-week cycle.", "G2: =SIN(2*PI()*C2/52)\nH2: =COS(2*PI()*C2/52)"],
+      ["Arrange x columns next to each other (C, G, H, D, E, F → J:O) and fit.", "=LINEST(B2:B157,J2:O157,TRUE,TRUE)"],
+      ["LINEST returns coefficients in reverse order: the last x first, the intercept last.", "=INDEX(LINEST(B2:B157,J2:O157),1,3)   (discount coefficient)"],
+      ["Baseline (no promo) and promo uplift for a week.", "=intercept+b_week*C2+b_sin*G2+b_cos*H2+b_hol*F2\n=b_disc*D2"],
+      ["Net promo effect = uplift + the after-promo dip.", "=b_disc*discount+b_after"],
+    ],
+  },
   deeper: [
     ["FPP3 chapter 7: Time series regression models", "https://otexts.com/fpp3/regression.html", "regression with trend, seasonal dummies and predictors"],
     ["FPP3 §7.4: Useful predictors (dummies, interventions)", "https://otexts.com/fpp3/useful-predictors.html", "how to code promotions, holidays and lags"],

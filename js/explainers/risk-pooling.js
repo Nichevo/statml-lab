@@ -10,6 +10,16 @@ Lab.register({
     ["Why don't companies always centralize everything?", "Central stock is further from customers: longer delivery times, higher transport cost, and sometimes lost sales when customers won't wait. Pooling saves stock but costs speed."],
     ["What other ways are there to pool risk without one warehouse?", "Transshipping between stores, holding generic components and customizing late (postponement), or using fewer product variants. Each lets one buffer cover several sources of demand."],
   ],
+  diy: {
+    intro: "n locations, each with demand SD σ in H1, lead time L in H2, service z in H3, correlation between locations ρ in H4.",
+    steps: [
+      ["Separate safety stocks.", "=n*H3*H1*SQRT(H2)"],
+      ["Pooled safety stock.", "=H3*H1*SQRT(n*(1+(n-1)*H4))*SQRT(H2)"],
+      ["Saving as a share.", "=1-pooled/separate"],
+      ["Square-root law (ρ = 0): pooled = separate ÷ √n.", "=separate/SQRT(n)"],
+      ["Measure ρ from history: weekly demand at two sites in B and C.", "=CORREL(B2:B105,C2:C105)"],
+    ],
+  },
   deeper: [
     ["Risk pooling — Wikipedia", "https://en.wikipedia.org/wiki/Risk_pooling", "the general idea, in insurance and inventory"],
     ["Square root law (inventory) — Wikipedia", "https://en.wikipedia.org/wiki/Square_root_law_(inventory_management)", "Maister's rule and its assumptions"],

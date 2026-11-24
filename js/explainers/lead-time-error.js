@@ -10,6 +10,17 @@ Lab.register({
     ["If demand were pure random noise around a fixed average, would the √L shortcut be right?", "Yes, roughly. With no level drift, errors in different weeks are independent, and the variance of a sum of L independent errors is L times one week's variance. Set level drift to 0 and compare."],
     ["What does a forecast 'waterfall' (or triangle) table show?", "Each target week's forecast as it was at each lag before the week. Reading across a row shows how the forecast for one week evolved as it got closer."],
   ],
+  diy: {
+    intro: "Backtest data: one-week-ahead errors in E2:E105, and L-week total errors (forecast made at order time vs. actual over the lead time) in F2:F105. Lead time L in H1, service z in H2.",
+    steps: [
+      ["One-week RMSE.", "H3: =SQRT(SUMSQ(E2:E105)/COUNT(E2:E105))"],
+      ["Shortcut safety stock, assuming independent weekly errors.", "=H2*H3*SQRT(H1)"],
+      ["L-week cumulative error for each order date (if you only have weekly errors).", "F2: =SUM(OFFSET(E2,0,0,$H$1))"],
+      ["Direct RMSE over the lead time.", "H4: =SQRT(SUMSQ(F2:F105)/COUNT(F2:F105))"],
+      ["Direct safety stock.", "=H2*H4"],
+      ["Ratio of the two: above 1 means errors are correlated week to week and the shortcut understates risk.", "=H4/(H3*SQRT(H1))"],
+    ],
+  },
   deeper: [
     ["FPP3: Evaluating point forecast accuracy", "https://otexts.com/fpp3/accuracy.html", "train/test, horizons and scale-free measures"],
     ["FPP3: Simple exponential smoothing", "https://otexts.com/fpp3/ses.html", "the forecasting method used here, and its forecast variance"],

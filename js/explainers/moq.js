@@ -10,6 +10,16 @@ Lab.register({
     ["The best option is 26 weeks of cover, but the product has a 13-week shelf life. What now?", "The model's answer is infeasible. Cap the order at what you can sell within shelf life (minus a safety margin), or price in the expected write-off. Obsolescence risk grows with cover."],
     ["A supplier's MOQ is 3× your EOQ. What can you negotiate?", "A lower MOQ for a small price premium, splitting the MOQ across several delivery dates, or sharing the MOQ with sister products from the same supplier."],
   ],
+  diy: {
+    intro: "Annual demand D in H1, order cost S in H2, carrying rate h in H3. Price breaks: minimum quantities in A2:A5, prices in B2:B5.",
+    steps: [
+      ["Price for a quantity Q.", "=LOOKUP(Q,$A$2:$A$5,$B$2:$B$5)"],
+      ["EOQ at each price, raised to that break's minimum if below.", "C2: =MAX(A2,SQRT(2*$H$1*$H$2/($H$3*B2)))"],
+      ["Total yearly cost at that Q.", "D2: =$H$1*B2+$H$1/C2*$H$2+C2/2*B2*$H$3"],
+      ["Best option.", "=INDEX(C2:C5,MATCH(MIN(D2:D5),D2:D5,0))"],
+      ["Cost of a supplier MOQ above your EOQ.", "=total(MOQ)-total(EOQ)"],
+    ],
+  },
   deeper: [
     ["Economic order quantity — Wikipedia (quantity discounts)", "https://en.wikipedia.org/wiki/Economic_order_quantity#Quantity_discounts", "the all-units discount method"],
     ["Minimum order quantity — Wikipedia", "https://en.wikipedia.org/wiki/Minimum_order_quantity", "why suppliers set them"],

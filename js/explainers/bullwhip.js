@@ -11,6 +11,17 @@ Lab.register({
     ["Order smoothing reduces swings. What's the catch?", "Each stage closes only part of its gap each week, so after a real change in demand, stock takes longer to recover. You trade order stability for more backorders or more stock."],
     ["The factory's orders swing wildly, but shopper demand barely changed. Where would you look first in a real business?", "At what each stage forecasts from (orders vs sales), at lead times, at batching (monthly or full-truck orders) and at promotions or price deals that cause forward buying."],
   ],
+  diy: {
+    intro: "Weekly customer demand in B2:B105. Lead time L (weeks) in H1, moving-average length p in H2, safety factor z in H3.",
+    steps: [
+      ["Forecast: moving average of the last p weeks.", "C12: =AVERAGE(OFFSET(B12,-$H$2+1,0,$H$2))"],
+      ["Order-up-to target = forecast × (L + 1) + safety stock.", "D12: =C12*($H$1+1)+$H$3*STDEV.S(OFFSET(B12,-$H$2+1,0,$H$2))*SQRT($H$1+1)"],
+      ["Inventory position (on hand + on order) after this week's demand; previous position in E11.", "E12: =E11+F11-B12"],
+      ["Order = target − position, not below zero.", "F12: =MAX(0,D12-E12)"],
+      ["Bullwhip ratio: variance of orders ÷ variance of demand.", "=VAR.S(F20:F105)/VAR.S(B20:B105)"],
+      ["Theoretical lower bound (Chen et al.).", "=1+2*$H$1/$H$2+2*$H$1^2/$H$2^2"],
+    ],
+  },
   deeper: [
     ["Lee, Padmanabhan & Whang (1997), \"The Bullwhip Effect in Supply Chains\"", "https://sloanreview.mit.edu/article/the-bullwhip-effect-in-supply-chains/", "the classic MIT Sloan article naming the four causes"],
     ["Bullwhip effect — Wikipedia", "https://en.wikipedia.org/wiki/Bullwhip_effect", "overview, history and countermeasures"],

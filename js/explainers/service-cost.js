@@ -10,6 +10,16 @@ Lab.register({
     ["Holding a unit costs $5 a year, a lost sale costs $50, you order 20 times a year. What cycle service level minimizes cost?", "Stockout probability per cycle = h × Q / (p × D) = h / (p × orders per year) = 5 / (50 × 20) = 0.5%, so 99.5% cycle service."],
     ["Why might a business choose a service level below the cost-optimal one?", "Cash or space limits, short shelf life, or because the shortage cost is overstated (customers wait or substitute). The optimum is only as good as the shortage cost you put in."],
   ],
+  diy: {
+    intro: "σ over lead time in H1, order quantity Q in H2, annual demand D in H3, holding cost per unit-year h in H4, penalty per unit short p in H5.",
+    steps: [
+      ["For a cycle service level in A2 (e.g. 0.95): z, G(z) and safety stock.", "B2: =NORM.S.INV(A2)\nC2: =NORM.S.DIST(B2,FALSE)-B2*(1-NORM.S.DIST(B2,TRUE))\nD2: =B2*$H$1"],
+      ["Units short per cycle and fill rate.", "E2: =$H$1*C2\nF2: =1-E2/$H$2"],
+      ["Yearly cost.", "G2: =$H$4*D2+$H$5*$H$3/$H$2*E2"],
+      ["Fill the table for service levels 0.80–0.999 and chart G against A.", ""],
+      ["Cost-optimal cycle service level.", "=1-H4*H2/(H5*H3)"],
+    ],
+  },
   deeper: [
     ["Service level — Wikipedia", "https://en.wikipedia.org/wiki/Service_level", "alpha (cycle) and beta (fill rate) service"],
     ["Safety stock — Wikipedia", "https://en.wikipedia.org/wiki/Safety_stock", "formulas for each service definition"],

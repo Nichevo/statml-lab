@@ -10,6 +10,16 @@ Lab.register({
     ["Benefits of $1m a year are usually claimed as 'savings'. Which ones should you count?", "Only those that change cash or profit: lower carrying cost, fewer lost sales (at contribution), less freight. A one-off inventory cut is a cash inflow in the year it happens, not a yearly saving."],
     ["NPV is positive on average but negative in 30% of simulations. What should you do?", "Find which assumptions drive the downside, test them early (a pilot), or phase the investment so you can stop if early benefits disappoint."],
   ],
+  diy: {
+    intro: "Up-front cost in H1, yearly benefit in H2, running cost in H3, discount rate in H4. Years 0–5 in A2:A7.",
+    steps: [
+      ["Cash flow each year (ramp % in C).", "B2: =-H1\nB3: =$H$2*C3-$H$3"],
+      ["Net present value.", "=B2+NPV($H$4,B3:B7)"],
+      ["Internal rate of return.", "=IRR(B2:B7)"],
+      ["Simple ROI.", "=(SUM(B3:B7)-H1)/H1"],
+      ["Payback year: first year the cumulative cash flow turns positive.", "D2: =SUM($B$2:B2)\n=INDEX(A2:A7,MATCH(TRUE,D2:D7>=0,0))"],
+    ],
+  },
   deeper: [
     ["Net present value — Wikipedia", "https://en.wikipedia.org/wiki/Net_present_value", "the formula and how to read it"],
     ["Payback period — Wikipedia", "https://en.wikipedia.org/wiki/Payback_period", "simple and discounted payback"],

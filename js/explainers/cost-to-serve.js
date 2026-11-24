@@ -10,6 +10,17 @@ Lab.register({
     ["Should you drop unprofitable customers?", "Usually not first. Fixed costs they absorb would move to others. Change how you serve them: minimum order sizes, delivery days, a charge for rush orders, better terms, or a cheaper channel. Drop only if that fails."],
     ["Why charge credit (receivable days) as a cost?", "Unpaid invoices tie up cash just like stock. 90 days of a customer's revenue at a 10% cost of capital is a real cost, often bigger than people expect."],
   ],
+  diy: {
+    intro: "One row per customer: revenue B, gross margin % C, orders D, lines per order E, deliveries F, km G, returns % H.",
+    steps: [
+      ["Order handling cost.", "I2: =D2*rate_per_order"],
+      ["Picking cost.", "J2: =D2*E2*rate_per_line"],
+      ["Delivery cost (round trip).", "K2: =F2*(rate_per_drop+2*G2*rate_per_km)"],
+      ["Returns and credit cost.", "L2: =B2*H2*cost_per_return_$\nM2: =B2*credit_days/365*cost_of_capital"],
+      ["Cost to serve and customer profit.", "N2: =SUM(I2:M2)\nO2: =B2*C2-N2"],
+      ["Whale curve: sort by profit descending, then the running total as a % of total profit.", "P2: =SUM($O$2:O2)/SUM($O$2:$O$201)"],
+    ],
+  },
   deeper: [
     ["Activity-based costing — Wikipedia", "https://en.wikipedia.org/wiki/Activity-based_costing", "assigning costs by what drives them"],
     ["Kaplan & Narayanan (2001), Measuring and managing customer profitability", "https://www.hbs.edu/faculty/Pages/item.aspx?num=11286", "where the whale curve comes from"],

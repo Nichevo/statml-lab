@@ -10,6 +10,16 @@ Lab.register({
     ["Your monthly forecast is perfect. Can your weekly MAPE still be 10%?", "Yes. Set the monthly error slider to 0%: all the remaining weekly error comes from the split, plus daily noise."],
     ["Where does the daily profile come from, and what could break it?", "From history: the average share of demand on each weekday and at each point in the month. It breaks when the pattern changes, for example a holiday moving dates, a store changing its opening hours, or a promotion calendar shifting."],
   ],
+  diy: {
+    intro: "Monthly forecast in H1, the month's dates in A2:A32, day-of-week weights (Mon…Sun) in K2:K8.",
+    steps: [
+      ["Weight for each date.", "B2: =INDEX($K$2:$K$8,WEEKDAY(A2,2))"],
+      ["Daily forecast.", "C2: =$H$1*B2/SUM($B$2:$B$32)"],
+      ["Week each date belongs to (Monday start).", "D2: =A2-WEEKDAY(A2,2)+1"],
+      ["Weekly forecast: sum the daily forecasts per week start (across both months for split weeks).", "=SUMIF(D:D,week_start,C:C)"],
+      ["Naive alternative for comparison: monthly ÷ 4.33.", "=H1/(365/12/7)"],
+    ],
+  },
   deeper: [
     ["FPP3: Temporal aggregation and reconciliation", "https://otexts.com/fpp3/hierarchical.html", "forecasting at several time granularities so they add up"],
     ["ISO week date — Wikipedia", "https://en.wikipedia.org/wiki/ISO_week_date", "why weeks are assigned to years and months by their Thursday"],

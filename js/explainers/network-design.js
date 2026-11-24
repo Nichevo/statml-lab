@@ -10,6 +10,16 @@ Lab.register({
     ["Why does inbound transport cost rise with more DCs?", "Inbound loads from the factory or port are split across more destinations, so trucks are less full or travel further in total."],
     ["The cost curve is very flat between 3 and 5 DCs. How do you choose?", "Use the things the model leaves out: delivery lead time promised to customers, risk (one DC is a single point of failure), growth plans, labour availability and the cost of change from today's network."],
   ],
+  diy: {
+    intro: "Customers: x in B2:B51, y in C2:C51, demand in D2:D51.",
+    steps: [
+      ["Centre of gravity (demand-weighted average location).", "=SUMPRODUCT(B2:B51,D2:D51)/SUM(D2:D51)\n=SUMPRODUCT(C2:C51,D2:D51)/SUM(D2:D51)"],
+      ["Distance from each customer to a DC at (X, Y).", "E2: =SQRT((B2-$X)^2+(C2-$Y)^2)"],
+      ["Weiszfeld step (minimises demand × distance): new X = Σ(d·x/dist) ÷ Σ(d/dist). Repeat until it stops moving.", "=SUMPRODUCT(D2:D51,B2:B51/E2:E51)/SUMPRODUCT(D2:D51,1/E2:E51)"],
+      ["With k candidate DCs: distance to each in columns, nearest per customer.", "=MIN(F2:H2)"],
+      ["Network cost for k DCs.", "outbound: =SUMPRODUCT(D2:D51,nearest)*rate\nfacilities: =k*fixed\ninventory: =SS_one_DC*SQRT(k)*value*carry"],
+    ],
+  },
   deeper: [
     ["Facility location problem — Wikipedia", "https://en.wikipedia.org/wiki/Facility_location_problem", "the optimization behind site selection"],
     ["Geometric median — Wikipedia", "https://en.wikipedia.org/wiki/Geometric_median", "Weiszfeld's algorithm for the true minimum-distance point"],

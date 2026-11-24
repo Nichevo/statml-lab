@@ -10,6 +10,17 @@ Lab.register({
     ["A constraint has a shadow price of zero. Why?", "It isn't binding: the best plan doesn't use all of that resource, so a bit more of it wouldn't change anything. It has slack."],
     ["The LP says make 23.3 of product A. What if you can only make whole units?", "That's an integer program. Rounding can break a limit or miss the best plan. Solvers use branch and bound: split on A ≤ 23 and A ≥ 24, solve each LP, and prune branches that can't beat the best whole-number plan found so far."],
   ],
+  diy: {
+    intro: "Two products A and B. Profit per unit in B1:C1; per-unit use of each resource in B3:C5; resource limits in E3:E5. Decision cells B7:C7.",
+    steps: [
+      ["Total profit.", "E7: =SUMPRODUCT(B1:C1,B7:C7)"],
+      ["Resource used for each constraint.", "D3: =SUMPRODUCT(B3:C3,$B$7:$C$7)   (fill down)"],
+      ["Solver: Data > Solver. Set objective E7 to Max, by changing B7:C7, subject to D3:D5 <= E3:E5, choose Simplex LP, tick 'make unconstrained variables non-negative'.", ""],
+      ["Integer version: add constraint B7:C7 = int.", ""],
+      ["Shadow prices: choose 'Sensitivity' report after solving. The shadow price is the profit gained per extra unit of each resource.", ""],
+      ["Check a corner by hand: solve two binding constraints together.", "=MMULT(MINVERSE(B3:C4),E3:E4)"],
+    ],
+  },
   deeper: [
     ["Linear programming — Wikipedia", "https://en.wikipedia.org/wiki/Linear_programming", "formulation, duality and history"],
     ["Simplex algorithm — Wikipedia", "https://en.wikipedia.org/wiki/Simplex_algorithm", "how the corner-walk works"],

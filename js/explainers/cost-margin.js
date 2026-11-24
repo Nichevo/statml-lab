@@ -11,6 +11,18 @@ Lab.register({
     ["Recovering a lost sale: is it worth the selling price, the gross margin, or something else?", "Its contribution: price minus landed cost and the variable costs of serving it (warehousing, outbound freight, a bit more stock to carry). Not the full price, because you still pay for the goods. Long term, a lost customer can cost far more than one sale."],
     ["Your country charges duty on the CIF value instead of FOB. What changes?", "Duty is charged on the goods plus insurance and international freight, so a freight increase also raises the duty bill. On FOB, freight isn't dutiable."],
   ],
+  diy: {
+    intro: "Per-unit inputs: FOB in H1, insurance % in H2, international freight in H3, duty % in H4, broker in H5, inland freight in H6, price in H7.",
+    steps: [
+      ["CIF value.", "H8: =H1+H1*H2+H3"],
+      ["Duty on CIF (or on FOB: replace H8 with H1).", "H9: =H8*H4"],
+      ["Landed cost per unit.", "H10: =H8+H9+H5+H6"],
+      ["Gross margin % and markup %.", "=(H7-H10)/H7\n=(H7-H10)/H10"],
+      ["P&L for units sold U and units bought B: gross margin, contribution, profit.", "GM: =U*H7-U*H10-(B-U)*H10\nContribution: =GM-U*warehousing-U*outbound-carrying\nProfit: =Contribution-overheads"],
+      ["Value of an improvement: recompute profit with the changed input and subtract.", "=profit_after-profit_before"],
+      ["Extra revenue needed to match a saving through sales alone.", "=saving/(contribution/revenue)"],
+    ],
+  },
   deeper: [
     ["Incoterms — Wikipedia", "https://en.wikipedia.org/wiki/Incoterms", "FOB, CIF, DDP and who pays which leg"],
     ["Landed cost — Wikipedia", "https://en.wikipedia.org/wiki/Landed_cost", "what goes into it"],

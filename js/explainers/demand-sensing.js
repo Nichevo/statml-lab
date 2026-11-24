@@ -10,6 +10,16 @@ Lab.register({
     ["Monday and Tuesday sales are usually 24% of the week. This Monday–Tuesday sold 300 against a plan of 1,000 for the week. What does the partial week suggest?", "300 / 0.24 = 1,250, so the week is running 25% above plan. Two days is a small sample, so blend it with the plan rather than trusting it fully."],
     ["Why can demand sensing hurt?", "If surprises are mostly random noise, reacting to them chases noise, which adds error and nervousness. Check it with FVA at each lag before trusting it."],
   ],
+  diy: {
+    intro: "Plan for the next weeks in C2:C9, this week's actual in B1, decay φ in H1.",
+    steps: [
+      ["Surprise: how far this week ran above or below plan.", "H2: =B1/C1-1"],
+      ["Sensed forecast h weeks ahead (h in A2:A9): the surprise fades by φ each week.", "D2: =C2*(1+$H$1^A2*$H$2)"],
+      ["Mid-week: estimate the full week from partial sales and the share of the week normally sold so far.", "=partial_sales/share_sold"],
+      ["Blend that estimate with the plan, trusting it more as the week fills.", "w: =share/(share+0.15)\n=w*estimate+(1-w)*plan"],
+      ["Pick φ by backtesting: average absolute error of the sensed forecast for several φ values.", "=AVERAGE(ABS(actual-sensed))"],
+    ],
+  },
   deeper: [
     ["FPP3: ARIMA models", "https://otexts.com/fpp3/arima.html", "autocorrelated errors are what make sensing work"],
     ["FPP3: Dynamic regression", "https://otexts.com/fpp3/dynamic.html", "adding outside signals (weather, promotions) to forecasts"],
