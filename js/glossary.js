@@ -1,5 +1,13 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Convolutional neural network (CNN)", "A neural network that scans its input with small learned filters, reusing the same weights at every position. The standard design for images.", "cnn"],
+  ["Convolution", "Sliding a small grid of weights over an image (or a series), multiplying and summing at each position to produce a feature map.", "cnn"],
+  ["Filter (kernel)", "The small grid of weights in a convolution, e.g. 5×5. Each filter learns to respond to one pattern, such as a stroke edge.", "cnn"],
+  ["Feature map", "The output of one filter across the whole image: high where its pattern appears.", "cnn"],
+  ["ReLU", "Rectified linear unit: max(0, x). Keeps positive values and sets negatives to zero; the most common activation function.", "cnn"],
+  ["Max pooling", "Shrinking a feature map by keeping only the largest value in each small block (e.g. 2×2).", "cnn"],
+  ["Weight sharing", "Using the same weights at every position, as a convolution does. Cuts the number of parameters and lets a pattern be found anywhere.", "cnn"],
+  ["MNIST", "A classic dataset of 70,000 handwritten digits, 28×28 pixels, used to benchmark image classifiers since 1998.", "cnn"],
   ["Bottom-up (roll-up)", "Aggregating by adding numerators and denominators first and dividing once, e.g. total margin $ ÷ total revenue.", "rollup"],
   ["Weighted average", "An average where each item counts in proportion to a weight. Matches the bottom-up figure when the weight is the ratio's denominator.", "rollup"],
   ["Mix effect", "Change in a total ratio caused by a shift in the weights (e.g. more sales of low-margin products), not by any item's own ratio changing.", "rollup"],

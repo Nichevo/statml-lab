@@ -15,7 +15,7 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
 - **Glossary links**: plain-language definitions of 175+ terms, cross-linked to the pages that use them.
 
-## Contents (56 explainers)
+## Contents (57 explainers)
 
 | Area | Pages |
 |---|---|
@@ -23,7 +23,7 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 | Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design |
 | Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, k-means clustering and PCA |
 | Statistics | R², least squares, central limit theorem, hypothesis tests and p-values, rolling up numbers (bottom-up vs averages) |
-| Machine learning | Bias–variance, gradient descent, attention in transformers, decision trees and random forests |
+| Machine learning | Bias–variance, gradient descent, attention in transformers, decision trees and random forests, convolutional neural networks (draw a digit and watch a real CNN read it) |
 | Optimization | Linear programming, simulated annealing |
 
 The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, and Statistics for decisions.
@@ -51,6 +51,7 @@ js/plot.js              Lab.Plot canvas helper (axes, lines, dots)
 js/app.js               routing, home page, groups, learning paths, quiz / DIY / go-deeper rendering
 js/papers.js            one-line summaries shown under research-paper links
 js/glossary.js          glossary terms and their cross-links
+js/cnn-data.js          weights of the small digit-reading CNN, plus sample MNIST digits
 js/gbm.js               small gradient-boosting helper (not used by any page yet)
 js/explainers/*.js      one file per explainer
 ```

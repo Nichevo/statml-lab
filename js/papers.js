@@ -92,6 +92,15 @@
     "https://doi.org/10.1016/0377-0427(87)90125-7": "Introduced the silhouette score, which compares each point's distance to its own cluster with its distance to the nearest other cluster. Used to choose the number of clusters.",
     "https://doi.org/10.1098/rsta.2015.0202": "A modern review of PCA: what it does, how to read loadings, when to standardise, and newer variants. A good next read after this page.",
 
+    // CNNs
+    "https://doi.org/10.1109/5.726791": "Introduced LeNet-5 and the MNIST digit benchmark: convolution, pooling and gradient descent, trained end to end. It read millions of bank cheques in the 1990s.",
+    "https://doi.org/10.1007/BF00344251": "The neocognitron, inspired by the visual cortex: layers of local feature detectors with pooling-like steps, giving tolerance to shifts. CNNs grew from this idea.",
+    "https://doi.org/10.1145/3065386": "AlexNet: a deep CNN trained on GPUs cut the ImageNet error rate from about 26% to 15%. This 2012 result started the deep learning boom.",
+    "https://arxiv.org/abs/1311.2901": "Projected filter activations back to pixels to show what each layer learns. Early layers find edges and colours; deeper layers find textures, parts and objects.",
+    "https://arxiv.org/abs/1512.03385": "ResNet adds shortcut connections so each block learns only a correction. That made networks over 100 layers deep trainable, and it won ImageNet 2015.",
+    "https://arxiv.org/abs/1803.01271": "Compared simple 1-D convolutional networks (TCNs) with LSTMs on many sequence tasks. The convolutional ones usually matched or beat them, and train faster.",
+    "https://distill.pub/2017/feature-visualization/": "Generates images that most excite a given neuron, to show what each part of a CNN looks for. Interactive, with many examples from a large image network.",
+
     // Supply chain
     "https://sloanreview.mit.edu/article/the-bullwhip-effect-in-supply-chains/": "Explained why orders swing more than sales as you move up a supply chain. Names four causes (forecast updating, batching, price promotions, shortage gaming) and ways to fix each.",
     "https://doi.org/10.1287/opre.44.1.87": "Sport Obermeyer case: order the most predictable styles early and delay the uncertain ones until early sales arrive. This 'accurate response' approach substantially cut stockout and markdown costs.",
