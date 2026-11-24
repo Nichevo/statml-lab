@@ -4,6 +4,29 @@ Lab.register({
   title: "Hypothesis tests and p-values",
   blurb: "Is the difference between two groups real, or could shuffling the labels produce it by chance? Shuffle and see.",
   lede: "A p-value answers one narrow question: if the two groups were really the same, how often would chance alone produce a difference at least as big as the one we saw? A permutation test answers it by literally shuffling the group labels thousands of times.",
+  quiz: [
+    ["p = 0.03. Does that mean a 3% chance the groups are the same?", "No. It means that if the groups were the same, a difference this big would turn up 3% of the time by chance. The probability the null is true needs a Bayesian analysis."],
+    ["Why shuffle the labels?", "If the groups really don't differ, which group a value came from is arbitrary. Shuffling shows the range of differences chance alone produces."],
+    ["A test of a tiny, unimportant difference on 1 million customers gives p < 0.001. Should you act?", "Not because of the p-value. With huge samples trivial differences are 'significant'. Look at the effect size and whether it matters commercially."],
+    ["You test 20 promotions and one has p = 0.04. Is it a winner?", "Be careful. With 20 tests at 5%, you'd expect about one false positive by chance. Correct for multiple tests (e.g. Bonferroni: 0.05 ÷ 20) or retest it."],
+  ],
+  diy: {
+    intro: "Group A values in A2:A21, group B in B2:B21.",
+    steps: [
+      ["Observed difference in means.", "E1: =AVERAGE(B2:B21)-AVERAGE(A2:A21)"],
+      ["Classic Welch t-test p-value (two-sided, unequal variances).", "=T.TEST(A2:A21,B2:B21,2,3)"],
+      ["Permutation test: stack both groups in D2:D41 with a random number beside each.", "D2:D41 = all 40 values\nE2: =RAND()"],
+      ["Shuffled 'group B' = the 20 values with the smallest random numbers; difference of means for this shuffle.", "=AVERAGE(IF(RANK(E2:E41,E2:E41)<=20,D2:D41))-AVERAGE(IF(RANK(E2:E41,E2:E41)>20,D2:D41))"],
+      ["Repeat the shuffle 1,000 times with a Data Table (What-If Analysis > Data Table, blank input cell) so G2:G1001 hold 1,000 shuffled differences.", ""],
+      ["p-value = share of shuffles at least as extreme as observed.", "=COUNTIF(G2:G1001,\">=\"&ABS(E1))/1000+COUNTIF(G2:G1001,\"<=\"&-ABS(E1))/1000"],
+      ["Effect size (Cohen's d), so you judge size as well as significance.", "=E1/SQRT((VAR.S(A2:A21)+VAR.S(B2:B21))/2)"],
+    ],
+  },
+  deeper: [
+    ["Wasserstein & Lazar (2016), The ASA statement on p-values, The American Statistician 70(2)", "https://doi.org/10.1080/00031305.2016.1154108", "what p-values do and don't mean"],
+    ["Greenland et al. (2016), Statistical tests, P values, confidence intervals, and power: a guide to misinterpretations, Eur. J. Epidemiology 31", "https://doi.org/10.1007/s10654-016-0149-3", "25 common misreadings"],
+    ["OpenIntro Statistics (free), ch. 5–7", "https://www.openintro.org/book/os/", "tests with randomisation and with formulas"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 58 C 24 58, 32 10, 48 10 S 72 58, 90 58"/><path d="M74 50 C 80 55, 84 58, 90 58 L90 58 L74 58 Z" fill="currentColor"/><line x1="74" y1="24" x2="74" y2="60" stroke-dasharray="3 3"/></svg>`,
 
   mount(root) {

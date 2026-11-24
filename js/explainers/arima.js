@@ -4,6 +4,31 @@ Lab.register({
   title: "ARIMA models",
   blurb: "Build a series from AR and MA pieces, read its fingerprint in the ACF and PACF, then fit an ARIMA(p,d,q) and forecast.",
   lede: "ARIMA describes a time series by how today depends on yesterday. The AR part says today echoes past values. The MA part says today echoes past surprises. The I part says to work with changes rather than levels. The ACF and PACF charts are how you tell which pieces a series needs.",
+  quiz: [
+    ["The ACF dies away slowly and the PACF cuts off after lag 1. What model?", "AR(1). An AR(p) process has a PACF that cuts off after lag p and an ACF that decays gradually."],
+    ["The ACF cuts off after lag 2 and the PACF decays. What model?", "MA(2). The pattern is the mirror image of AR: ACF cuts off after q lags, PACF decays."],
+    ["What does the d in ARIMA(p,d,q) do?", "It differences the series d times (y′ = yₜ − yₜ₋₁) to remove a trend or wandering level before fitting the AR and MA parts. Most business series need d = 0 or 1."],
+    ["Why must φ₁ be between −1 and 1 in an AR(1)?", "Otherwise shocks don't die out and the series explodes. |φ₁| < 1 makes it stationary: it keeps returning towards its mean."],
+    ["An ARIMA(0,1,1) forecast looks a lot like simple exponential smoothing. Coincidence?", "No. ARIMA(0,1,1) is mathematically the same model as simple exponential smoothing, with α = 1 + θ₁."],
+  ],
+  diy: {
+    intro: "Series in B2:B101. This fits an AR(1) and an AR(2) by least squares; MA terms need Solver (step 6).",
+    steps: [
+      ["Difference once if the series trends (d = 1). Work on column C from here.", "C3: =B3-B2"],
+      ["Autocorrelation at lag k (here lag 1; change the offsets for other lags). Chart lags 1–12 as columns for the ACF.", "=CORREL(C3:C100,C4:C101)"],
+      ["Approximate 95% significance band for the ACF bars.", "=1.96/SQRT(COUNT(C3:C101))"],
+      ["AR(1): regress the series on its own previous value. SLOPE gives φ₁, INTERCEPT gives c.", "=SLOPE(C4:C101,C3:C100)\n=INTERCEPT(C4:C101,C3:C100)"],
+      ["AR(2): put lag 1 in D and lag 2 in E, then LINEST. It returns φ₂, φ₁, c in that order.", "D5: =C4   E5: =C3\n=LINEST(C5:C101,D5:E101)"],
+      ["MA terms depend on past errors, which depend on θ, so fit with Solver: compute the one-step error each row, minimise SUMSQ of errors by changing c, φ, θ.", "F4: =C4-($H$1+$H$2*C3+$H$3*F3)   (F3 = 0)\nminimise =SUMSQ(F4:F101)"],
+      ["Forecast: plug the last values in, then add back the differences to return to levels.", "next change: =$H$1+$H$2*C101\nnext level:  =B101+that change"],
+    ],
+  },
+  deeper: [
+    ["Hyndman & Athanasopoulos, FPP3 ch. 9: ARIMA models", "https://otexts.com/fpp3/arima.html", "free textbook: ACF/PACF, differencing, auto.arima"],
+    ["Box & Jenkins, Time Series Analysis: Forecasting and Control (5th ed., Wiley 2015)", "https://doi.org/10.1002/9781118619193", "the book that defined the method (1970)"],
+    ["Hyndman & Khandakar (2008), Automatic time series forecasting: the forecast package for R, J. Statistical Software 27(3)", "https://doi.org/10.18637/jss.v027.i03", "the auto.arima algorithm"],
+    ["Penn State STAT 510: Applied Time Series Analysis", "https://online.stat.psu.edu/stat510/", "free course notes with ACF/PACF identification"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g fill="currentColor"><rect x="8" y="14" width="6" height="34"/><rect x="20" y="24" width="6" height="24" opacity=".8"/><rect x="32" y="32" width="6" height="16" opacity=".6"/><rect x="44" y="38" width="6" height="10" opacity=".45"/><rect x="56" y="42" width="6" height="6" opacity=".3"/></g><line x1="4" y1="48" x2="92" y2="48"/><line x1="4" y1="40" x2="92" y2="40" stroke-dasharray="3 3" opacity=".5"/><path d="M66 20 L74 14 L82 22 L90 10" /></svg>`,
 
   mount(root) {

@@ -4,6 +4,31 @@ Lab.register({
   title: "Intermittent demand and Croston's method",
   blurb: "Spare parts and slow sellers: mostly zeros with the odd order. See why ordinary smoothing struggles and how Croston splits size from timing.",
   lede: "Many items sell nothing most weeks, then a few units at once. Ordinary exponential smoothing drops after every zero and jumps after every sale, so it is always out of step. Croston's method forecasts two things separately: how big an order is when one comes, and how often one comes.",
+  quiz: [
+    ["Why does simple exponential smoothing struggle with intermittent demand?", "It updates every period, so it drops after each zero and jumps after each order. The forecast is always too high just after a sale and too low just before the next."],
+    ["Croston's size z = 6 units and gap p = 4 weeks. What's the forecast?", "z ÷ p = 1.5 units per week. Not a prediction that 1.5 units will sell next week, but the average rate for stock and ordering decisions."],
+    ["What's wrong with plain Croston, and what's the fix?", "It's biased upwards, because the average of z/p isn't z̄/p̄. The Syntetos–Boylan approximation (SBA) multiplies the forecast by (1 − α/2)."],
+    ["Why is MAPE useless here?", "Most actuals are zero, so the percentage error is undefined for most periods. Use MAE, MASE or, better, measures of stock outcomes."],
+  ],
+  diy: {
+    intro: "Weekly demand in B2:B105, α in H1. Columns: C = size estimate z, D = gap estimate p, E = weeks since last order.",
+    steps: [
+      ["Start values: the first non-zero demand and the average gap.", "C2: =INDEX(B2:B105,MATCH(TRUE,B2:B105>0,0))\nD2: =COUNT(B2:B105)/COUNTIF(B2:B105,\">0\")\nE2: =1"],
+      ["Weeks since last order: reset to 1 after a sale, otherwise count up.", "E3: =IF(B2>0,1,E2+1)"],
+      ["Update size only in weeks with demand.", "C3: =IF(B3>0,$H$1*B3+(1-$H$1)*C2,C2)"],
+      ["Update gap only in weeks with demand, using the weeks since the previous order.", "D3: =IF(B3>0,$H$1*E3+(1-$H$1)*D2,D2)"],
+      ["Croston forecast per week, and the SBA bias-corrected version.", "F3: =C3/D3\nG3: =(1-$H$1/2)*C3/D3"],
+      ["Compare with simple exponential smoothing on the same data.", "I2: =B2\nI3: =$H$1*B3+(1-$H$1)*I2"],
+      ["Classify the item (Syntetos et al.): ADI = average gap, CV² of non-zero sizes. ADI > 1.32 means intermittent; CV² > 0.49 means lumpy.", "=D2\n=(STDEV.S(IF(B2:B105>0,B2:B105))/AVERAGE(IF(B2:B105>0,B2:B105)))^2"],
+    ],
+  },
+  deeper: [
+    ["Croston (1972), Forecasting and stock control for intermittent demands, ORQ 23(3)", "https://doi.org/10.1057/jors.1972.50", "the original method"],
+    ["Syntetos & Boylan (2005), The accuracy of intermittent demand estimates, IJF 21(2)", "https://doi.org/10.1016/j.ijforecast.2004.10.001", "the SBA bias correction"],
+    ["Syntetos, Boylan & Croston (2005), On the categorization of demand patterns, JORS 56(5)", "https://doi.org/10.1057/palgrave.jors.2601841", "the ADI / CV² classification"],
+    ["Teunter, Syntetos & Babai (2011), Intermittent demand: linking forecasting to inventory obsolescence, EJOR 214(3)", "https://doi.org/10.1016/j.ejor.2011.05.018", "the TSB method for items that may die out"],
+    ["Hyndman & Athanasopoulos, FPP3 §13.6: Forecasting count time series", "https://otexts.com/fpp3/counts.html", "free textbook section on Croston"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="56" x2="92" y2="56"/><g fill="currentColor"><rect x="10" y="30" width="6" height="26"/><rect x="34" y="40" width="6" height="16"/><rect x="40" y="22" width="6" height="34"/><rect x="70" y="34" width="6" height="22"/></g><path d="M4 44 L92 44" stroke-dasharray="5 3"/></svg>`,
 
   mount(root) {

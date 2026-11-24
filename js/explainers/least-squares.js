@@ -4,6 +4,29 @@ Lab.register({
   title: "Least squares, by hand",
   blurb: "Fit the line yourself with two sliders and try to beat the formula. You can't, but you'll see why.",
   lede: "Ordinary least squares picks the intercept and slope that make the total area of the squared residuals as small as possible. Here you get to steer the line yourself and watch that area grow and shrink.",
+  quiz: [
+    ["Why square the residuals rather than just add them?", "Positive and negative residuals would cancel, so many bad lines would score zero. Squaring makes every miss count, gives a unique best line, and leads to the simple closed-form formulas."],
+    ["Where does the least-squares line always pass?", "Through the point (x̄, ȳ), the means of x and y. That follows from â = ȳ − b̂·x̄."],
+    ["What is the downside of squaring?", "Big residuals count a lot, so one outlier can drag the line towards it. Least absolute deviations or robust regression resist that."],
+    ["Slope 2.5 with x in weeks and y in units. What does it mean?", "On average y is 2.5 units higher for each extra week. It describes association in this data, not necessarily cause."],
+  ],
+  diy: {
+    intro: "x in A2:A31, y in B2:B31.",
+    steps: [
+      ["Means.", "E1: =AVERAGE(A2:A31)\nE2: =AVERAGE(B2:B31)"],
+      ["Slope from the formula: sum of cross-products ÷ sum of squares of x.", "E3: =SUMPRODUCT(A2:A31-E1,B2:B31-E2)/DEVSQ(A2:A31)"],
+      ["Intercept.", "E4: =E2-E3*E1"],
+      ["Check against Excel's built-ins.", "=SLOPE(B2:B31,A2:A31)\n=INTERCEPT(B2:B31,A2:A31)"],
+      ["Residuals and the sum of squared errors the method minimises.", "C2: =B2-($E$4+$E$3*A2)\n=SUMSQ(C2:C31)"],
+      ["Several x variables: LINEST returns slopes (last x first), then intercept. Add TRUE,TRUE for standard errors and R².", "=LINEST(B2:B31,A2:A31,TRUE,TRUE)"],
+    ],
+  },
+  deeper: [
+    ["Stigler (1981), Gauss and the invention of least squares, Annals of Statistics 9(3)", "https://doi.org/10.1214/aos/1176345451", "the history: Legendre (1805) and Gauss"],
+    ["James, Witten, Hastie & Tibshirani, An Introduction to Statistical Learning, ch. 3 (free PDF)", "https://www.statlearning.com/", "linear regression with labs"],
+    ["OpenIntro Statistics (free), ch. 8", "https://www.openintro.org/book/os/", "least squares, residuals and outliers"],
+    ["Seeing Theory: Regression analysis", "https://seeing-theory.brown.edu/regression-analysis/index.html", "another interactive view"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 56 C 30 6, 66 6, 88 56"/><circle cx="48" cy="18" r="4" fill="currentColor"/><line x1="8" y1="60" x2="88" y2="60" opacity=".4"/><line x1="48" y1="18" x2="48" y2="60" stroke-dasharray="3 3" opacity=".6"/></svg>`,
 
   mount(root) {

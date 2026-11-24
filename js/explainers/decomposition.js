@@ -4,6 +4,30 @@ Lab.register({
   title: "Seasonal decomposition",
   blurb: "Pull a monthly series apart into trend, seasonal pattern and leftover noise, one worked step at a time.",
   lede: "Most business series are a mix of three things: a slow trend, a pattern that repeats every year, and noise. Decomposition separates them so you can see each one on its own. Here it is done the classical way, with moving averages, so every number can be checked by hand.",
+  quiz: [
+    ["Why use a 2×12 moving average for the trend of monthly data?", "A 12-month average covers each month once, so the seasonal pattern cancels out. But 12 is even, so the average sits between two months; averaging two neighbouring 12-month averages centres it on a month."],
+    ["How do you get the seasonal index for March?", "Take every March's detrended value (actual − trend, or actual ÷ trend for multiplicative), average them across years, then adjust all 12 so they sum to zero (or average to 1)."],
+    ["What should the remainder look like if the decomposition worked?", "Like noise: no trend, no repeating pattern, roughly constant spread. Structure left in the remainder means a component was missed, or the additive/multiplicative choice is wrong."],
+    ["What is seasonally adjusted data?", "The actuals with the seasonal component removed (y − S, or y ÷ S). It shows the underlying movement month to month, which is what you want when asking 'is demand growing?'"],
+  ],
+  diy: {
+    intro: "Monthly actuals in B2:B49 (four years, starting in January), month number 1–12 in A2:A49.",
+    steps: [
+      ["Centred 2×12 moving average for the trend. The first and last six months have no value.", "C8: =(AVERAGE(B2:B13)+AVERAGE(B3:B14))/2   (fill down to C43)"],
+      ["Detrend: additive subtracts the trend, multiplicative divides.", "D8: =B8-C8          (additive)\nD8: =B8/C8          (multiplicative)"],
+      ["Raw seasonal index per month: average the detrended values for that month. Month numbers 1–12 in F2:F13.", "G2: =AVERAGEIF($A$8:$A$43,F2,$D$8:$D$43)"],
+      ["Normalise so the indices sum to 0 (additive) or average to 1 (multiplicative).", "H2: =G2-AVERAGE($G$2:$G$13)      (additive)\nH2: =G2/AVERAGE($G$2:$G$13)      (multiplicative)"],
+      ["Seasonal component for every month, then the remainder.", "E2: =INDEX($H$2:$H$13,A2)\nI8: =B8-C8-E8      (additive)\nI8: =B8/(C8*E8)   (multiplicative)"],
+      ["Seasonally adjusted series.", "J2: =B2-E2   (or =B2/E2)"],
+      ["Check: the remainder should average about 0 (or 1) with no pattern. Chart it.", "=AVERAGE(I8:I43)"],
+    ],
+  },
+  deeper: [
+    ["Hyndman & Athanasopoulos, FPP3 ch. 3: Time series decomposition", "https://otexts.com/fpp3/decomposition.html", "free textbook: classical, X-11, SEATS and STL"],
+    ["Hyndman & Athanasopoulos, FPP3 §3.6: STL decomposition", "https://otexts.com/fpp3/stl.html", "the modern alternative (Cleveland et al., 1990)"],
+    ["US Census Bureau, X-13ARIMA-SEATS", "https://www.census.gov/data/software/x13as.html", "the method official statistics use"],
+    ["NIST Engineering Statistics Handbook: Seasonality", "https://www.itl.nist.gov/div898/handbook/pmc/section4/pmc443.htm", "seasonal indices step by step"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14 L12 8 L20 16 L28 6 L36 12 L44 4 L52 10"/><path d="M4 30 L52 22" opacity=".8"/><path d="M4 44 C 10 38, 16 38, 22 44 S 34 50, 40 44 S 48 38, 52 44" opacity=".6"/><path d="M4 58 L10 56 L16 60 L22 57 L28 59 L34 56 L40 60 L46 57 L52 58" opacity=".4"/><path d="M60 32 L70 32 M66 28 L70 32 L66 36"/><rect x="74" y="8" width="18" height="48" rx="3" opacity=".4"/></svg>`,
 
   mount(root) {

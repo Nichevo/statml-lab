@@ -4,6 +4,29 @@ Lab.register({
   title: "Gradient descent",
   blurb: "Roll a ball downhill on a loss surface. Tune the learning rate and momentum and watch it converge, zig-zag or blow up.",
   lede: "Most models learn by repeatedly nudging their parameters a small step against the gradient, the direction in which the loss rises fastest. The step size, called the learning rate, decides whether that works.",
+  quiz: [
+    ["The loss goes up and down wildly and never settles. What should you change?", "Lower the learning rate. Each step overshoots the bottom of the valley and lands on the other side, higher up."],
+    ["Training is very slow but steady. What might help?", "A larger learning rate, or momentum, which builds up speed along directions where the gradient keeps pointing the same way."],
+    ["Why does a long, narrow valley make plain gradient descent zig-zag?", "The gradient points mostly across the valley (the steep direction), not along it. Momentum or optimisers like Adam average out the zig-zag."],
+    ["What is stochastic gradient descent?", "Computing the gradient on a small random batch of data instead of all of it. Each step is noisier but far cheaper, and the noise can help escape poor local minima."],
+  ],
+  diy: {
+    intro: "Fit y = a + b·x by gradient descent. x in A2:A31, y in B2:B31, learning rate η in H1. Each row below is one iteration.",
+    steps: [
+      ["Starting parameters in row 2 of columns D (a) and E (b).", "D2: 0\nE2: 0"],
+      ["Gradient of the mean squared error with respect to a and b.", "F2: =-2*AVERAGE($B$2:$B$31-(D2+E2*$A$2:$A$31))\nG2: =-2*AVERAGE(($B$2:$B$31-(D2+E2*$A$2:$A$31))*$A$2:$A$31)"],
+      ["Step against the gradient.", "D3: =D2-$H$1*F2\nE3: =E2-$H$1*G2   (fill D3:G3 down 200 rows)"],
+      ["Loss each iteration, to chart.", "I2: =AVERAGE(($B$2:$B$31-(D2+E2*$A$2:$A$31))^2)"],
+      ["With momentum β in H2: keep a velocity for each parameter.", "J3: =$H$2*J2-$H$1*F2   (velocity for a)\nD3: =D2+J3"],
+      ["Check the answer against least squares.", "=INTERCEPT(B2:B31,A2:A31)\n=SLOPE(B2:B31,A2:A31)"],
+    ],
+  },
+  deeper: [
+    ["Ruder (2016), An overview of gradient descent optimization algorithms, arXiv:1609.04747", "https://arxiv.org/abs/1609.04747", "momentum, Adam and friends, clearly compared"],
+    ["Kingma & Ba (2014), Adam: a method for stochastic optimization, arXiv:1412.6980", "https://arxiv.org/abs/1412.6980", "the most used optimiser today"],
+    ["Goh (2017), Why momentum really works, Distill", "https://distill.pub/2017/momentum/", "beautiful interactive explanation"],
+    ["Goodfellow, Bengio & Courville, Deep Learning, ch. 8 (free online)", "https://www.deeplearningbook.org/contents/optimization.html", "optimisation for training models"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="60" cy="34" rx="30" ry="12" opacity=".3"/><ellipse cx="60" cy="34" rx="18" ry="7" opacity=".5"/><ellipse cx="60" cy="34" rx="6" ry="2.5"/><path d="M10 8 L24 26 L32 18 L42 30 L48 26 L56 33 L60 34"/><circle cx="10" cy="8" r="3" fill="currentColor"/></svg>`,
 
   mount(root) {

@@ -4,6 +4,27 @@ Lab.register({
   title: "Forecast Value Added (FVA)",
   blurb: "Does each step of your forecasting process make the forecast better or worse? Compare naive, statistical, planner and consensus forecasts step by step.",
   lede: "A forecast usually passes through several hands: a statistical model, then a planner's override, then a sales or consensus review. Forecast Value Added measures whether each touch reduced the error compared with the step before it. A negative FVA means a step made the forecast worse.",
+  quiz: [
+    ["Statistical forecast WAPE 28%, after planner overrides 31%. What's the FVA of the override?", "28 − 31 = −3 points. The override made the forecast worse on average; it removed value."],
+    ["What should the first step in an FVA analysis be compared with?", "A naive forecast (last period's actual, or same period last year). If the statistical model can't beat naive, the process is starting from negative value."],
+    ["Overrides are positive FVA on average but negative on most items. How?", "A few large, well-informed overrides (a known promotion, a lost customer) add a lot, while many small tweaks add noise. Track FVA by override size and reason, and consider a threshold for small changes."],
+    ["Why look at bias as well as accuracy in FVA?", "Sales input often adds optimism: forecasts drift upwards. Accuracy may change little while bias grows, which drives excess stock."],
+  ],
+  diy: {
+    intro: "Actuals in B2:B53. Forecasts from each step in columns C (naive), D (statistical), E (planner), F (consensus).",
+    steps: [
+      ["Naive forecast: last period's actual.", "C3: =B2"],
+      ["Absolute error of each step, side by side.", "G3: =ABS($B3-C3)   (fill right to J for D, E, F)"],
+      ["WAPE for each step.", "=SUM(G3:G53)/SUM($B$3:$B$53)   (fill right)"],
+      ["FVA of each step = previous step's WAPE − this step's WAPE (positive = improvement). Put the WAPEs in G55:J55.", "H56: =G55-H55   (fill right)"],
+      ["Bias of each step (positive = over-forecast).", "=SUM(D3:D53-$B$3:$B$53)/SUM($B$3:$B$53)"],
+      ["Share of periods where a step improved on the one before.", "=SUMPRODUCT(--(H3:H53<G3:G53))/COUNT(H3:H53)"],
+    ],
+  },
+  deeper: [
+    ["Fildes, Goodwin, Lawrence & Nikolopoulos (2009), Effective forecasting and judgmental adjustments, IJF 25(1)", "https://doi.org/10.1016/j.ijforecast.2008.11.010", "evidence from 60,000 forecasts: large overrides help, small ones hurt"],
+    ["Fildes & Goodwin (2007), Against your better judgment? How organizations can improve their use of management judgment in forecasting, Interfaces 37(6)", "https://doi.org/10.1287/inte.1070.0309", "practical guidance on overrides"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g fill="currentColor"><rect x="8" y="8" width="70" height="9" opacity=".35"/><rect x="8" y="22" width="48" height="9" opacity=".6"/><rect x="8" y="36" width="40" height="9"/><rect x="8" y="50" width="54" height="9" opacity=".6"/></g><path d="M78 12 L56 26 M56 26 L48 40 M48 40 L62 54"/></svg>`,
 
   mount(root) {

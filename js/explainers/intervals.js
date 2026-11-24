@@ -4,6 +4,30 @@ Lab.register({
   title: "Prediction intervals and quantile forecasts",
   blurb: "A forecast is a range, not a number. See what an 80% interval promises, check it against a year of actuals, and turn it into a stock level.",
   lede: "A point forecast says \"we expect 100\". A prediction interval says \"80% of the time, demand will land between 82 and 118\". The ends of that range are quantile forecasts, and choosing which quantile to stock to is how forecasts become service levels and safety stock.",
+  quiz: [
+    ["What does an 80% prediction interval of 82 to 118 mean?", "If the forecasting process is well calibrated, actuals land inside such intervals 80% of the time, below 82 about 10% and above 118 about 10%."],
+    ["Underage cost $6 (lost margin), overage cost $2 (holding). What quantile should you stock to?", "Critical ratio = 6 ÷ (6 + 2) = 0.75. Stock to the 75th percentile of demand."],
+    ["Why do intervals widen the further ahead you forecast?", "Errors accumulate: uncertainty about the level, the trend and each period's noise all add up. For a random walk the SD grows with √h."],
+    ["How can you check your intervals are honest?", "Backtest: count how often past actuals fell inside the intervals you would have issued. An 80% interval that covers 65% is too narrow, and your safety stock with it."],
+  ],
+  diy: {
+    intro: "Backtest errors (actual − forecast) in E2:E101, next period's point forecast in H1.",
+    steps: [
+      ["Normal approach: spread of errors and the z for your coverage.", "H2: =STDEV.S(E2:E101)\nH3: =NORM.S.INV(0.9)   (80% two-sided → 90th percentile)"],
+      ["Interval ends.", "=H1-H3*H2\n=H1+H3*H2"],
+      ["Empirical approach (no normal assumption): add the error percentiles to the forecast.", "=H1+PERCENTILE.INC(E2:E101,0.1)\n=H1+PERCENTILE.INC(E2:E101,0.9)"],
+      ["Critical ratio for stocking and the matching quantile forecast.", "H5: =cu/(cu+co)\n=H1+PERCENTILE.INC(E2:E101,H5)"],
+      ["Safety stock = quantile forecast − point forecast.", "=NORM.S.INV(H5)*H2"],
+      ["Widen for h periods ahead (assuming independent errors).", "=H3*H2*SQRT(h)"],
+      ["Check coverage on history: share of actuals inside past intervals (F = lower, G = upper).", "=SUMPRODUCT((B2:B101>=F2:F101)*(B2:B101<=G2:G101))/COUNT(B2:B101)"],
+    ],
+  },
+  deeper: [
+    ["Hyndman & Athanasopoulos, FPP3 §5.5: Distributional forecasts and prediction intervals", "https://otexts.com/fpp3/prediction-intervals.html", "free textbook"],
+    ["Chatfield (1993), Calculating interval forecasts, J. Business & Economic Statistics 11(2)", "https://doi.org/10.1080/07350015.1993.10509938", "why intervals are usually too narrow"],
+    ["Koenker & Bassett (1978), Regression quantiles, Econometrica 46(1)", "https://doi.org/10.2307/1913643", "the foundation of quantile forecasting"],
+    ["Gneiting & Katzfuss (2014), Probabilistic forecasting, Annual Review of Statistics 1", "https://doi.org/10.1146/annurev-statistics-062713-085831", "calibration and sharpness"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 36 L92 30 L92 6 L4 22 Z" fill="currentColor" fill-opacity=".15" stroke="none"/><path d="M4 50 L92 54 L92 30 L4 36 Z" fill="currentColor" fill-opacity=".15" stroke="none"/><path d="M4 36 L92 30"/><g fill="currentColor"><circle cx="16" cy="30" r="2.5"/><circle cx="30" cy="40" r="2.5"/><circle cx="44" cy="28" r="2.5"/><circle cx="58" cy="12" r="3.5"/><circle cx="72" cy="36" r="2.5"/><circle cx="86" cy="26" r="2.5"/></g></svg>`,
 
   mount(root) {

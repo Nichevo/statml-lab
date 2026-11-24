@@ -4,6 +4,29 @@ Lab.register({
   title: "The central limit theorem",
   blurb: "Start from any lopsided distribution, average a few draws, repeat. The averages pile up into a bell curve.",
   lede: "Take a sample, compute its mean, and do it again thousands of times. Whatever the shape of the data you start with, the means form a bell curve that gets narrower as each sample grows. This is why so much of statistics leans on the normal distribution.",
+  quiz: [
+    ["Daily demand has SD 20. What is the SD of the average of 25 days?", "20 ÷ √25 = 4. Averages are much less variable than single values."],
+    ["Does the CLT need the original data to be normal?", "No. Averages of almost any distribution with a finite variance become close to normal as n grows. Very skewed data need a larger n."],
+    ["Why does safety stock grow with √(lead time) rather than lead time?", "Demand over L days is a sum of L daily demands. If days are independent, the variance adds up, so the SD grows with √L."],
+    ["When does the CLT fail?", "With very heavy tails (infinite variance), strongly dependent data, or small samples from very skewed distributions."],
+  ],
+  diy: {
+    intro: "Simulate it. Put a skewed 'daily demand' generator in Excel and average n draws, many times.",
+    steps: [
+      ["One skewed draw (exponential with mean 10).", "=-10*LN(RAND())"],
+      ["Make a block of draws: 1,000 rows × n columns (n = 30 here, A2:AD1001).", "A2: =-10*LN(RAND())   (fill A2:AD1001)"],
+      ["Average of each row = one sample mean.", "AF2: =AVERAGE(A2:AD2)"],
+      ["Compare the spread with the CLT prediction σ/√n (σ = 10 for this exponential).", "=STDEV.S(AF2:AF1001)\n=10/SQRT(30)"],
+      ["Histogram of AF to see the bell shape; repeat with n = 2 and n = 5.", "=FREQUENCY(AF2:AF1001,bins)"],
+      ["95% confidence interval for a mean from one real sample.", "=AVERAGE(data)±T.INV.2T(0.05,COUNT(data)-1)*STDEV.S(data)/SQRT(COUNT(data))"],
+    ],
+  },
+  deeper: [
+    ["Seeing Theory: Central limit theorem", "https://seeing-theory.brown.edu/probability-distributions/index.html", "interactive companion"],
+    ["OpenIntro Statistics (free), ch. 5: Foundations for inference", "https://www.openintro.org/book/os/", "sampling distributions"],
+    ["Fischer, A History of the Central Limit Theorem (Springer, 2011)", "https://doi.org/10.1007/978-0-387-87857-7", "from de Moivre to modern proofs"],
+    ["Penn State STAT 414, Lesson 27: The central limit theorem", "https://online.stat.psu.edu/stat414/lesson/27", "free course notes with proofs"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g fill="currentColor" opacity=".35"><rect x="30" y="44" width="6" height="14"/><rect x="38" y="30" width="6" height="28"/><rect x="46" y="20" width="6" height="38"/><rect x="54" y="28" width="6" height="30"/><rect x="62" y="42" width="6" height="16"/></g><path d="M8 58 C 30 58, 36 16, 49 16 S 68 58, 90 58"/></svg>`,
 
   mount(root) {

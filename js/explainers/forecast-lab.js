@@ -4,6 +4,30 @@ Lab.register({
   title: "Forecast lab",
   blurb: "Every forecasting method on the same data, side by side. Pick a pattern or paste your own series, then compare scores and read each method's strengths and weaknesses.",
   lede: "No forecasting method wins everywhere. Each one assumes something about the data: that it is flat, trending, seasonal or lumpy. Run them all on the same series, score them on months they haven't seen, and the method whose assumptions match the data comes out on top.",
+  quiz: [
+    ["Why score methods on months they haven't seen?", "In-sample fit rewards complexity: a flexible method can match history closely and still forecast badly. Holding out the last months tests what you actually care about."],
+    ["A seasonal naive forecast beats your fancy model. What does that tell you?", "Most of the predictable signal is the seasonal pattern, and the extra machinery is fitting noise. Seasonal naive is a benchmark every model should beat."],
+    ["Should you always pick the method with the lowest error on one holdout?", "Not blindly. One holdout is a small sample; use several origins (rolling backtest) and prefer simpler methods when the gap is small. Averaging the top few often wins."],
+    ["What assumption does a moving average make?", "That the series is flat apart from noise. It lags behind any trend and smears out seasonality."],
+  ],
+  diy: {
+    intro: "Monthly actuals in B2:B49. Hold out the last 12 months (rows 38–49) and forecast them from row 37.",
+    steps: [
+      ["Naive: repeat the last actual.", "=$B$37"],
+      ["Seasonal naive: same month last year.", "C38: =B26   (fill down)"],
+      ["Moving average of the last 12 months.", "=AVERAGE($B$26:$B$37)"],
+      ["Linear trend fitted to the training months (row number in A).", "D38: =FORECAST.LINEAR(A38,$B$2:$B$37,$A$2:$A$37)"],
+      ["Excel's built-in Holt-Winters (ETS AAA), with dates in A.", "E38: =FORECAST.ETS(A38,$B$2:$B$37,$A$2:$A$37,12)"],
+      ["Score each method on the holdout.", "=SUMPRODUCT(ABS($B$38:$B$49-C38:C49))/SUM($B$38:$B$49)   (WAPE)"],
+      ["Average of methods (often hard to beat).", "F38: =AVERAGE(C38:E38)"],
+    ],
+  },
+  deeper: [
+    ["Makridakis, Spiliotis & Assimakopoulos (2020), The M4 Competition: 100,000 time series and 61 forecasting methods, IJF 36(1)", "https://doi.org/10.1016/j.ijforecast.2019.04.014", "which methods win, at scale"],
+    ["Hyndman & Athanasopoulos, FPP3 §5.2: Some simple forecasting methods", "https://otexts.com/fpp3/simple-methods.html", "free textbook: the benchmarks"],
+    ["Tashman (2000), Out-of-sample tests of forecasting accuracy, IJF 16(4)", "https://doi.org/10.1016/S0169-2070(00)00065-0", "how to hold out data properly"],
+    ["Green & Armstrong (2015), Simple versus complex forecasting: the evidence, J. Business Research 68(8)", "https://doi.org/10.1016/j.jbusres.2015.03.026", "complexity rarely pays"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 40 L14 34 L24 38 L34 28 L44 32 L54 22"/><path d="M54 22 L92 8" stroke-dasharray="4 3"/><path d="M54 22 L92 22" stroke-dasharray="2 3" opacity=".6"/><path d="M54 22 L64 14 L74 24 L84 12 L92 18" stroke-dasharray="5 2" opacity=".8"/><line x1="54" y1="4" x2="54" y2="60" opacity=".3"/></svg>`,
 
   mount(root) {

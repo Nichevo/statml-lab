@@ -4,6 +4,31 @@ Lab.register({
   title: "Forecast accuracy measures",
   blurb: "MAE, RMSE, MAPE, WAPE, MASE and bias side by side. Edit the numbers or load a scenario and see which measure tells the truth.",
   lede: "Every accuracy measure boils a column of errors down to one number, and each one does it differently. Some punish big misses, some divide by the actual value, some ignore direction. Load a scenario or type your own actuals and forecasts, then watch the measures disagree.",
+  quiz: [
+    ["Why can MAPE be misleading for slow movers?", "It divides by the actual. A week with actual 1 and forecast 3 is a 200% error, so a few tiny actuals dominate the average, and a zero actual makes it undefined."],
+    ["What is WAPE and why do planners like it?", "Total absolute error ÷ total actuals. It's MAPE weighted by volume, so big items count more, and it works with zeros as long as the total isn't zero."],
+    ["MASE = 0.8. Is that good?", "Yes: the forecast's MAE is 80% of a naive 'same as last period' forecast's in-sample MAE. Above 1 means a naive forecast would have done better."],
+    ["Your MAE is low but bias is +15%. What's wrong?", "The errors are small on average but mostly in one direction: you over-forecast consistently. Accuracy measures hide this; always track bias (mean error) alongside."],
+    ["Why might RMSE rank two forecasts differently from MAE?", "RMSE squares errors, so it punishes a few big misses heavily. A forecast with occasional large errors loses on RMSE even if its typical error is smaller."],
+  ],
+  diy: {
+    intro: "Actuals in B2:B25, forecasts in C2:C25.",
+    steps: [
+      ["Error and absolute error for each period (error = actual − forecast here; some firms use the opposite sign, so state yours).", "D2: =B2-C2\nE2: =ABS(D2)"],
+      ["Bias (mean error) and bias as a % of actuals.", "=AVERAGE(D2:D25)\n=SUM(D2:D25)/SUM(B2:B25)"],
+      ["MAE and RMSE.", "=AVERAGE(E2:E25)\n=SQRT(SUMSQ(D2:D25)/COUNT(D2:D25))"],
+      ["MAPE, skipping zero actuals.", "=AVERAGE(IF(B2:B25<>0,E2:E25/ABS(B2:B25)))   (Ctrl+Shift+Enter in older Excel)"],
+      ["sMAPE.", "=AVERAGE(2*E2:E25/(ABS(B2:B25)+ABS(C2:C25)))"],
+      ["WAPE (also called MAD/mean ratio).", "=SUM(E2:E25)/SUM(B2:B25)"],
+      ["MASE: scale by the naive forecast's in-sample MAE (use the training period; here the same range for simplicity).", "F3: =ABS(B3-B2)\n=AVERAGE(E2:E25)/AVERAGE(F3:F25)"],
+    ],
+  },
+  deeper: [
+    ["Hyndman & Koehler (2006), Another look at measures of forecast accuracy, IJF 22(4)", "https://doi.org/10.1016/j.ijforecast.2006.03.001", "introduces MASE and explains the problems with percentage errors"],
+    ["Hyndman & Athanasopoulos, FPP3 §5.8: Evaluating point forecast accuracy", "https://otexts.com/fpp3/accuracy.html", "free textbook"],
+    ["Makridakis (1993), Accuracy measures: theoretical and practical concerns, IJF 9(4)", "https://doi.org/10.1016/0169-2070(93)90079-3", "the case for sMAPE"],
+    ["Gneiting (2011), Making and evaluating point forecasts, JASA 106(494)", "https://doi.org/10.1198/jasa.2011.r10138", "which error measure rewards which kind of forecast (mean vs median)"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 40 L20 30 L34 36 L48 22 L62 28 L76 16 L90 24"/><path d="M6 46 L20 26 L34 42 L48 30 L62 20 L76 26 L90 18" stroke-dasharray="4 3" opacity=".6"/><g opacity=".5"><line x1="20" y1="26" x2="20" y2="30"/><line x1="34" y1="36" x2="34" y2="42"/><line x1="48" y1="22" x2="48" y2="30"/><line x1="62" y1="20" x2="62" y2="28"/><line x1="76" y1="16" x2="76" y2="26"/></g></svg>`,
 
   mount(root) {

@@ -4,6 +4,30 @@ Lab.register({
   title: "Attention, the heart of a transformer",
   blurb: "Click a word and see which other words it 'looks at', with every dot product and softmax weight worked out.",
   lede: "A transformer lets every word gather information from the other words in the sentence. Each word asks a question (its query), every word offers a label (its key), and the better they match the more that word's content (its value) gets mixed in. This page uses tiny hand-made vectors so you can read every number.",
+  quiz: [
+    ["Why divide by √d before the softmax?", "Dot products of long vectors get large, which pushes the softmax to put nearly all weight on one word and makes gradients tiny. Dividing by √d keeps the scores in a sensible range."],
+    ["What do the query, key and value play?", "The query is what this word is looking for, each key is what a word offers to be matched on, and the value is the information it passes on if chosen. Attention weights come from query·key; the output is the weighted average of values."],
+    ["What does softmax do to the scores?", "Exponentiates and normalises them so they're positive and sum to 1: a set of weights. Bigger scores get disproportionately more weight."],
+    ["Why use several attention heads?", "Each head has its own Q, K and V projections, so different heads can track different relationships (who did what, what an adjective describes) at the same time."],
+  ],
+  diy: {
+    intro: "A toy example with 4 words and d = 3. Query vectors in B2:D5, key vectors in F2:H5, value vectors in J2:L5 (one word per row).",
+    steps: [
+      ["Scores: each query against each key (4 × 4 matrix), scaled by √d.", "N2: =MMULT(B2:D5,TRANSPOSE(F2:H5))/SQRT(3)"],
+      ["Softmax across each row: exponentiate, then divide by the row total. Subtracting the row max first avoids overflow.", "S2: =EXP(N2-MAX($N2:$Q2))/SUM(EXP($N2:$Q2-MAX($N2:$Q2)))   (fill to V5)"],
+      ["Check each row of weights sums to 1.", "=SUM(S2:V2)"],
+      ["Output for each word: weights × values.", "X2: =MMULT(S2:V5,J2:L5)"],
+      ["In a real model Q, K and V come from the word embeddings (E) times learned matrices.", "Q: =MMULT(E,WQ)   K: =MMULT(E,WK)   V: =MMULT(E,WV)"],
+      ["Causal (decoder) attention: set scores for later words to a very negative number before softmax, so words only attend backwards.", "=IF(COLUMN()-COLUMN($N2)>ROW()-ROW(N$2),-1E9,score)"],
+    ],
+  },
+  deeper: [
+    ["Vaswani et al. (2017), Attention is all you need, arXiv:1706.03762", "https://arxiv.org/abs/1706.03762", "the transformer paper"],
+    ["Bahdanau, Cho & Bengio (2014), Neural machine translation by jointly learning to align and translate, arXiv:1409.0473", "https://arxiv.org/abs/1409.0473", "where attention began"],
+    ["Alammar, The illustrated transformer", "https://jalammar.github.io/illustrated-transformer/", "step-by-step pictures"],
+    ["3Blue1Brown, Attention in transformers, visually explained", "https://www.3blue1brown.com/lessons/attention", "video walkthrough"],
+    ["Jurafsky & Martin, Speech and Language Processing, ch. 9: Transformers (free draft)", "https://web.stanford.edu/~jurafsky/slp3/", "textbook treatment"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g fill="currentColor"><rect x="6" y="6" width="16" height="8" rx="2"/><rect x="6" y="28" width="16" height="8" rx="2"/><rect x="6" y="50" width="16" height="8" rx="2"/><rect x="74" y="6" width="16" height="8" rx="2" opacity=".5"/><rect x="74" y="28" width="16" height="8" rx="2" opacity=".5"/><rect x="74" y="50" width="16" height="8" rx="2" opacity=".5"/></g><path d="M22 32 L74 10" stroke-width="4"/><path d="M22 32 L74 32" opacity=".5"/><path d="M22 32 L74 54" opacity=".25"/></svg>`,
 
   mount(root) {

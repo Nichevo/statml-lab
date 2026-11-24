@@ -4,6 +4,28 @@ Lab.register({
   title: "R², the coefficient of determination",
   blurb: "How much better is the regression line than just guessing the average? Compare the squares.",
   lede: "R² compares two ways of predicting y. The lazy way guesses the mean every time. The regression way uses x. R² is the share of the lazy model's squared error that the line gets rid of.",
+  quiz: [
+    ["SST = 500, SSE = 150. What is R²?", "1 − 150/500 = 0.70. The line removes 70% of the squared error you'd make by always guessing the mean."],
+    ["Can R² be negative?", "For least squares with an intercept, on the data it was fitted to, no. On new data, or for a model forced through the origin, yes: it means the model predicts worse than the mean."],
+    ["R² = 0.95 on a model of monthly sales against time. Is it a good forecasting model?", "Not necessarily. Trending series give high R² easily. Check the residuals for patterns and test it on held-out months."],
+    ["Why use adjusted R² when comparing models with different numbers of predictors?", "Plain R² never falls when you add a variable, even pure noise. Adjusted R² penalises each extra predictor."],
+  ],
+  diy: {
+    intro: "x in A2:A31, y in B2:B31.",
+    steps: [
+      ["Fitted line and predictions.", "E1: =SLOPE(B2:B31,A2:A31)\nE2: =INTERCEPT(B2:B31,A2:A31)\nC2: =$E$2+$E$1*A2"],
+      ["Total sum of squares: squared distance from the mean (the lazy model's error).", "E3: =DEVSQ(B2:B31)"],
+      ["Residual sum of squares: squared distance from the line.", "E4: =SUMXMY2(B2:B31,C2:C31)"],
+      ["R² and a check against Excel's own.", "E5: =1-E4/E3\n=RSQ(B2:B31,A2:A31)"],
+      ["Adjusted R² with k predictors (k = 1 here).", "=1-(1-E5)*(COUNT(B2:B31)-1)/(COUNT(B2:B31)-1-1)"],
+    ],
+  },
+  deeper: [
+    ["Michael Wypych, R² explainer", "https://mic-wypych.github.io/r2_explainer/", "the visual explainer that inspired this site"],
+    ["Kvålseth (1985), Cautionary note about R², The American Statistician 39(4)", "https://doi.org/10.1080/00031305.1985.10479448", "eight different R² formulas and when they disagree"],
+    ["OpenIntro Statistics (free), ch. 8: Introduction to linear regression", "https://www.openintro.org/book/os/", "R² with worked examples"],
+    ["Penn State STAT 501, Lesson 2.5: The coefficient of determination", "https://online.stat.psu.edu/stat501/lesson/2/2.5", "free course notes"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="54" x2="90" y2="12"/><line x1="6" y1="34" x2="90" y2="34" stroke-dasharray="4 4" opacity=".5"/><rect x="26" y="26" width="18" height="18" fill="currentColor" fill-opacity=".15"/><rect x="60" y="14" width="10" height="10" fill="currentColor" fill-opacity=".15"/><circle cx="26" cy="44" r="3" fill="currentColor"/><circle cx="60" cy="24" r="3" fill="currentColor"/><circle cx="44" cy="40" r="3" fill="currentColor"/><circle cx="78" cy="20" r="3" fill="currentColor"/></svg>`,
 
   mount(root) {

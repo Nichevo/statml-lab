@@ -4,6 +4,32 @@ Lab.register({
   title: "Moving averages and exponential smoothing",
   blurb: "Naive, moving average and exponential smoothing up to Holt-Winters, scored head to head on held-out months. Paste in your own data or drag the points.",
   lede: "Exponential smoothing forecasts the future from a weighted average of the past, with recent months counting most. Adding a trend term and a seasonal term turns the simple version into Holt's method and then Holt-Winters, the workhorse of business forecasting.",
+  quiz: [
+    ["What does α control in simple exponential smoothing?", "How much weight the newest actual gets. α = 0.8 reacts fast but is noisy; α = 0.1 is smooth but slow to follow a real change. The weights on older actuals fall by (1 − α) each period."],
+    ["Why add a trend term (Holt)?", "Without it the forecast is flat at the current level, so on a growing series it always lags behind. The trend b is itself smoothed and added h times for h periods ahead."],
+    ["Additive or multiplicative seasonality?", "Additive when the seasonal swing is a fixed number of units each year; multiplicative when it grows in proportion to the level (December is always +40%, not +400 units)."],
+    ["Why do Holt's trend forecasts often overshoot far ahead?", "They extend today's trend in a straight line forever. A damped trend (multiply the trend by φ < 1 each step) usually forecasts better beyond a few periods."],
+  ],
+  diy: {
+    intro: "Monthly actuals in B2:B49 (four years). α, β, γ in H1:H3. This is Holt-Winters with additive seasonality, matching the page.",
+    steps: [
+      ["Simple exponential smoothing first: start the level at the first actual, then blend.", "C2: =B2\nC3: =$H$1*B3+(1-$H$1)*C2   (fill down; forecast for next month = level)"],
+      ["Holt-Winters start values from year 1: level = average of the first 12 months, trend = (year 2 average − year 1 average) ÷ 12, season = actual − year 1 average.", "C13: =AVERAGE(B2:B13)\nD13: =(AVERAGE(B14:B25)-AVERAGE(B2:B13))/12\nE2: =B2-$C$13   (fill to E13)"],
+      ["Level update from month 13 on (row 14). E is the seasonal index for the same month a year earlier.", "C14: =$H$1*(B14-E2)+(1-$H$1)*(C13+D13)"],
+      ["Trend update.", "D14: =$H$2*(C14-C13)+(1-$H$2)*D13"],
+      ["Season update.", "E14: =$H$3*(B14-C14)+(1-$H$3)*E2"],
+      ["One-step forecast made the month before, to score the fit. Fill C14:F49 down.", "F14: =C13+D13+E2\nG14: =B14-F14   (error)"],
+      ["Forecast h months past the last actual (row 49). Use the seasonal index from the same month in the last year.", "=$C$49+h*$D$49+INDEX($E$38:$E$49,MOD(h-1,12)+1)"],
+      ["Pick α, β, γ by minimising the squared errors with Solver (Data > Solver): minimise H5, changing H1:H3, constraints 0 ≤ H1:H3 ≤ 1.", "H5: =SUMSQ(G14:G49)"],
+    ],
+  },
+  deeper: [
+    ["Hyndman & Athanasopoulos, FPP3 ch. 8: Exponential smoothing", "https://otexts.com/fpp3/expsmooth.html", "free textbook, the standard reference"],
+    ["Holt (1957, reprinted 2004), Forecasting seasonals and trends by exponentially weighted moving averages, IJF 20(1)", "https://doi.org/10.1016/j.ijforecast.2003.09.015", "the original Holt paper"],
+    ["Winters (1960), Forecasting sales by exponentially weighted moving averages, Management Science 6(3)", "https://doi.org/10.1287/mnsc.6.3.324", "adds the seasonal component"],
+    ["Gardner (2006), Exponential smoothing: the state of the art, part II, IJF 22(4)", "https://doi.org/10.1016/j.ijforecast.2006.03.005", "a review of 50 years of variants"],
+    ["Hyndman, Koehler, Snyder & Grose (2002), A state space framework for automatic forecasting using exponential smoothing methods, IJF 18(3)", "https://doi.org/10.1016/S0169-2070(01)00110-8", "ETS models and prediction intervals"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 44 L12 36 L20 42 L28 30 L36 36 L44 26 L52 32 L60 22"/><path d="M60 22 L68 28 L76 18 L84 24 L92 14" stroke-dasharray="4 3"/><path d="M60 22 L92 4 L92 34 Z" fill="currentColor" fill-opacity=".12" stroke="none"/><line x1="60" y1="4" x2="60" y2="60" opacity=".3"/></svg>`,
 
   mount(root) {

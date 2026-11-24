@@ -4,6 +4,30 @@ Lab.register({
   title: "Decision trees and random forests",
   blurb: "Grow one decision tree and see it overfit. Grow a hundred on shuffled data and let them vote. Every split rule is spelled out.",
   lede: "A decision tree classifies by asking a chain of yes/no questions like \"is x₁ below 0.42?\". One deep tree memorizes its training data. A random forest trains many trees, each on a random resample of the data, and lets them vote. The mistakes of individual trees cancel out.",
+  quiz: [
+    ["A node has 8 of class A and 2 of class B. What is its Gini impurity?", "1 − 0.8² − 0.2² = 1 − 0.64 − 0.04 = 0.32."],
+    ["How does a tree choose a split?", "It tries every feature and threshold and picks the one that most reduces the weighted average impurity of the two child nodes."],
+    ["What two kinds of randomness make a random forest?", "Each tree trains on a bootstrap sample of the rows (bagging), and each split considers only a random subset of features. Both make trees less alike, so their errors cancel when they vote."],
+    ["What is the out-of-bag error?", "Each tree never sees about a third of the rows. Scoring each row using only the trees that didn't see it gives a free estimate of test error."],
+  ],
+  diy: {
+    intro: "Two features in A2:B101, class (A or B) in C2:C101. This finds the best single split on feature 1, which is what each tree node does.",
+    steps: [
+      ["Gini of the whole set.", "F1: =1-(COUNTIF(C2:C101,\"A\")/100)^2-(COUNTIF(C2:C101,\"B\")/100)^2"],
+      ["Candidate threshold t in E2 (try each sorted value of A). Counts on each side.", "nL: =COUNTIF(A2:A101,\"<\"&E2)\nnL_A: =COUNTIFS(A2:A101,\"<\"&E2,C2:C101,\"A\")"],
+      ["Gini of the left and right groups.", "GL: =1-(nL_A/nL)^2-((nL-nL_A)/nL)^2\nGR: =1-(nR_A/nR)^2-((nR-nR_A)/nR)^2"],
+      ["Weighted impurity after the split; pick the threshold with the lowest.", "=(nL*GL+nR*GR)/100"],
+      ["Bootstrap sample for one tree: draw row numbers with replacement.", "=RANDBETWEEN(2,101)   (100 times, then INDEX the rows)"],
+      ["Forest prediction = majority vote of the trees' predictions in J:S.", "=IF(COUNTIF(J2:S2,\"A\")>COUNTIF(J2:S2,\"B\"),\"A\",\"B\")"],
+    ],
+  },
+  deeper: [
+    ["Breiman (2001), Random forests, Machine Learning 45(1)", "https://doi.org/10.1023/A:1010933404324", "the original paper"],
+    ["Breiman (1996), Bagging predictors, Machine Learning 24(2)", "https://doi.org/10.1007/BF00058655", "the bootstrap-and-vote idea"],
+    ["James et al., An Introduction to Statistical Learning, ch. 8 (free PDF)", "https://www.statlearning.com/", "trees, bagging, forests and boosting"],
+    ["Breiman, Friedman, Olshen & Stone, Classification and Regression Trees (1984)", "https://doi.org/10.1201/9781315139470", "CART, the tree algorithm inside"],
+    ["Grinsztajn, Oyallon & Varoquaux (2022), Why do tree-based models still outperform deep learning on tabular data?, arXiv:2207.08815", "https://arxiv.org/abs/2207.08815", "why forests and boosting rule business data"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="38" y="4" width="20" height="10" rx="2"/><rect x="14" y="26" width="20" height="10" rx="2"/><rect x="62" y="26" width="20" height="10" rx="2"/><path d="M48 14 L24 26 M48 14 L72 26 M24 36 L14 50 M24 36 L34 50 M72 36 L64 50 M72 36 L82 50"/><circle cx="14" cy="54" r="4" fill="currentColor"/><circle cx="34" cy="54" r="4"/><circle cx="64" cy="54" r="4" fill="currentColor"/><circle cx="82" cy="54" r="4"/></svg>`,
 
   mount(root) {

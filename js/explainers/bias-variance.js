@@ -4,6 +4,29 @@ Lab.register({
   title: "The bias–variance tradeoff",
   blurb: "Fit the same model to 30 different samples. Simple models agree but miss; flexible ones hit on average but scatter.",
   lede: "Imagine collecting your training data again and again from the same process. A good model should give similar answers each time (low variance) and be right on average (low bias). Polynomial degree lets you trade one for the other.",
+  quiz: [
+    ["A degree-15 polynomial fits the training data almost perfectly but tests badly. Bias or variance?", "Variance. It has learned the noise in this particular sample, so it changes wildly with a new sample."],
+    ["A straight line fitted to a clearly curved pattern. Bias or variance?", "Bias. Even with endless data the line can't bend, so it's systematically wrong in the same places."],
+    ["Why can't test error go below σ²?", "σ² is the irreducible noise: the part of y that no function of x can predict. Even the true function makes that error."],
+    ["What are three ways to reduce variance?", "More data, a simpler model, and regularisation or averaging (bagging, random forests, ensembles of forecasts)."],
+  ],
+  diy: {
+    intro: "x in A2:A31, y in B2:B31. Use rows 2–21 for training and 22–31 for testing. Put x, x², x³ … x⁷ in D:J.",
+    steps: [
+      ["Powers of x for polynomial fits.", "D2: =$A2   E2: =$A2^2   F2: =$A2^3   … up to J2: =$A2^7"],
+      ["Fit a degree-d polynomial on the training rows with LINEST (degree 3 shown).", "=LINEST(B2:B21,D2:F21)"],
+      ["Predict for every row with TREND, which uses the same fit.", "L2: =TREND($B$2:$B$21,$D$2:$F$21,D2:F2)"],
+      ["Training and test error (mean squared error).", "=SUMXMY2(B2:B21,L2:L21)/20\n=SUMXMY2(B22:B31,L22:L31)/10"],
+      ["Repeat for degrees 1 to 7 and chart both errors against degree. Training error falls; test error falls then rises.", ""],
+      ["To see variance directly: refit on several resampled training sets and take the variance of the predictions at one x.", "=VAR.S(predictions at x from each fit)"],
+    ],
+  },
+  deeper: [
+    ["Geman, Bienenstock & Doursat (1992), Neural networks and the bias/variance dilemma, Neural Computation 4(1)", "https://doi.org/10.1162/neco.1992.4.1.1", "the classic paper"],
+    ["Hastie, Tibshirani & Friedman, The Elements of Statistical Learning, §7.3 (free PDF)", "https://hastie.su.domains/ElemStatLearn/", "the decomposition derived"],
+    ["James et al., An Introduction to Statistical Learning, §2.2 (free PDF)", "https://www.statlearning.com/", "a gentler version"],
+    ["Belkin, Hsu, Ma & Mandal (2019), Reconciling modern machine-learning practice and the bias-variance trade-off, PNAS 116(32)", "https://doi.org/10.1073/pnas.1903070116", "double descent: why huge models can generalise"],
+  ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 32 C 22 4, 38 4, 48 32 S 74 60, 90 32" stroke-dasharray="4 3"/><path d="M6 36 C 22 10, 38 2, 48 30 S 74 56, 90 30" opacity=".35"/><path d="M6 28 C 22 6, 40 10, 48 34 S 72 62, 90 36" opacity=".35"/><path d="M6 34 C 24 2, 36 6, 48 28 S 76 58, 90 26" opacity=".35"/></svg>`,
 
   mount(root) {
