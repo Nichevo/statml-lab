@@ -22,8 +22,7 @@ Lab.register({
   },
   deeper: [
     ["Economic order quantity — Wikipedia (quantity discounts)", "https://en.wikipedia.org/wiki/Economic_order_quantity#Quantity_discounts", "the all-units discount method"],
-    ["Minimum order quantity — Wikipedia", "https://en.wikipedia.org/wiki/Minimum_order_quantity", "why suppliers set them"],
-    ["Volume discount — Wikipedia", "https://en.wikipedia.org/wiki/Volume_discount", "pricing structures"],
+    ["Discounts and allowances — Wikipedia", "https://en.wikipedia.org/wiki/Discounts_and_allowances", "quantity discounts and other pricing structures"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 14 h24 v14 h24 v10 h32"/><path d="M8 56 C 30 30, 60 30, 88 50" opacity=".5"/><circle cx="56" cy="38" r="4" fill="currentColor"/></svg>`,
 

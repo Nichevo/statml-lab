@@ -34,7 +34,7 @@ Lab.register({
     ["Amiti, Redding & Weinstein (2019), The impact of the 2018 tariffs on prices and welfare, J. Economic Perspectives 33(4)", "https://doi.org/10.1257/jep.33.4.187", "near-complete pass-through into US import prices"],
     ["Fajgelbaum, Goldberg, Kennedy & Khandelwal (2020), The return to protectionism, Quarterly J. Economics 135(1)", "https://doi.org/10.1093/qje/qjz036", "who paid for the 2018 tariffs, and the welfare cost"],
     ["Cavallo, Gopinath, Neiman & Tang (2021), Tariff pass-through at the border and at the store, AER: Insights 3(1)", "https://doi.org/10.1257/aeri.20190536", "import prices rose, retail prices much less: retailers absorbed it"],
-    ["Krugman, Obstfeld & Melitz, International Economics, ch. 9: The instruments of trade policy", "https://www.pearson.com/en-us/subject-catalog/p/international-economics-theory-and-policy/P200000006433", "the textbook analysis of tariff incidence and deadweight loss"],
+    ["Tax incidence — Wikipedia", "https://en.wikipedia.org/wiki/Tax_incidence", "the textbook analysis of who bears a tax or tariff: it depends on elasticities, not on who writes the cheque"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="20" width="30" height="24" rx="2"/><path d="M38 32 h20" stroke-dasharray="3 3"/><path d="M58 14 v36" stroke-width="3"/><rect x="64" y="20" width="24" height="24" rx="2" fill="currentColor" opacity=".25"/><text x="76" y="37" font-size="13" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif">%</text></svg>`,
 

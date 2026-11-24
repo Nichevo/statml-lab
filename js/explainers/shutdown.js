@@ -21,7 +21,7 @@ Lab.register({
     ],
   },
   deeper: [
-    ["Aggregate planning — Wikipedia", "https://en.wikipedia.org/wiki/Aggregate_planning", "level, chase and mixed strategies"],
+    ["Sales and operations planning — Wikipedia", "https://en.wikipedia.org/wiki/Sales_and_operations_planning", "where build-ahead plans get agreed"],
     ["Contract manufacturer — Wikipedia", "https://en.wikipedia.org/wiki/Contract_manufacturer", "co-packers and toll manufacturing"],
     ["Turnaround (refining) — Wikipedia", "https://en.wikipedia.org/wiki/Turnaround_(refining)", "planned shutdowns in process industries"],
   ],

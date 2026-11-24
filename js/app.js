@@ -31,7 +31,7 @@
     if (ex.quiz && ex.quiz.length) h += `<section class="quiz"><h2>Check yourself</h2><div class="qgrid">${ex.quiz.map(([q, a], i) => `
       <details><summary><span class="qn">Q${i + 1}</span>${q}</summary><div>${a}</div></details>`).join("")}</div></section>`;
     if (ex.deeper && ex.deeper.length) h += `<section class="deeper"><h2>Go deeper</h2><ul>${ex.deeper.map(([t, u, d]) => `
-      <li><a href="${u}" target="_blank" rel="noopener">${t}</a>${d ? ` <span>${d}</span>` : ""}</li>`).join("")}</ul></section>`;
+      <li><a href="${u}" target="_blank" rel="noopener">${t}</a>${d ? ` <span>${d}</span>` : ""}${Lab.paperSummaries && Lab.paperSummaries[u] ? `<div class="psum">${Lab.paperSummaries[u]}</div>` : ""}</li>`).join("")}</ul></section>`;
     return h;
   };
 

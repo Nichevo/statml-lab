@@ -23,8 +23,8 @@ Lab.register({
   },
   deeper: [
     ["Activity-based costing — Wikipedia", "https://en.wikipedia.org/wiki/Activity-based_costing", "assigning costs by what drives them"],
-    ["Kaplan & Narayanan (2001), Measuring and managing customer profitability", "https://www.hbs.edu/faculty/Pages/item.aspx?num=11286", "where the whale curve comes from"],
-    ["Time-driven activity-based costing — Wikipedia", "https://en.wikipedia.org/wiki/Time-driven_activity-based_costing", "a lighter way to set activity rates"],
+    ["Cooper & Kaplan (1991), Profit priorities from activity-based costing, Harvard Business Review", "https://hbr.org/1991/05/profit-priorities-from-activity-based-costing", "where the whale curve comes from"],
+    ["Kaplan & Anderson (2004), Time-driven activity-based costing, Harvard Business Review", "https://hbr.org/2004/11/time-driven-activity-based-costing", "a lighter way to set activity rates"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 56 C 20 14, 34 8, 52 8 C 66 8, 78 14, 90 30"/><path d="M8 56 h82" opacity=".4"/><path d="M8 40 h82" stroke-dasharray="3 3" opacity=".5"/></svg>`,
 

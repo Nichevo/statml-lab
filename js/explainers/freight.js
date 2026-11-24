@@ -22,8 +22,7 @@ Lab.register({
     ],
   },
   deeper: [
-    ["Less than truckload shipping — Wikipedia", "https://en.wikipedia.org/wiki/Less_than_truckload_shipping", "how LTL is priced"],
-    ["Full truckload shipping — Wikipedia", "https://en.wikipedia.org/wiki/Full_truckload_shipping", "FTL basics"],
+    ["Less-than-truckload shipping — Wikipedia", "https://en.wikipedia.org/wiki/Less-than-truckload_shipping", "how LTL is priced, and how it compares with full loads"],
     ["Economic order quantity — Wikipedia", "https://en.wikipedia.org/wiki/Economic_order_quantity", "the same trade-off for orders"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="18" width="52" height="28" rx="2" fill="currentColor" fill-opacity=".15"/><path d="M58 26 h18 l12 12 v8 h-30 Z"/><circle cx="22" cy="50" r="5"/><circle cx="72" cy="50" r="5"/><path d="M12 24 h10 v16 h-10 Z M26 24 h10 v16 h-10 Z" fill="currentColor" fill-opacity=".35"/></svg>`,

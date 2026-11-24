@@ -26,7 +26,7 @@ Lab.register({
     ["Bahdanau, Cho & Bengio (2014), Neural machine translation by jointly learning to align and translate, arXiv:1409.0473", "https://arxiv.org/abs/1409.0473", "where attention began"],
     ["Alammar, The illustrated transformer", "https://jalammar.github.io/illustrated-transformer/", "step-by-step pictures"],
     ["3Blue1Brown, Attention in transformers, visually explained", "https://www.3blue1brown.com/lessons/attention", "video walkthrough"],
-    ["Jurafsky & Martin, Speech and Language Processing, ch. 9: Transformers (free draft)", "https://web.stanford.edu/~jurafsky/slp3/", "textbook treatment"],
+    ["Jurafsky & Martin, Speech and Language Processing, 3rd ed. draft: Transformers and pretraining chapter (free)", "https://web.stanford.edu/~jurafsky/slp3/", "textbook treatment"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g fill="currentColor"><rect x="6" y="6" width="16" height="8" rx="2"/><rect x="6" y="28" width="16" height="8" rx="2"/><rect x="6" y="50" width="16" height="8" rx="2"/><rect x="74" y="6" width="16" height="8" rx="2" opacity=".5"/><rect x="74" y="28" width="16" height="8" rx="2" opacity=".5"/><rect x="74" y="50" width="16" height="8" rx="2" opacity=".5"/></g><path d="M22 32 L74 10" stroke-width="4"/><path d="M22 32 L74 32" opacity=".5"/><path d="M22 32 L74 54" opacity=".25"/></svg>`,
 

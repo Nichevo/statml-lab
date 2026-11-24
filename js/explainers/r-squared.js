@@ -24,7 +24,7 @@ Lab.register({
     ["Michael Wypych, R² explainer", "https://mic-wypych.github.io/r2_explainer/", "the visual explainer that inspired this site"],
     ["Kvålseth (1985), Cautionary note about R², The American Statistician 39(4)", "https://doi.org/10.1080/00031305.1985.10479448", "eight different R² formulas and when they disagree"],
     ["OpenIntro Statistics (free), ch. 8: Introduction to linear regression", "https://www.openintro.org/book/os/", "R² with worked examples"],
-    ["Penn State STAT 501, Lesson 2.5: The coefficient of determination", "https://online.stat.psu.edu/stat501/lesson/2/2.5", "free course notes"],
+    ["Penn State STAT 501, Lesson 1.5: The coefficient of determination", "https://online.stat.psu.edu/stat501/lesson/1/1.5", "free course notes"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="54" x2="90" y2="12"/><line x1="6" y1="34" x2="90" y2="34" stroke-dasharray="4 4" opacity=".5"/><rect x="26" y="26" width="18" height="18" fill="currentColor" fill-opacity=".15"/><rect x="60" y="14" width="10" height="10" fill="currentColor" fill-opacity=".15"/><circle cx="26" cy="44" r="3" fill="currentColor"/><circle cx="60" cy="24" r="3" fill="currentColor"/><circle cx="44" cy="40" r="3" fill="currentColor"/><circle cx="78" cy="20" r="3" fill="currentColor"/></svg>`,
 

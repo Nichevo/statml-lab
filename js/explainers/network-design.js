@@ -23,7 +23,7 @@ Lab.register({
   deeper: [
     ["Facility location problem — Wikipedia", "https://en.wikipedia.org/wiki/Facility_location_problem", "the optimization behind site selection"],
     ["Geometric median — Wikipedia", "https://en.wikipedia.org/wiki/Geometric_median", "Weiszfeld's algorithm for the true minimum-distance point"],
-    ["Square root law (inventory) — Wikipedia", "https://en.wikipedia.org/wiki/Square_root_law_(inventory_management)", "why stock grows with the number of DCs"],
+    ["Maister (1976), Centralisation of inventories and the square root law, Int. J. Physical Distribution 6(3)", "https://doi.org/10.1108/eb014366", "why stock grows with the number of DCs"],
     ["Google OR-Tools: assignment and MIP", "https://developers.google.com/optimization/mip", "solve real location models for free"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="40" y="26" width="12" height="12" fill="currentColor"/><path d="M46 32 L14 12 M46 32 L18 52 M46 32 L80 14 M46 32 L84 48 M46 32 L50 58" opacity=".5"/><circle cx="14" cy="12" r="3"/><circle cx="18" cy="52" r="3"/><circle cx="80" cy="14" r="3"/><circle cx="84" cy="48" r="3"/><circle cx="50" cy="58" r="3"/></svg>`,

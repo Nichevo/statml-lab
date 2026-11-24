@@ -1,20 +1,73 @@
 # StatML Lab
 
-Interactive visual explainers for statistics and machine learning. Plain HTML, CSS and JavaScript with no build step.
+Interactive visual explainers for statistics, machine learning, forecasting and supply chain. Each page lets you move the numbers yourself and watch the result change, then shows how to do the same calculation in Excel.
 
-## Run locally
+**Live site:** https://nichevo.github.io/statml-lab/
 
-Open `index.html` in a browser, or serve the folder: `python3 -m http.server` then visit http://localhost:8000.
+It is plain HTML, CSS and JavaScript. There is no build step, no framework and no server code.
+
+## What every page has
+
+- **A live figure** with sliders, buttons or editable tables. Every control moves the headline numbers.
+- **Worked numbers** showing the formula with today's values plugged in.
+- **Do it yourself**: step-by-step Excel formulas to rebuild the calculation in a spreadsheet.
+- **Check yourself**: a short quiz with the answers hidden until you open them.
+- **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
+- **Glossary links**: plain-language definitions of 175+ terms, cross-linked to the pages that use them.
+
+## Contents (56 explainers)
+
+| Area | Pages |
+|---|---|
+| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, accuracy measures (MAE, MAPE, RMSE, MASE, bias), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions |
+| Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design |
+| Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, k-means clustering and PCA |
+| Statistics | R², least squares, central limit theorem, hypothesis tests and p-values, rolling up numbers (bottom-up vs averages) |
+| Machine learning | Bias–variance, gradient descent, attention in transformers, decision trees and random forests |
+| Optimization | Linear programming, simulated annealing |
+
+The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, and Statistics for decisions.
+
+## Run it locally
+
+Open `index.html` in a browser. Or serve the folder:
+
+```
+python3 -m http.server
+```
+
+Then visit http://localhost:8000.
 
 ## Publish on GitHub Pages
 
-Push this folder to a repository, then in Settings > Pages choose "Deploy from a branch", branch `main`, folder `/ (root)`.
+In the repository's **Settings > Pages**, choose "Deploy from a branch", branch `main`, folder `/ (root)`. The site appears at `https://<user>.github.io/<repo>/` a minute or two later.
+
+## Project layout
+
+```
+index.html              page shell; loads every script in order
+css/style.css           all styles, light and dark themes
+js/plot.js              Lab.Plot canvas helper (axes, lines, dots)
+js/app.js               routing, home page, groups, learning paths, quiz / DIY / go-deeper rendering
+js/papers.js            one-line summaries shown under research-paper links
+js/glossary.js          glossary terms and their cross-links
+js/gbm.js               small gradient-boosting helper (not used by any page yet)
+js/explainers/*.js      one file per explainer
+```
 
 ## Add an explainer
 
-1. Copy one of the files in `js/explainers/` (for example `r-squared.js`) and change the `id`, `group`, `title`, `blurb`, `lede` and `glyph`.
-2. In `mount(root)`, build the page with `Lab.page(this, { figure, panel, notes })`, draw with `Lab.Plot`, and return the cleanup function from `Lab.watch(...)`.
-3. Add a `<script>` tag for it at the bottom of `index.html`.
-4. Add any new terms to `js/glossary.js` with the explainer's `id` so the glossary links to it.
+1. Copy a file in `js/explainers/` (for example `r-squared.js`) and change `id`, `group`, `title`, `blurb`, `lede` and `glyph`. The `group` must be one of the groups listed at the top of `js/app.js`.
+2. Fill in the shared sections:
+   - `quiz: [[question, answer], ...]`
+   - `diy: { intro, steps: [[text, excelFormula], ...] }`
+   - `deeper: [[title, url, note], ...]`
+3. In `mount(root)`, build the page with `Lab.page(this, { figure, panel, notes })`, draw with `Lab.Plot`, and return the cleanup function from `Lab.watch(...)`.
+4. Add a `<script>` tag for it near the bottom of `index.html`.
+5. If a `deeper` link is a research paper, add a one-line summary for its URL in `js/papers.js`.
+6. Add any new terms to `js/glossary.js`, with the explainer's `id`, so the glossary links to the page.
+7. To include it in a learning path, add its `id` to `PATHS` in `js/app.js`.
 
-Groups on the home page are listed in `js/app.js`.
+## Credits
+
+The visual style was inspired by [this R² explainer](https://mic-wypych.github.io/r2_explainer/). The references on each page point to the original authors.

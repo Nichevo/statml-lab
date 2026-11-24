@@ -25,7 +25,7 @@ Lab.register({
   },
   deeper: [
     ["Incoterms — Wikipedia", "https://en.wikipedia.org/wiki/Incoterms", "FOB, CIF, DDP and who pays which leg"],
-    ["Landed cost — Wikipedia", "https://en.wikipedia.org/wiki/Landed_cost", "what goes into it"],
+    ["WTO, Customs valuation: technical information", "https://www.wto.org/english/tratop_e/cusval_e/cusval_info_e.htm", "how customs values imports, the base that duty is charged on"],
     ["Gross margin — Wikipedia", "https://en.wikipedia.org/wiki/Gross_margin", "margin vs markup"],
     ["Contribution margin — Wikipedia", "https://en.wikipedia.org/wiki/Contribution_margin", "the right lens for extra volume"],
     ["Working capital — Wikipedia", "https://en.wikipedia.org/wiki/Working_capital", "why stock is cash on the shelf"],

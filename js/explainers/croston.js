@@ -27,7 +27,7 @@ Lab.register({
     ["Syntetos & Boylan (2005), The accuracy of intermittent demand estimates, IJF 21(2)", "https://doi.org/10.1016/j.ijforecast.2004.10.001", "the SBA bias correction"],
     ["Syntetos, Boylan & Croston (2005), On the categorization of demand patterns, JORS 56(5)", "https://doi.org/10.1057/palgrave.jors.2601841", "the ADI / CV² classification"],
     ["Teunter, Syntetos & Babai (2011), Intermittent demand: linking forecasting to inventory obsolescence, EJOR 214(3)", "https://doi.org/10.1016/j.ejor.2011.05.018", "the TSB method for items that may die out"],
-    ["Hyndman & Athanasopoulos, FPP3 §13.6: Forecasting count time series", "https://otexts.com/fpp3/counts.html", "free textbook section on Croston"],
+    ["Hyndman & Athanasopoulos, FPP3 §13.2: Time series of counts", "https://otexts.com/fpp3/counts.html#sec-counts", "free textbook section on Croston"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="56" x2="92" y2="56"/><g fill="currentColor"><rect x="10" y="30" width="6" height="26"/><rect x="34" y="40" width="6" height="16"/><rect x="40" y="22" width="6" height="34"/><rect x="70" y="34" width="6" height="22"/></g><path d="M4 44 L92 44" stroke-dasharray="5 3"/></svg>`,
 

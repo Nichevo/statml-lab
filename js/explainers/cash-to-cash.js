@@ -25,7 +25,7 @@ Lab.register({
     ["Cash conversion cycle — Wikipedia", "https://en.wikipedia.org/wiki/Cash_conversion_cycle", "definitions and formulas"],
     ["Days sales outstanding — Wikipedia", "https://en.wikipedia.org/wiki/Days_sales_outstanding", "measuring receivables"],
     ["Working capital — Wikipedia", "https://en.wikipedia.org/wiki/Working_capital", "what it is and why it matters"],
-    ["Reverse factoring — Wikipedia", "https://en.wikipedia.org/wiki/Reverse_factoring", "supply chain finance"],
+    ["Supply chain finance (reverse factoring) — Wikipedia", "https://en.wikipedia.org/wiki/Supply_chain_finance", "how buyers help suppliers get paid early"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 20 h48" stroke-width="6" opacity=".4"/><path d="M56 32 h30" stroke-width="6" opacity=".7"/><path d="M8 46 h22" stroke-width="6" opacity=".25"/><path d="M30 54 h56" stroke-dasharray="3 3"/></svg>`,
 

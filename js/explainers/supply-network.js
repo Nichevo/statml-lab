@@ -23,7 +23,7 @@ Lab.register({
   deeper: [
     ["Graves & Willems (2000), Optimizing strategic safety stock placement", "https://doi.org/10.1287/msom.2.1.68.23267", "the guaranteed-service model used here"],
     ["Multi-echelon inventory — overview", "https://en.wikipedia.org/wiki/Inventory_optimization", "Wikipedia on inventory optimization across networks"],
-    ["Risk pooling — Wikipedia", "https://en.wikipedia.org/wiki/Risk_pooling", "why a shared buffer needs less stock"],
+    ["Risk pool — Wikipedia", "https://en.wikipedia.org/wiki/Risk_pool", "why a shared buffer needs less stock"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="38" y="2" width="20" height="12" rx="2" fill="currentColor" fill-opacity=".3"/><rect x="12" y="24" width="22" height="12" rx="2"/><rect x="62" y="24" width="22" height="12" rx="2"/><g fill="currentColor"><circle cx="8" cy="54" r="5"/><circle cx="24" cy="54" r="5"/><circle cx="40" cy="54" r="5"/><circle cx="64" cy="54" r="5"/><circle cx="84" cy="54" r="5"/></g><path d="M48 14 L23 24 M48 14 L73 24 M23 36 L8 49 M23 36 L24 49 M23 36 L40 49 M73 36 L64 49 M73 36 L84 49"/></svg>`,
 

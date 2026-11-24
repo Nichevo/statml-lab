@@ -185,6 +185,7 @@ footer .wrap { padding-block: 20px; }
 .deeper ul { padding-left: 1.1em; }
 .deeper li { margin: 0 0 6px; }
 .deeper li span { color: var(--muted); font-size: .92em; }
+.deeper .psum { margin: 3px 0 2px; padding-left: 10px; border-left: 2px solid var(--line); color: var(--muted); font-size: .9em; line-height: 1.45; max-width: 70ch; }
 .notes .quiz { grid-column: 1 / -1; }
 .quiz .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 8px; align-items: start; }
 .quiz .qgrid details { margin: 0; }

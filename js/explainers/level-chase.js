@@ -22,7 +22,7 @@ Lab.register({
   },
   deeper: [
     ["Sales and operations planning — Wikipedia", "https://en.wikipedia.org/wiki/Sales_and_operations_planning", "the process this plan feeds"],
-    ["Aggregate planning — Wikipedia", "https://en.wikipedia.org/wiki/Aggregate_planning", "level, chase and hybrid strategies"],
+    ["Sales and operations planning — Wikipedia", "https://en.wikipedia.org/wiki/Sales_and_operations_planning", "the monthly process where level vs chase gets decided"],
     ["MIT OpenCourseWare: Introduction to Operations Management", "https://ocw.mit.edu/courses/15-760b-introduction-to-operations-management-spring-2004/", "aggregate planning lecture notes"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g fill="currentColor" opacity=".35"><rect x="6" y="40" width="10" height="18"/><rect x="20" y="32" width="10" height="26"/><rect x="34" y="20" width="10" height="38"/><rect x="48" y="12" width="10" height="46"/><rect x="62" y="24" width="10" height="34"/><rect x="76" y="38" width="10" height="20"/></g><line x1="4" y1="30" x2="90" y2="30" stroke-width="2.5"/><path d="M11 40 L25 32 L39 20 L53 12 L67 24 L81 38" stroke-dasharray="4 3"/></svg>`,

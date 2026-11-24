@@ -21,8 +21,8 @@ Lab.register({
     ],
   },
   deeper: [
-    ["Risk pooling — Wikipedia", "https://en.wikipedia.org/wiki/Risk_pooling", "the general idea, in insurance and inventory"],
-    ["Square root law (inventory) — Wikipedia", "https://en.wikipedia.org/wiki/Square_root_law_(inventory_management)", "Maister's rule and its assumptions"],
+    ["Risk pool — Wikipedia", "https://en.wikipedia.org/wiki/Risk_pool", "the general idea, in insurance and inventory"],
+    ["Maister (1976), Centralisation of inventories and the square root law, Int. J. Physical Distribution 6(3)", "https://doi.org/10.1108/eb014366", "the original square root rule and its assumptions"],
     ["Postponement — Wikipedia", "https://en.wikipedia.org/wiki/Postponement", "pooling by delaying product differentiation"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><g opacity=".6"><rect x="4" y="6" width="14" height="12"/><rect x="4" y="26" width="14" height="12"/><rect x="4" y="46" width="14" height="12"/></g><path d="M18 12 L56 30 M18 32 L56 32 M18 52 L56 34"/><rect x="56" y="22" width="34" height="20" fill="currentColor" fill-opacity=".25"/></svg>`,
