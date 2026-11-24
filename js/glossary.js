@@ -62,6 +62,9 @@ Lab.terms = [
   ["Seasonal decomposition", "Splitting a series into trend, seasonal and remainder parts, either added together or multiplied.", "seasonal-decomposition"],
   ["Seasonally adjusted", "A series with its seasonal part removed, so underlying movements are easier to see.", "seasonal-decomposition"],
   ["STL", "Seasonal-Trend decomposition using Loess: a flexible, outlier-resistant way to split a series into trend, season and remainder.", "seasonal-decomposition"],
+  ["1 − xMAPE", "An accuracy score: the average of 1 − |actual − forecast| / max(actual, forecast). Runs from 0% to 100%, higher is better, symmetric for over- and under-forecasts, and safe with zeros.", "forecast-accuracy"],
+  ["Croston's method", "A forecast for intermittent demand that smooths order size and the gap between orders separately, then divides one by the other.", "intermittent-demand"],
+  ["Intermittent demand", "Demand that is zero in many periods, with occasional orders of varying size. Typical of spare parts and slow sellers.", "intermittent-demand"],
 ];
 
 Lab.glossaryPage = (main) => {

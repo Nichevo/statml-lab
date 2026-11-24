@@ -33,7 +33,7 @@ Lab.register({
       },
       asym: {
         name: "Over vs under",
-        lesson: "Every row misses by exactly 50 units, half too high and half too low. MAE treats them the same. MAPE does not: forecasting 150 when 100 happened is a 50% error, but forecasting 100 when 150 happened is only 33%. Over-forecasts are punished more, so choosing models by MAPE quietly favours forecasts that run low.",
+        lesson: "Every row misses by exactly 50 units, half too high and half too low. MAE treats them the same. MAPE does not: forecasting 150 when 100 happened is a 50% error, but forecasting 100 when 150 happened is only 33%. Over-forecasts are punished more, so choosing models by MAPE quietly favours forecasts that run low. 1 − xMAPE divides by the larger of the two, so both kinds of miss score the same 66.7%.",
         a: [100, 150, 100, 150, 100, 150, 100, 150, 100, 150, 100, 150], f: [150, 100, 150, 100, 150, 100, 150, 100, 150, 100, 150, 100],
       },
       biased: {
@@ -55,6 +55,7 @@ Lab.register({
       { id: "wape", name: "WAPE", full: "weighted absolute percentage error", col: "abs" },
       { id: "mase", name: "MASE", full: "mean absolute scaled error", col: "scaled" },
       { id: "bias", name: "Bias", full: "mean error, actual − forecast", col: "err" },
+      { id: "xacc", name: "1 − xMAPE", full: "accuracy: mean of 1 − |e| / max(A, F); higher is better", col: "xape" },
     ];
 
     root.innerHTML = Lab.page(this, {
@@ -102,6 +103,8 @@ Lab.register({
           <div class="eq">WAPE = Σ|e| / Σ|A| × 100%</div>
           <div class="eq">MASE = MAE / mean(|A<sub>t</sub> − A<sub>t−1</sub>|)</div>
           <div class="eq">Bias = mean(e)</div>
+          <div class="eq">1 − xMAPE = mean(1 − |e| / max(A, F)) × 100%</div>
+          <p><b>1 − xMAPE</b> is an accuracy score, so higher is better. Dividing by the larger of actual and forecast keeps every month between 0% and 100%, treats a 50-unit over-forecast the same as a 50-unit under-forecast at the same level, and survives an actual of zero (that month just scores 0%).</p>
           <p>MASE divides by the error of the "repeat last value" forecast on the same data. Below 1 beats that naive forecast; above 1 loses to it. Strictly, the scaling uses the training data; this page uses the actuals shown, to keep it simple.</p>
         </section>
         <section>
@@ -112,6 +115,7 @@ Lab.register({
             <li><b>MAPE</b>: familiar to managers, but breaks near zero and favours under-forecasting.</li>
             <li><b>WAPE</b>: a percentage that weights by volume. Popular in retail and supply chain.</li>
             <li><b>MASE</b>: scale-free and safe with zeros. Good for comparing many series.</li>
+            <li><b>1 − xMAPE</b>: a bounded 0 to 100% accuracy score that managers can read like a grade. Symmetric, and safe with zeros, but still unweighted, so small months count as much as big ones.</li>
             <li><b>Bias</b>: not a size measure. Pair it with one of the others to catch systematic over- or under-forecasting.</li>
           </ul>
         </section>
@@ -134,7 +138,8 @@ Lab.register({
     function compute() {
       const n = A.length, rows = A.map((a, i) => {
         const f = F[i], e = a - f;
-        return { a, f, e, abs: Math.abs(e), sq: e * e, ape: a === 0 ? Infinity : (Math.abs(e) / Math.abs(a)) * 100, sape: Math.abs(a) + Math.abs(f) === 0 ? 0 : (200 * Math.abs(e)) / (Math.abs(a) + Math.abs(f)) };
+        return { a, f, e, abs: Math.abs(e), sq: e * e, ape: a === 0 ? Infinity : (Math.abs(e) / Math.abs(a)) * 100, sape: Math.abs(a) + Math.abs(f) === 0 ? 0 : (200 * Math.abs(e)) / (Math.abs(a) + Math.abs(f)),
+          xape: Math.max(Math.abs(a), Math.abs(f)) === 0 ? 0 : (100 * Math.abs(e)) / Math.max(Math.abs(a), Math.abs(f)) };
       });
       let nd = 0; for (let i = 1; i < n; i++) nd += Math.abs(A[i] - A[i - 1]);
       const scale = nd / (n - 1);
@@ -143,14 +148,14 @@ Lab.register({
       const sumA = A.reduce((s, v) => s + Math.abs(v), 0);
       const m = {
         mae: mean("abs"), rmse: Math.sqrt(mean("sq")), mape: mean("ape"), smape: mean("sape"),
-        wape: sumA ? (rows.reduce((s, r) => s + r.abs, 0) / sumA) * 100 : Infinity, mase: scale > 0 ? mean("abs") / scale : Infinity, bias: mean("e"),
+        wape: sumA ? (rows.reduce((s, r) => s + r.abs, 0) / sumA) * 100 : Infinity, mase: scale > 0 ? mean("abs") / scale : Infinity, bias: mean("e"), xacc: 100 - mean("xape"),
       };
       return { rows, m, scale };
     }
 
     const show = (id, v) => {
       if (!isFinite(v)) return id === "mape" ? "undefined" : "∞";
-      if (["mape", "smape", "wape"].includes(id)) return v.toFixed(1) + "%";
+      if (["mape", "smape", "wape", "xacc"].includes(id)) return v.toFixed(1) + "%";
       if (id === "mase") return v.toFixed(2);
       if (id === "bias") return (v > 0 ? "+" : "") + fmt(v);
       return fmt(v);
@@ -206,27 +211,28 @@ Lab.register({
 
     function drawTable(res) {
       const hl = METRICS.find((x) => x.id === sel).col;
-      const cols = [["a", "Actual A"], ["f", "Forecast F"], ["err", "Error e = A − F"], ["abs", "|e|"], ["sq", "e²"], ["ape", "|e|/A"], ["sape", "2|e|/(A+F)"], ["scaled", "|e| ÷ naive"]];
+      const cols = [["a", "Actual A"], ["f", "Forecast F"], ["err", "Error e = A − F"], ["abs", "|e|"], ["sq", "e²"], ["ape", "|e|/A"], ["sape", "2|e|/(A+F)"], ["xape", "|e|/max(A,F)"], ["scaled", "|e| ÷ naive"]];
       const cell = (k, r, i) => {
         if (k === "a" || k === "f") return `<input type="number" step="any" data-k="${k}" data-i="${i}" value="${+(k === "a" ? r.a : r.f).toFixed(2)}" aria-label="${k === "a" ? "Actual" : "Forecast"} for period ${i + 1}" style="width:84px;font:inherit;font-family:var(--font-mono);text-align:right;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">`;
         const v = k === "err" ? r.e : r[k];
         if (!isFinite(v)) return `<span style="color:var(--bad)">÷ 0</span>`;
-        if (k === "ape" || k === "sape") return v.toFixed(1) + "%";
+        if (k === "ape" || k === "sape" || k === "xape") return v.toFixed(1) + "%";
         if (k === "scaled") return v.toFixed(2);
         return fmt(v, Math.abs(v) >= 1000 ? 0 : 2);
       };
       const bg = (k) => (k === hl ? "background:var(--accent-soft);" : "");
       const tot = (k) => {
-        const map = { abs: ["mean", "mae"], sq: ["mean", "mse"], ape: ["mean", "mape"], sape: ["mean", "smape"], scaled: ["mean", "mase"], err: ["mean", "bias"] };
+        const map = { abs: ["mean", "mae"], sq: ["mean", "mse"], ape: ["mean", "mape"], sape: ["mean", "smape"], scaled: ["mean", "mase"], err: ["mean", "bias"], xape: ["mean", "xacc"] };
         if (!map[k]) return "";
         const v = k === "sq" ? res.m.rmse ** 2 : res.m[map[k][1]];
+        if (k === "xape") return `${(100 - v).toFixed(1)}%<br><span style="color:var(--muted)">1 − that = ${v.toFixed(1)}%</span>`;
         return k === "sq" ? `${fmt(v)}<br><span style="color:var(--muted)">√ = ${fmt(res.m.rmse)}</span>` : show(map[k][1], v);
       };
       $("#tbl").innerHTML =
         `<tr><th style="text-align:left;padding:4px 6px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:500">#</th>${cols.map(([k, t]) => `<th style="${bg(k)}text-align:right;padding:4px 6px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:500;white-space:nowrap">${t}</th>`).join("")}</tr>` +
         res.rows.map((r, i) => `<tr><td style="padding:3px 6px;border-bottom:1px solid var(--grid);color:var(--muted)">${i + 1}</td>${cols.map(([k]) => `<td style="${bg(k)}text-align:right;padding:3px 6px;border-bottom:1px solid var(--grid);font-family:var(--font-mono);white-space:nowrap">${cell(k, r, i)}</td>`).join("")}</tr>`).join("") +
         `<tr><td style="padding:6px;font-weight:600">mean</td><td></td><td></td>${cols.slice(2).map(([k]) => `<td style="${bg(k)}text-align:right;padding:6px;font-family:var(--font-mono);font-weight:600">${tot(k)}</td>`).join("")}</tr>` +
-        `<tr><td colspan="9" style="padding:6px;color:var(--muted);font-size:.8rem">Naive scale for MASE = mean |A<sub>t</sub> − A<sub>t−1</sub>| = ${fmt(res.scale)}. WAPE = Σ|e| ÷ Σ|A| = ${show("wape", res.m.wape)}.</td></tr>`;
+        `<tr><td colspan="10" style="padding:6px;color:var(--muted);font-size:.8rem">Naive scale for MASE = mean |A<sub>t</sub> − A<sub>t−1</sub>| = ${fmt(res.scale)}. WAPE = Σ|e| ÷ Σ|A| = ${show("wape", res.m.wape)}.</td></tr>`;
       $("#tbl").querySelectorAll("input").forEach((inp) => inp.addEventListener("change", () => {
         const v = parseFloat(inp.value);
         if (!isFinite(v)) { inp.value = inp.dataset.k === "a" ? A[+inp.dataset.i] : F[+inp.dataset.i]; return; }
