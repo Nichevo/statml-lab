@@ -81,7 +81,7 @@ Lab.register({
             <li>Raise the margin to 70%. Stockouts now cost more than stock, so "Better service" pays off more.</li>
             <li>Lower the service level to 85%. Safety stock is cheaper, but lost margin dominates. Error costs you either way.</li>
           </ol>
-          <p>Related: <a href="#forecast-accuracy">forecast accuracy measures</a>, <a href="#service-level-cost">service level vs cost</a>, <a href="#lead-time-error">lead-time forecast error</a>, <a href="#fva">forecast value added</a>.</p>
+          <p>Related: <a href="#forecast-accuracy">forecast accuracy measures</a>, <a href="#service-level-cost">service level vs cost</a>, <a href="#lead-time-error">lead-time forecast error</a>, <a href="#forecast-value-added">forecast value added</a>.</p>
         </section>`,
     });
 

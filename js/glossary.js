@@ -1,5 +1,18 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Linear programming (LP)", "Optimizing a linear objective subject to linear constraints. The best solution lies at a corner of the feasible region.", "linear-programming"],
+  ["Feasible region", "All the plans that satisfy every constraint.", "linear-programming"],
+  ["Simplex method", "The classic LP algorithm: move from corner to neighbouring corner while the objective improves.", "linear-programming"],
+  ["Shadow price", "How much the optimal objective improves per extra unit of a constrained resource. Zero if the constraint has slack.", "linear-programming"],
+  ["Integer programming", "An LP where some variables must be whole numbers. Solved with branch and bound.", "linear-programming"],
+  ["Heuristic", "A fast rule of thumb that finds a good, not guaranteed optimal, solution.", "tsp"],
+  ["Travelling salesman problem (TSP)", "Find the shortest route that visits every stop once and returns to the start.", "tsp"],
+  ["2-opt", "Route improvement move: remove two edges and reconnect the other way, reversing the stretch between.", "tsp"],
+  ["Local optimum", "A solution no small change can improve, though a better one exists elsewhere.", "simulated-annealing"],
+  ["Simulated annealing", "A search that sometimes accepts worse moves (probability e^(−Δ/T)) to escape local optima, accepting fewer as the temperature falls.", "simulated-annealing"],
+  ["Centre of gravity", "The demand-weighted average location of customers; a starting point for siting a DC.", "network-design"],
+  ["Facility location", "Choosing which sites to open, and which customers each serves, to minimise total cost.", "network-design"],
+  ["Pre-build", "Producing ahead of a planned shutdown so stock covers demand while the plant is closed.", "plant-shutdown"],
   ["Cost to serve", "All the costs of serving a customer beyond the product itself: orders, picking, delivery, returns, credit. Used to find truly profitable customers.", "cost-to-serve"],
   ["Activity-based costing", "Assigning overhead costs by the activities that cause them (orders, lines, drops) instead of spreading them by sales.", "cost-to-serve"],
   ["Whale curve", "Cumulative profit by customer, sorted most to least profitable. Often peaks well above 100% of total profit.", "cost-to-serve"],

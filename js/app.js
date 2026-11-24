@@ -1,7 +1,7 @@
 // Registry + hash router. Each explainer file calls Lab.register({...}).
 (function () {
   const explainers = [];
-  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain"];
+  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Optimization"];
   Lab.register = (ex) => explainers.push(ex);
   Lab.titleOf = (id) => (explainers.find((e) => e.id === id) || { title: id }).title;
 
@@ -38,7 +38,11 @@
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
       ["exponential-smoothing", "seasonal-decomposition", "forecast-accuracy", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
-      ["prediction-intervals", "reorder-point", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "bullwhip-effect", "carrying-cost", "forecast-value", "newsvendor", "cost-margin", "cost-to-serve", "freight", "cash-to-cash", "moq", "roi"]],
+      ["prediction-intervals", "reorder-point", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "bullwhip-effect", "plant-shutdown"]],
+    ["Supply chain money", "Landed cost, margins and how to put a dollar value on supply chain improvements.",
+      ["cost-margin", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi"]],
+    ["Optimization and network design", "From a two-product LP to routing heuristics and choosing DC locations.",
+      ["linear-programming", "tsp", "simulated-annealing", "network-design", "supply-network"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
       ["central-limit", "hypothesis-test", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
