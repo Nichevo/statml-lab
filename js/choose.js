@@ -1,0 +1,254 @@
+// "Which method when?" decision flowcharts. Each tree is questions (Q) with answers leading to more questions or to a technique (L).
+(function () {
+  const Q = (q, kids) => ({ q, kids: kids.map(([opt, node]) => ({ opt, node })) });
+  const L = (t, id, why) => ({ t, id, why });
+
+  const TREES = [
+    {
+      key: "forecast", name: "Forecasting method",
+      intro: "Start from what you know about the item's sales history. Whatever you pick, back-test it against a naive forecast before trusting it.",
+      tree: Q("How much sales history does the item have?", [
+        ["None yet (not launched)", Q("Do you have similar past launches?", [
+          ["Yes", L("Forecast by analogy", "new-product", "Average the sales curves of similar launches and scale them to the plan.")],
+          ["No", L("Bass model + judgment", "new-product", "Pick p, q and market size from typical values and expert input; revise once sales arrive.")],
+        ])],
+        ["A few weeks or months", Q("Are there many related items with longer history?", [
+          ["Yes, dozens or more", L("Global ML model", "global-forecasting", "One model trained on all items borrows seasonality and promo effects for the new one.")],
+          ["No", L("Analogues scaled to sales so far", "new-product", "Re-scale the analogue curve to actual early sales; fit a Bass curve once there's enough data.")],
+        ])],
+        ["A year or more", Q("Are most periods zero?", [
+          ["Yes, sales are lumpy", L("Croston / SBA", "intermittent-demand", "Forecast the size of a sale and the gap between sales separately.")],
+          ["No", Q("Do known drivers move sales (promotions, price, events)?", [
+            ["Yes", Q("Many related items with the same drivers?", [
+              ["Yes", L("Global ML model", "global-forecasting", "Gradient-boosted trees on scaled sales with promo, price and calendar features.")],
+              ["No, just this item", L("Regression with driver variables", "promo-regression", "Baseline plus a promo uplift term, estimated from this item's own history.")],
+            ])],
+            ["No", Q("What pattern do you see?", [
+              ["A repeating season", L("Holt-Winters / decomposition", "exponential-smoothing", "Smoothing with level, trend and seasonal parts; decomposition shows the parts.")],
+              ["A trend, no season", L("Holt's linear method", "exponential-smoothing", "Smoothing with a level and a trend.")],
+              ["Just noise around a level", L("Moving average / simple smoothing", "exponential-smoothing", "Average recent periods; simple smoothing weights recent ones more.")],
+              ["Each period depends on the last few", L("ARIMA", "arima", "Models autocorrelation directly; good for smooth, wandering series.")],
+            ])],
+          ])],
+        ])],
+      ]),
+      after: [["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
+    },
+    {
+      key: "accuracy", name: "Forecast accuracy measure",
+      intro: "Different measures answer different questions. Most teams track one size-of-error measure plus bias.",
+      tree: Q("What do you want to know?", [
+        ["How big are the errors?", Q("Comparing across items of different sizes?", [
+          ["No, one item or one scale", Q("Are big misses much worse than small ones?", [
+            ["Yes", L("RMSE", "forecast-accuracy", "Squares errors first, so big misses dominate.")],
+            ["No, every unit counts the same", L("MAE", "forecast-accuracy", "Average absolute error in units. Easy to explain.")],
+          ])],
+          ["Yes, many items", Q("Any zero or tiny actuals?", [
+            ["Yes", L("WAPE or MASE", "forecast-accuracy", "WAPE = total |error| ÷ total actuals; MASE compares with a naive forecast. Neither blows up at zero.")],
+            ["No", L("MAPE (or WAPE)", "forecast-accuracy", "Familiar percentage, but it punishes over-forecasts less than under-forecasts and favours small items.")],
+          ])],
+        ])],
+        ["Are we always too high or too low?", L("Bias and tracking signal", "forecast-accuracy", "Average signed error; a running tracking signal flags drift.")],
+        ["Is our forecasting process adding value?", L("Forecast value added (FVA)", "forecast-value-added", "Compare each step (statistical, overrides) with a naive forecast.")],
+        ["Is better accuracy worth the money?", L("Value of forecast accuracy", "forecast-value", "Turns error into safety stock, lost sales and cost.")],
+        ["How good is a range or distribution?", Q("What does the forecast give?", [
+          ["Intervals (e.g. 80%)", L("Coverage and width", "prediction-intervals", "Share of actuals inside the interval, and how narrow it is.")],
+          ["One quantile (e.g. P90)", L("Pinball loss", "pinball-crps", "Weights misses on the costly side by the quantile level.")],
+          ["A full distribution", L("CRPS", "pinball-crps", "Scores the whole distribution in demand units.")],
+        ])],
+      ]),
+      after: [["Measure on a back-test, not one week", "backtesting"]],
+    },
+    {
+      key: "stats", name: "Statistical analysis",
+      intro: "Start from the question you're trying to answer, not from the test.",
+      tree: Q("What's your question?", [
+        ["Is a difference real or just noise?", Q("What are you comparing?", [
+          ["Two group averages", L("t-test", "hypothesis-test", "Is the gap between two means bigger than sampling noise would explain?")],
+          ["Three or more group averages", L("ANOVA", null, "One test across all groups before comparing pairs.")],
+          ["Counts or shares across categories", L("Chi-square test", null, "Do the observed counts differ from what independence predicts?")],
+          ["Before vs after a change in a series", L("Change-point detection", "change-points", "Find when the level of a series shifted.")],
+        ])],
+        ["How sure is my estimate?", Q("What are you estimating?", [
+          ["A mean, with a decent sample", L("t confidence interval", "confidence-intervals", "Mean ± t × standard error.")],
+          ["A median, P90 or anything odd", L("Bootstrap interval", "confidence-intervals", "Resample your own data many times; no formula needed.")],
+          ["Why do averages look normal?", L("Central limit theorem", "central-limit", "Averages of many values are close to normal whatever the raw shape.")],
+        ])],
+        ["How are two things related?", Q("What do you want from it?", [
+          ["Predict a number", L("Linear regression", "least-squares", "Fit the line that minimises squared errors; check R² and residuals.")],
+          ["Predict yes / no", L("Logistic regression", "logistic-regression", "Probability of the outcome from the drivers.")],
+          ["Just how strongly they move together", L("Correlation (with care)", "correlation-traps", "Watch for outliers, curves, hidden groups and confounders.")],
+          ["How much of the variation is explained", L("R²", "r-squared", "Share of variance the model accounts for.")],
+        ])],
+        ["Which data points look wrong?", Q("What kind of data?", [
+          ["One set of numbers", L("Outlier rules (IQR, z, MAD)", "outliers", "Flag points far from the bulk; robust rules resist the outliers themselves.")],
+          ["A time series", L("Time-series anomalies", "ts-anomalies", "Compare each point with what its recent pattern predicts.")],
+          ["Possibly made-up figures", L("Benford's law", "benford", "Leading digits of many real-world amounts follow a known pattern.")],
+          ["Gaps and blanks", L("Missing-data handling", "missing-data", "Why values are missing decides how to fill them.")],
+        ])],
+        ["What shape is my data?", L("Distributions", "distributions", "Normal, Poisson, log-normal and friends, and when each appears.")],
+        ["Find groups or simplify many variables", L("PCA and clustering", "pca-clustering", "Reduce many columns to a few directions; group similar rows.")],
+      ]),
+      after: [["Check the result on fresh data", "cross-validation"]],
+    },
+    {
+      key: "ml", name: "Machine-learning model",
+      intro: "The kind of data narrows things quickly. For tables, start simple and only add complexity if cross-validation says it helps.",
+      tree: Q("What does your data look like?", [
+        ["Images", L("Convolutional neural network", "cnn", "Small learned filters scan the image for patterns.")],
+        ["Text or long sequences", L("Transformer (attention)", "attention", "Each position looks at every other to decide what matters.")],
+        ["Many related time series", L("Global ML forecasting", "global-forecasting", "One tree model across all series with lag and calendar features.")],
+        ["A table of rows and columns", Q("Do you have a target to predict?", [
+          ["No, I want to find structure", L("PCA and clustering", "pca-clustering", "Unsupervised: groups and main directions in the data.")],
+          ["Yes, a number", Q("What matters more?", [
+            ["Explaining the effect of each driver", L("Linear regression", "least-squares", "One coefficient per driver, easy to read.")],
+            ["Accuracy, with curves and interactions", L("Random forest / gradient boosting", "random-forest", "Many trees capture non-linear effects without hand-made features.")],
+          ])],
+          ["Yes, a category (yes/no, A/B/C)", Q("What matters more?", [
+            ["Explaining and probabilities", L("Logistic regression", "logistic-regression", "Readable coefficients and calibrated probabilities.")],
+            ["Accuracy, with curves and interactions", L("Random forest / gradient boosting", "random-forest", "Usually the strongest choice for tabular data.")],
+            ["Learning raw patterns from scratch", L("Neural network", "neural-net", "Hidden layers build their own features; needs more data.")],
+          ])],
+        ])],
+      ]),
+      after: [["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
+    },
+    {
+      key: "supply", name: "Inventory and supply decision",
+      intro: "Most supply chain questions come down to how much, where, and when.",
+      tree: Q("What decision are you making?", [
+        ["How much stock to hold", Q("What kind of buying decision?", [
+          ["One order for a season or perishable", L("Newsvendor", "newsvendor", "Order up to the quantile set by the cost of too few vs too many.")],
+          ["Ongoing replenishment, steady demand", L("Reorder point + safety stock", "reorder-point", "Reorder when stock covers lead-time demand plus a buffer.")],
+          ["Ongoing, but demand is lumpy", L("Croston-based stock levels", "intermittent-demand", "Forecast sizes and gaps; set stock from that.")],
+          ["Which SKUs deserve the most attention", L("ABC-XYZ segmentation", "abc-xyz", "Split by value and by predictability; set policies per cell.")],
+          ["What service level to aim for", L("Service level vs cost", "service-level-cost", "Each extra point of service costs more stock than the last.")],
+        ])],
+        ["How many locations, and where", Q("What's the main concern?", [
+          ["Safety stock across sites", L("Risk pooling", "risk-pooling", "Fewer stock points need less total safety stock.")],
+          ["Cost of the whole network", L("Network design", "network-design", "Trade facility, transport and inventory cost.")],
+          ["Lead times at different points", L("Supply network trade-offs", "supply-network", "Where to hold stock when lead times change.")],
+        ])],
+        ["How much to order from a supplier", Q("What's driving it?", [
+          ["Minimum order quantities", L("MOQ trade-off", "moq", "Price breaks vs extra stock you'll carry.")],
+          ["Cost of holding stock", L("Carrying cost", "carrying-cost", "Capital, storage, obsolescence and shrink.")],
+          ["Freight: full loads vs smaller shipments", L("Freight trade-offs", "freight", "Bigger loads cost less per unit but add stock.")],
+        ])],
+        ["How to plan capacity", Q("What's the situation?", [
+          ["Seasonal demand", L("Level vs chase", "level-vs-chase", "Build ahead at a steady rate, or follow demand.")],
+          ["A planned stop", L("Plant shutdown build-ahead", "plant-shutdown", "How much to build before the plant stops.")],
+          ["Plans keep changing near-term", L("Frozen zones", "frozen-zones", "Lock the next few weeks to stop churn.")],
+        ])],
+        ["Why do the numbers look strange?", Q("What's happening?", [
+          ["Orders swing more than sales", L("Bullwhip effect", "bullwhip-effect", "Batching and over-reaction amplify swings up the chain.")],
+          ["Stock-outs hide real demand", L("Censored demand", "censored-demand", "Sales stop at zero stock; true demand was higher.")],
+        ])],
+        ["How to route or schedule", Q("What kind of problem?", [
+          ["Visit every stop once, shortest route", L("Travelling salesman", "tsp", "Heuristics find good routes fast.")],
+          ["Best mix under limits", L("Linear programming", "linear-programming", "Maximise profit or minimise cost subject to constraints.")],
+          ["Messy problem, many local optima", L("Simulated annealing", "simulated-annealing", "Random search that sometimes accepts worse moves to escape traps.")],
+        ])],
+      ]),
+      after: [["What forecast error costs you", "lead-time-error"], ["Cash tied up in stock", "cash-to-cash"]],
+    },
+  ];
+
+  // ---------- layout: left-to-right tree, leaves stacked, each box sized to its wrapped text
+  const BW = 214, GAP = 46, PADX = 10, LH = 15, OPTH = 14;
+  function wrap(text, max) {
+    const out = []; let line = "";
+    for (const w of text.split(" ")) { if ((line + " " + w).trim().length > max && line) { out.push(line); line = w; } else line = (line + " " + w).trim(); }
+    if (line) out.push(line);
+    return out;
+  }
+  function layout(root) {
+    const nodes = []; let y = 0, maxD = 0;
+    (function walk(n, d, opt, parent, path) {
+      const main = wrap(n.q || n.t, 29), optL = opt ? wrap(opt, 33) : [];
+      const h = 12 + optL.length * OPTH + main.length * LH + (n.q ? 0 : 14) + 8;
+      const me = { n, d, opt, optL, main, h, parent, path, kids: [] };
+      nodes.push(me); maxD = Math.max(maxD, d);
+      if (n.kids) { n.kids.forEach((k, i) => me.kids.push(walk(k.node, d + 1, k.opt, me, path.concat(i)))); me.y = (me.kids[0].y + me.kids[me.kids.length - 1].y + me.kids[me.kids.length - 1].h) / 2 - h / 2; }
+      else { me.y = y; y += h + 12; }
+      // a question taller than its children block: push later leaves down
+      if (n.kids) { const bottom = me.y + h; if (bottom + 12 > y) y = bottom + 12; if (me.y < 0) me.y = 0; }
+      me.x = d * (BW + GAP);
+      return me;
+    })(root, 0, null, null, []);
+    return { nodes, W: (maxD + 1) * (BW + GAP) - GAP + 4, H: Math.max(...nodes.map((m) => m.y + m.h)) + 4 };
+  }
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const same = (a, b) => a.length <= b.length && a.every((v, i) => v === b[i]);
+
+  function svg(T, sel) {
+    const { nodes, W, H } = layout(T.tree);
+    let edges = "", boxes = "";
+    for (const m of nodes) {
+      const on = same(m.path, sel), leaf = !m.n.kids, cls = `fc-node${leaf ? " fc-leaf" : ""}${on ? " fc-on" : ""}${leaf && !m.n.id ? " fc-soon" : ""}`;
+      if (m.parent) {
+        const x1 = m.parent.x + BW, y1 = m.parent.y + m.parent.h / 2, x2 = m.x, y2 = m.y + m.h / 2, mx = x1 + GAP / 2;
+        edges += `<path class="fc-edge${on ? " fc-on" : ""}" d="M${x1} ${y1} H${mx} V${y2} H${x2}"/>`;
+      }
+      let ty = 12, t = "";
+      m.optL.forEach((l) => { ty += OPTH - 2; t += `<text class="fc-opt" x="${m.x + PADX}" y="${m.y + ty}">${esc(l)}</text>`; ty += 2; });
+      if (m.optL.length) ty += 3;
+      m.main.forEach((l) => { ty += LH; t += `<text class="${leaf ? "fc-tech" : "fc-q"}" x="${m.x + PADX}" y="${m.y + ty - 3}">${esc(l)}</text>`; });
+      if (leaf) t += `<text class="fc-go" x="${m.x + PADX}" y="${m.y + ty + 13}">${m.n.id ? "Open the explainer →" : "Not on the site yet"}</text>`;
+      const rect = `<rect class="fc-box" x="${m.x}" y="${m.y}" width="${BW}" height="${m.h}" rx="8"/>`;
+      const label = leaf ? `${m.opt ? m.opt + ": " : ""}${m.n.t}` : m.n.q;
+      boxes += leaf && m.n.id
+        ? `<a href="#${m.n.id}" class="${cls}" aria-label="${esc(label)}">${rect}${t}</a>`
+        : `<g class="${cls}" data-path="${m.path.join(".")}" role="button" tabindex="0" aria-label="${esc(label)}">${rect}${t}</g>`;
+    }
+    return `<svg class="fc-svg" viewBox="0 0 ${W} ${H}" style="width:100%;min-width:${Math.round(W * 0.78)}px;max-width:${W}px;height:auto" role="group" aria-label="${esc(T.name)} flowchart">${edges}${boxes}</svg>`;
+  }
+
+  Lab.chooseTrees = TREES;
+  Lab.choosePage = function (main) {
+    document.title = "Which method when? · StatML Lab";
+    let cur = 0, sel = [];
+    try { const k = localStorage.getItem("statml-choose"); const i = TREES.findIndex((t) => t.key === k); if (i >= 0) cur = i; } catch (e) {}
+    main.innerHTML = `
+      <div class="wrap">
+        <header class="ex-head"><div class="eyebrow">Reference</div><h1>Which method when?</h1>
+          <p>Flowcharts for picking a technique. Answer the questions one at a time, or read the whole chart below. Every end point links to the page that shows the technique working.</p></header>
+        <div class="seg fc-tabs" id="fcTabs" role="tablist">${TREES.map((t, i) => `<button type="button" role="tab" data-i="${i}">${t.name}</button>`).join("")}</div>
+        <section class="fc-walk" id="fcWalk" aria-live="polite"></section>
+        <section class="fc-chart">
+          <h2>The whole chart</h2><p class="hint" id="fcHint"></p>
+          <div class="fc-scroll" id="fcChart"></div>
+          <div id="fcAfter"></div>
+        </section>
+      </div>`;
+    const $ = (s) => main.querySelector(s);
+    const nodeAt = (p) => p.reduce((n, i) => n.kids[i].node, TREES[cur].tree);
+    function walker() {
+      const T = TREES[cur], n = nodeAt(sel);
+      let crumbs = [], m = T.tree;
+      sel.forEach((i, k) => { crumbs.push(`<button type="button" class="fc-crumb" data-back="${k}">${esc(m.q)} <b>${esc(m.kids[i].opt)}</b></button>`); m = m.kids[i].node; });
+      const body = n.kids
+        ? `<h3>${esc(n.q)}</h3><div class="fc-opts">${n.kids.map((k, i) => `<button type="button" class="btn fc-ans" data-i="${i}">${esc(k.opt)}</button>`).join("")}</div>`
+        : `<div class="fc-result"><span class="fc-label">Suggested technique</span><h3>${esc(n.t)}</h3><p>${esc(n.why)}</p>${n.id ? `<a class="btn primary" href="#${n.id}">Open the explainer →</a>` : `<p class="hint">Not on the site yet; it's on the list to build.</p>`}</div>`;
+      $("#fcWalk").innerHTML = `<p class="hint" style="margin:0 0 10px">${esc(T.intro)}</p>${crumbs.length ? `<div class="fc-crumbs">${crumbs.join("")}</div>` : ""}${body}${sel.length ? `<div class="btns" style="margin-top:12px"><button type="button" class="btn" id="fcBack">Back one step</button><button type="button" class="btn" id="fcRestart">Start again</button></div>` : ""}`;
+      $("#fcWalk").querySelectorAll(".fc-ans").forEach((b) => b.addEventListener("click", () => { sel = sel.concat(+b.dataset.i); draw(); }));
+      $("#fcWalk").querySelectorAll(".fc-crumb").forEach((b) => b.addEventListener("click", () => { sel = sel.slice(0, +b.dataset.back); draw(); }));
+      if ($("#fcBack")) { $("#fcBack").addEventListener("click", () => { sel = sel.slice(0, -1); draw(); }); $("#fcRestart").addEventListener("click", () => { sel = []; draw(); }); }
+    }
+    function chart() {
+      const T = TREES[cur];
+      $("#fcChart").innerHTML = svg(T, sel);
+      $("#fcHint").textContent = "Highlighted: your answers so far. Click a question box to jump the walk-through to it. Scroll sideways on a small screen.";
+      $("#fcChart").querySelectorAll("g[data-path]").forEach((g) => {
+        const go = () => { sel = g.dataset.path ? g.dataset.path.split(".").map(Number) : []; draw(); $("#fcWalk").scrollIntoView({ behavior: "smooth", block: "nearest" }); };
+        g.addEventListener("click", go); g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+      });
+      $("#fcAfter").innerHTML = T.after && T.after.length ? `<div class="fc-after"><span class="fc-label">Whichever you choose</span><ul>${T.after.map(([t, id]) => `<li><a href="#${id}">${esc(t)}</a></li>`).join("")}</ul></div>` : "";
+    }
+    function draw() {
+      $("#fcTabs").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === cur)));
+      walker(); chart();
+    }
+    $("#fcTabs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { cur = +b.dataset.i; sel = []; try { localStorage.setItem("statml-choose", TREES[cur].key); } catch (e) {} draw(); }));
+    draw();
+  };
+})();

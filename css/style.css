@@ -261,3 +261,38 @@ footer .wrap { padding-block: 20px; }
 .notes .diy { grid-column: 1 / -1; }
 .diy ol { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); column-gap: 32px; }
 .diy li { max-width: none; }
+
+/* ---------- "Which method when?" flowcharts */
+.fc-tabs { display: flex; flex-wrap: wrap; margin-bottom: 18px; }
+.fc-tabs button { flex: 1 1 auto; }
+.fc-walk { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 26px; }
+.fc-walk h3 { font: 700 1.25rem/1.25 var(--font-display); margin: 4px 0 12px; text-wrap: balance; }
+.fc-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.fc-ans { text-align: left; }
+.fc-crumbs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.fc-crumb { all: unset; cursor: pointer; font-size: .85rem; color: var(--muted); }
+.fc-crumb b { color: var(--accent); font-weight: 600; }
+.fc-crumb:hover, .fc-crumb:focus-visible { color: var(--ink); text-decoration: underline; }
+.fc-label { font: 600 .7rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.fc-result p { margin: 0 0 12px; max-width: 64ch; }
+.fc-chart h2 { font: 700 1.2rem/1.2 var(--font-display); margin: 0 0 4px; }
+.fc-scroll { overflow-x: auto; padding: 12px 2px 8px; margin-top: 8px; }
+.fc-svg { display: block; font-family: var(--font-body); }
+.fc-edge { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.fc-edge.fc-on { stroke: var(--accent); stroke-width: 2.5; }
+.fc-box { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
+.fc-leaf .fc-box { fill: var(--accent-soft); stroke: transparent; }
+.fc-soon .fc-box { fill: var(--grid); }
+.fc-on .fc-box { stroke: var(--accent); stroke-width: 2.5; }
+.fc-node { cursor: pointer; }
+.fc-node:hover .fc-box, .fc-node:focus-visible .fc-box { stroke: var(--accent); }
+.fc-node:focus { outline: none; }
+.fc-opt { font-size: 11px; fill: var(--muted); }
+.fc-q { font-size: 13px; font-weight: 600; fill: var(--ink); }
+.fc-tech { font-size: 13px; font-weight: 600; fill: var(--ink); }
+.fc-go { font-size: 11px; fill: var(--accent); font-weight: 600; }
+.fc-soon .fc-go { fill: var(--muted); font-weight: 400; }
+.fc-after { margin-top: 14px; }
+.fc-after ul { margin: 6px 0 0; padding-left: 18px; columns: 2 220px; }
+@media (max-width: 560px) { .topbar nav .hide-sm { display: none; } }
+@media (max-width: 380px) { .topbar nav a[href="#forecast-lab"] { display: none; } }

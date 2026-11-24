@@ -26,6 +26,8 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 | Machine learning | Logistic regression and the confusion matrix, overfitting and cross-validation, bias–variance, gradient descent, attention in transformers, decision trees and random forests, neural networks from scratch (perceptron to hidden layers), convolutional neural networks (draw a digit and watch a real CNN read it) |
 | Optimization | Linear programming, simulated annealing |
 
+A **Which method when?** page has flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model or supply chain tool, each ending at the relevant explainer.
+
 The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, and Statistics for decisions.
 
 ## Run it locally
@@ -51,6 +53,7 @@ js/plot.js              Lab.Plot canvas helper (axes, lines, dots)
 js/app.js               routing, home page, groups, learning paths, quiz / DIY / go-deeper rendering
 js/papers.js            one-line summaries shown under research-paper links
 js/glossary.js          glossary terms and their cross-links
+js/choose.js            "Which method when?" decision flowcharts
 js/cnn-data.js          weights of the small digit-reading CNN, plus sample MNIST digits
 js/gbm.js               small gradient-boosting helper (used by global ML forecasting)
 js/explainers/*.js      one file per explainer

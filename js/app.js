@@ -88,7 +88,9 @@
         <div class="shelf">${shelves}
           <section><h2>Reference</h2><div class="cards"><a class="card" href="#glossary">
             <div class="glyph" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="18" y="6" width="44" height="54" rx="3"/><line x1="26" y1="18" x2="54" y2="18"/><line x1="26" y1="28" x2="50" y2="28" opacity=".5"/><line x1="26" y1="38" x2="54" y2="38" opacity=".5"/><line x1="26" y1="48" x2="44" y2="48" opacity=".5"/><circle cx="70" cy="40" r="9"/><line x1="76" y1="47" x2="86" y2="57"/></svg></div>
-            <h3>Glossary</h3><p>${Lab.terms.length} terms in plain language, each linked to the explainer that shows it.</p><span class="go">Browse terms →</span></a></div></section>
+            <h3>Glossary</h3><p>${Lab.terms.length} terms in plain language, each linked to the explainer that shows it.</p><span class="go">Browse terms →</span></a><a class="card" href="#which-method">
+            <div class="glyph" aria-hidden="true"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="24" width="22" height="16" rx="3"/><path d="M28 32 H40 V12 H52 M40 32 V52 H52"/><rect x="52" y="4" width="22" height="16" rx="3"/><rect x="52" y="44" width="22" height="16" rx="3" opacity=".5"/><path d="M74 12 H88" opacity=".5"/></svg></div>
+            <h3>Which method when?</h3><p>Flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model or supply chain tool.</p><span class="go">Open the flowcharts →</span></a></div></section>
         </div>
       </div>`;
   }
@@ -97,6 +99,7 @@
     if (cleanup) { try { cleanup(); } catch (e) { console.error(e); } cleanup = null; }
     const id = location.hash.replace(/^#/, "");
     if (id === "glossary") { Lab.glossaryPage(main()); window.scrollTo(0, 0); return; }
+    if (id === "which-method") { Lab.choosePage(main()); window.scrollTo(0, 0); return; }
     const ex = explainers.find((e) => e.id === id);
     if (!ex) { home(); window.scrollTo(0, 0); return; }
     document.title = `${ex.title} · StatML Lab`;
