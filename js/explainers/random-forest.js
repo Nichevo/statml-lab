@@ -29,9 +29,15 @@ Lab.register({
           <figcaption>Accuracy of a forest made of the first n trees.</figcaption>
         </figure>
         <div class="plot" style="padding:14px">
-          <h4 style="margin:0 0 8px;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">The rules inside <span id="treeName"></span></h4>
-          <p class="hint" style="margin:0 0 8px">Each split picks the question that makes the two sides purest (lowest Gini impurity). Click a line to fold it.</p>
-          <div id="rules" style="font:12.5px/1.6 var(--font-mono);overflow-x:auto;max-height:420px;overflow-y:auto"></div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px">
+            <h4 style="margin:0;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Inside <span id="treeName"></span></h4>
+            <label style="font-size:.85rem;display:flex;gap:6px;align-items:center">Levels shown <select id="lv" style="width:auto"><option>2</option><option selected>3</option><option>4</option></select></label>
+          </div>
+          <p class="hint" style="margin:0 0 8px">Each box is a question; go left for yes, right for no. The bar shows the mix of classes reaching that box. Hover a box to light up its region on the map. Deeper branches are folded into "more splits".</p>
+          <div style="overflow-x:auto"><svg id="tree" role="img" aria-label="Decision tree diagram" style="display:block"></svg></div>
+          <details style="margin-top:10px"><summary style="cursor:pointer;font-size:.88rem">Full rule list (every node)</summary>
+            <div id="rules" style="font:12.5px/1.6 var(--font-mono);overflow-x:auto;max-height:420px;overflow-y:auto;margin-top:8px"></div>
+          </details>
         </div>`,
       panel: `
         <div class="ctrl">
@@ -97,6 +103,7 @@ Lab.register({
         <section>
           <h2>Try this</h2>
           <ol>
+            <li>Look at the tree diagram. The first question splits the data roughly in half; hover each box to see the region it covers on the map.</li>
             <li>Set trees to 1 and depth to 12. The single tree draws boxy islands around individual noisy points: overfitting. Compare its test accuracy with the 50-tree forest.</li>
             <li>Switch to "One tree" and step through trees 1, 2, 3. Each is jagged in a different way. Switch back to the forest and the jaggedness averages out.</li>
             <li>Untick both bootstrap and random features. Every tree is now identical, so the forest is no better than one tree.</li>
@@ -109,7 +116,7 @@ Lab.register({
     const $ = (s) => root.querySelector(s);
     const map = new Plot($("#rfc"), { x: [0, 1], y: [0, 1], pad: { l: 40, b: 32 } });
     const acc = new Plot($("#rfa"), { x: [1, 50], y: [0.5, 1], pad: { b: 30, t: 10 } });
-    let train = [], test = [], trees = [], view = "forest", addClass = 0, dataSeed = 4, forestSeed = 1, bg = null, curve = [];
+    let train = [], test = [], trees = [], view = "forest", addClass = 0, dataSeed = 4, forestSeed = 1, bg = null, curve = [], hl = null;
 
     function gen(kind, n, noise, r) {
       const pts = [];
@@ -217,7 +224,58 @@ Lab.register({
         ${rulesHTML(node.l, depth + 1, `if ${nm} &lt; ${node.t.toFixed(3)}`)}${rulesHTML(node.r, depth + 1, `if ${nm} ≥ ${node.t.toFixed(3)}`)}</details>`;
     }
 
-    function draw() {
+    function treeSVG(t) {
+      const L = +$("#lv").value, BW = 112, BH = 52, GAP = 12, RH = 82;
+      let slot = 0;
+      const nodes = [], edges = [];
+      const count = (n) => (n.l ? 1 + count(n.l) + count(n.r) : 0);
+      function lay(n, d, box, parent, side) {
+        const me = { n, d, box, folded: d === L && !!n.l };
+        if (n.l && !me.folded) {
+          const lb = { ...box }, rb = { ...box };
+          if (n.f === "x") { lb.x1 = n.t; rb.x0 = n.t; } else { lb.y1 = n.t; rb.y0 = n.t; }
+          const a = lay(n.l, d + 1, lb, me, "yes"), b = lay(n.r, d + 1, rb, me, "no");
+          me.x = (a.x + b.x) / 2;
+        } else me.x = slot++ * (BW + GAP) + BW / 2;
+        me.y = d * RH + BH / 2 + 4;
+        if (parent) edges.push([parent, me, side]);
+        nodes.push(me);
+        return me;
+      }
+      lay(t.root, 0, { x0: 0, x1: 1, y0: 0, y1: 1 }, null);
+      const W = slot * (BW + GAP), H = (Math.max(...nodes.map((m) => m.d)) + 1) * RH;
+      const nm = (f) => (f === "x" ? "x₁" : "x₂");
+      const svg = $("#tree");
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("width", W); svg.setAttribute("height", H);
+      svg.style.minWidth = "100%";
+      const txt = (x, y, s, o = "") => `<text x="${x}" y="${y}" text-anchor="middle" ${o}>${s}</text>`;
+      svg.innerHTML =
+        edges.map(([a, b, side]) => {
+          const y1 = a.y + BH / 2, y2 = b.y - BH / 2;
+          return `<path d="M${a.x} ${y1} C ${a.x} ${y1 + 22}, ${b.x} ${y2 - 22}, ${b.x} ${y2}" fill="none" stroke="var(--line)" stroke-width="2"/>` +
+            txt((a.x + b.x) / 2 + (side === "yes" ? -10 : 10), (y1 + y2) / 2, side, `font-size="10" fill="var(--muted)" font-family="var(--font-mono)"`);
+        }).join("") +
+        nodes.map((m, i) => {
+          const n = m.n, tot = n.n0 + n.n1, leaf = !n.l, x = m.x - BW / 2, y = m.y - BH / 2;
+          const maj = n.n1 > n.n0 ? "--warm" : "--accent";
+          const head = leaf ? `predict ${n.pred ? "B" : "A"}` : m.folded ? `+${count(n)} more splits` : `${nm(n.f)} &lt; ${n.t.toFixed(2)} ?`;
+          const stroke = leaf ? `var(${n.pred ? "--warm" : "--accent"})` : "var(--line)";
+          return `<g data-i="${i}" style="cursor:pointer">
+            <rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="7" fill="${leaf ? `var(${n.pred ? "--warm-soft" : "--accent-soft"})` : "var(--surface)"}" stroke="${stroke}" stroke-width="${leaf ? 2 : 1.5}" ${m.folded ? 'stroke-dasharray="4 3"' : ""}/>
+            ${txt(m.x, y + 17, head, `font-size="12" font-weight="600" fill="${m.folded ? "var(--muted)" : "var(--ink)"}" font-family="var(--font-mono)"`)}
+            ${txt(m.x, y + 31, `n=${tot} · gini ${n.g.toFixed(2)}`, `font-size="10" fill="var(--muted)" font-family="var(--font-mono)"`)}
+            <rect x="${x + 10}" y="${y + 38}" width="${(BW - 20) * (n.n0 / tot)}" height="6" fill="var(--accent)"/>
+            <rect x="${x + 10 + (BW - 20) * (n.n0 / tot)}" y="${y + 38}" width="${(BW - 20) * (n.n1 / tot)}" height="6" fill="var(--warm)"/>
+          </g>`;
+        }).join("");
+      svg.querySelectorAll("g[data-i]").forEach((gEl) => {
+        const m = nodes[+gEl.dataset.i];
+        gEl.addEventListener("pointerenter", () => { hl = m.box; draw(true); });
+        gEl.addEventListener("pointerleave", () => { hl = null; draw(true); });
+      });
+    }
+
+    function draw(mapOnly = false) {
       $("#noiseV").textContent = (+$("#noise").value).toFixed(2);
       $("#ntV").textContent = $("#nt").value; $("#mdV").textContent = $("#md").value; $("#tiV").textContent = $("#ti").value;
       $("#treeCtl").hidden = view !== "tree";
@@ -231,6 +289,13 @@ Lab.register({
         map.dot(p.x, p.y, 4.5, css(p.c ? "--warm" : "--accent"), css("--surface"));
         if (view === "tree" && t && !t.inBag[i]) map.dot(p.x, p.y, 7.5, null, css("--ink"));
       });
+      if (hl) {
+        const g = map.ctx, x0 = map.sx(hl.x0), x1 = map.sx(hl.x1), y0 = map.sy(hl.y1), y1 = map.sy(hl.y0);
+        g.save(); g.fillStyle = css("--ink"); g.globalAlpha = 0.35;
+        g.beginPath(); g.rect(map.pad.l, map.pad.t, map.iw, map.ih); g.rect(x0, y0, x1 - x0, y1 - y0); g.fill("evenodd");
+        g.globalAlpha = 1; g.strokeStyle = css("--ink"); g.lineWidth = 2.5; g.strokeRect(x0, y0, x1 - x0, y1 - y0); g.restore();
+      }
+      if (mapOnly) return;
 
       acc.x = [1, Math.max(2, curve.length)];
       const lo = Math.min(...curve.map((c) => Math.min(c.teA, isFinite(c.oobA) ? c.oobA : 1))) - 0.05;
@@ -247,6 +312,7 @@ Lab.register({
       $("#t1A").textContent = pc(test.filter((p) => predict(trees[0].root, p) === p.c).length / test.length);
       $("#treeName").textContent = `tree ${$("#ti").value}${view === "forest" ? " (switch to One tree to pick another)" : ""}`;
       $("#rules").innerHTML = rulesHTML(t.root, 0, "all points");
+      treeSVG(t);
     }
 
     function rebuild(newData) {
@@ -267,6 +333,7 @@ Lab.register({
     $("#noise").addEventListener("input", () => rebuild(true));
     ["#nt", "#md", "#boot", "#rfeat"].forEach((s) => $(s).addEventListener("input", () => rebuild(false)));
     $("#ti").addEventListener("input", () => { bg = null; draw(); });
+    $("#lv").addEventListener("change", () => draw());
     $("#regrow").addEventListener("click", () => { forestSeed++; rebuild(false); });
     $("#newdata").addEventListener("click", () => { dataSeed++; rebuild(true); });
     map.c.addEventListener("pointermove", (e) => {

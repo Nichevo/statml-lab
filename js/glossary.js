@@ -59,6 +59,9 @@ Lab.terms = [
   ["Stationary", "A series whose mean, spread and correlations do not drift over time. ARMA models assume it; differencing can create it.", "arima"],
   ["WAPE", "Weighted absolute percentage error: total absolute error divided by total actuals. Weights big periods more and avoids MAPE's blow-ups.", "forecast-accuracy"],
   ["White noise", "A series of independent random values with no pattern. A good model's residuals should look like it.", "arima"],
+  ["Seasonal decomposition", "Splitting a series into trend, seasonal and remainder parts, either added together or multiplied.", "seasonal-decomposition"],
+  ["Seasonally adjusted", "A series with its seasonal part removed, so underlying movements are easier to see.", "seasonal-decomposition"],
+  ["STL", "Seasonal-Trend decomposition using Loess: a flexible, outlier-resistant way to split a series into trend, season and remainder.", "seasonal-decomposition"],
 ];
 
 Lab.glossaryPage = (main) => {
