@@ -41,7 +41,7 @@
   // Suggested reading orders. Ids that don't exist yet are skipped, so paths can list pages before they're built.
   const PATHS = [
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
-      ["exponential-smoothing", "seasonal-decomposition", "forecast-accuracy", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "pinball-crps", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
+      ["exponential-smoothing", "seasonal-decomposition", "forecast-accuracy", "acf-pacf", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "pinball-crps", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
       ["prediction-intervals", "reorder-point", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "bullwhip-effect", "plant-shutdown"]],
     ["Supply chain money", "Landed cost, margins and how to put a dollar value on supply chain improvements.",
@@ -51,9 +51,9 @@
     ["Data quality", "Check your data before you trust it: outliers, gaps, shifts, shapes and misleading correlations.",
       ["outliers", "distributions", "missing-data", "ts-anomalies", "change-points", "correlation-traps", "benford", "pca-clustering"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
-      ["central-limit", "confidence-intervals", "hypothesis-test", "rollup", "r-squared", "least-squares"]],
+      ["central-limit", "confidence-intervals", "hypothesis-test", "anova-chi-square", "ab-power", "bayesian-updating", "rollup", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
-      ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "gradient-descent", "random-forest", "neural-net", "cnn"]],
+      ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "regularisation", "gradient-descent", "random-forest", "neural-net", "cnn"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",
       ["gradient-descent", "attention"]],
   ];

@@ -249,5 +249,42 @@
   }
   const gloss = (z) => dnorm(z) - z * (1 - pnorm(z));
 
-  window.Lab = { css, niceTicks, fmt, Plot, watch, dragPoints, rng, ols, solve, el, qnorm, dnorm, pnorm, gloss };
+
+  // Gamma / beta functions for chi-square, F and t tail probabilities (Numerical Recipes style).
+  function lgamma(x) {
+    const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+    let y = x, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015;
+    for (const v of c) s += v / ++y;
+    return -t + Math.log((2.5066282746310005 * s) / x);
+  }
+  function pgamma(a, x) { // regularised lower incomplete gamma P(a, x)
+    if (x <= 0) return 0;
+    if (x < a + 1) { let ap = a, sum = 1 / a, del = sum; for (let n = 0; n < 500; n++) { ap++; del *= x / ap; sum += del; if (Math.abs(del) < Math.abs(sum) * 1e-14) break; } return sum * Math.exp(-x + a * Math.log(x) - lgamma(a)); }
+    let b = x + 1 - a, c = 1e300, d = 1 / b, h = d;
+    for (let i = 1; i < 500; i++) { const an = -i * (i - a); b += 2; d = an * d + b; if (Math.abs(d) < 1e-300) d = 1e-300; c = b + an / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del; if (Math.abs(del - 1) < 1e-14) break; }
+    return 1 - Math.exp(-x + a * Math.log(x) - lgamma(a)) * h;
+  }
+  function betacf(a, b, x) {
+    let qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - (qab * x) / qap; if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; let h = d;
+    for (let m = 1; m < 500; m++) {
+      const m2 = 2 * m; let aa = (m * (b - m) * x) / ((qam + m2) * (a + m2));
+      d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; h *= d * c;
+      aa = (-(a + m) * (qab + m) * x) / ((a + m2) * (qap + m2));
+      d = 1 + aa * d; if (Math.abs(d) < 1e-300) d = 1e-300; c = 1 + aa / c; if (Math.abs(c) < 1e-300) c = 1e-300; d = 1 / d; const del = d * c; h *= del;
+      if (Math.abs(del - 1) < 1e-14) break;
+    }
+    return h;
+  }
+  function ibeta(a, b, x) { // regularised incomplete beta I_x(a, b)
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    const bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+    return x < (a + 1) / (a + b + 2) ? (bt * betacf(a, b, x)) / a : 1 - (bt * betacf(b, a, 1 - x)) / b;
+  }
+  const pchisqUpper = (x, k) => (x <= 0 ? 1 : 1 - pgamma(k / 2, x / 2)); // P(X >= x)
+  const pfUpper = (f, d1, d2) => (f <= 0 ? 1 : ibeta(d2 / 2, d1 / 2, d2 / (d2 + d1 * f))); // P(F >= f)
+  const ptTwo = (t, df) => ibeta(df / 2, 0.5, df / (df + t * t)); // two-sided P(|T| >= |t|)
+  const dchisq = (x, k) => (x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.LN2 - lgamma(k / 2)));
+  const df_ = (x, d1, d2) => (x <= 0 ? 0 : Math.exp(0.5 * (d1 * Math.log(d1 * x) + d2 * Math.log(d2) - (d1 + d2) * Math.log(d1 * x + d2)) - Math.log(x) - (lgamma(d1 / 2) + lgamma(d2 / 2) - lgamma((d1 + d2) / 2))));
+
+  window.Lab = { css, niceTicks, fmt, Plot, watch, dragPoints, rng, ols, solve, el, qnorm, dnorm, pnorm, gloss, lgamma, pgamma, ibeta, pchisqUpper, pfUpper, ptTwo, dchisq, dF: df_ };
 })();

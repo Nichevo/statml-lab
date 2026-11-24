@@ -140,5 +140,22 @@
     "https://doi.org/10.1016/j.ijforecast.2019.05.008": "Proposes criteria for sorting forecasting methods, including whether a model is global (shared across series) or local (one per series).",
     "https://doi.org/10.1214/aos/1013203451": "The paper that introduced gradient boosting: build a strong model by adding many small trees, each fitted to the errors the earlier ones left.",
     "https://doi.org/10.1016/j.eswa.2019.112896": "Groups similar time series by clustering, then trains one recurrent neural network per group, so each model learns from many related series.",
+    // ANOVA, A/B tests, Bayesian, regularisation, autocorrelation
+    "https://doi.org/10.1080/14786440009463897": "Introduced the chi-square test: add up (observed − expected)² ÷ expected across categories and compare with a known distribution to judge whether the gaps are bigger than chance.",
+    "https://doi.org/10.2307/3001913": "Tukey's early method for deciding which group means differ after an analysis of variance, the forerunner of the 'honestly significant difference' test.",
+    "https://doi.org/10.1017/9781108653985": "A practical book on running A/B tests well, from people who ran thousands at Microsoft, Google and LinkedIn: metrics, sample sizes, pitfalls and trust in results.",
+    "https://doi.org/10.1037/0033-2909.112.1.155": "A short guide to statistical power: how sample size, effect size and significance level fit together, with tables of the sample sizes needed for common tests.",
+    "https://doi.org/10.1177/1745691614551642": "Shows that in low-power studies, significant results often have the wrong sign (type S error) or a greatly exaggerated size (type M error), and suggests a design analysis to check for this.",
+    "https://doi.org/10.1145/2433396.2433413": "Introduced CUPED: adjust each user's result for their pre-experiment value of the same metric, which cuts noise and so the sample size an A/B test needs.",
+    "https://doi.org/10.1038/scientificamerican0577-119": "A popular explanation of Stein's paradox using baseball batting averages: pulling each player's average towards the overall average predicts their future better than their own average alone.",
+    "https://doi.org/10.1098/rstl.1763.0053": "Bayes' essay, published after his death by Richard Price: how to infer an unknown probability from the numbers of successes and failures observed.",
+    "https://doi.org/10.1111/j.2517-6161.1996.tb02080.x": "Introduced the lasso: least squares with a limit on the sum of absolute coefficients, which shrinks some coefficients and sets others to exactly zero.",
+    "https://doi.org/10.1080/00401706.1970.10488634": "Introduced ridge regression: adding a small constant to the diagonal of X'X gives biased but much more stable coefficients when drivers are correlated.",
+    "https://doi.org/10.1111/j.1467-9868.2005.00503.x": "Introduced the elastic net, which mixes the ridge and lasso penalties so that groups of correlated drivers are kept or dropped together.",
+    "https://doi.org/10.18637/jss.v033.i01": "Describes glmnet: fitting lasso, ridge and elastic net for a whole sequence of penalty values quickly by coordinate descent.",
+    "https://doi.org/10.1037/a0029146": "Shows how to compare two groups the Bayesian way, giving a full distribution of the difference and its effect size instead of a single p-value.",
+    "https://sites.stat.columbia.edu/gelman/book/": "Home page of the standard Bayesian statistics textbook, with a free PDF for non-commercial use. Chapter 2 works through single-parameter models like the beta-binomial used here.",
+    "https://doi.org/10.1093/biomet/65.2.297": "Proposed the Ljung–Box test, which checks whether a set of autocorrelations (usually of a model's residuals) is jointly larger than chance would produce.",
+    "https://doi.org/10.2307/1401322": "Gave the recursive method (now called Durbin–Levinson) for fitting autoregressive models of increasing order, which is also how partial autocorrelations are computed.",
   };
 })();

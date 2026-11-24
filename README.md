@@ -15,14 +15,14 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
 - **Glossary links**: plain-language definitions of 175+ terms, cross-linked to the pages that use them.
 
-## Contents (64 explainers)
+## Contents (69 explainers)
 
 | Area | Pages |
 |---|---|
-| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, accuracy measures (MAE, MAPE, RMSE, MASE, bias), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions, pinball loss and CRPS, new-product forecasting (Bass model and analogues), global ML forecasting across many SKUs |
+| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, accuracy measures (MAE, MAPE, RMSE, MASE, bias), autocorrelation (ACF/PACF), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions, pinball loss and CRPS, new-product forecasting (Bass model and analogues), global ML forecasting across many SKUs |
 | Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design |
 | Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, k-means clustering and PCA |
-| Statistics | R², least squares, central limit theorem, confidence intervals and the bootstrap, hypothesis tests and p-values, rolling up numbers (bottom-up vs averages) |
+| Statistics | R², least squares, central limit theorem, confidence intervals and the bootstrap, hypothesis tests and p-values, ANOVA and chi-square, A/B tests and power, Bayesian updating, ridge and lasso regularisation, rolling up numbers (bottom-up vs averages) |
 | Machine learning | Logistic regression and the confusion matrix, overfitting and cross-validation, bias–variance, gradient descent, attention in transformers, decision trees and random forests, neural networks from scratch (perceptron to hidden layers), convolutional neural networks (draw a digit and watch a real CNN read it) |
 | Optimization | Linear programming, simulated annealing |
 

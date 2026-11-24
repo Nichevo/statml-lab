@@ -27,12 +27,12 @@
               ["A repeating season", L("Holt-Winters / decomposition", "exponential-smoothing", "Smoothing with level, trend and seasonal parts; decomposition shows the parts.")],
               ["A trend, no season", L("Holt's linear method", "exponential-smoothing", "Smoothing with a level and a trend.")],
               ["Just noise around a level", L("Moving average / simple smoothing", "exponential-smoothing", "Average recent periods; simple smoothing weights recent ones more.")],
-              ["Each period depends on the last few", L("ARIMA", "arima", "Models autocorrelation directly; good for smooth, wandering series.")],
+              ["Each period depends on the last few", L("ARIMA (read the ACF/PACF first)", "arima", "Models autocorrelation directly; the ACF and PACF charts suggest the orders.")],
             ])],
           ])],
         ])],
       ]),
-      after: [["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
+      after: [["Read the series with ACF/PACF", "acf-pacf"], ["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
     },
     {
       key: "accuracy", name: "Forecast accuracy measure",
@@ -65,13 +65,15 @@
       tree: Q("What's your question?", [
         ["Is a difference real or just noise?", Q("What are you comparing?", [
           ["Two group averages", L("t-test", "hypothesis-test", "Is the gap between two means bigger than sampling noise would explain?")],
-          ["Three or more group averages", L("ANOVA", null, "One test across all groups before comparing pairs.")],
-          ["Counts or shares across categories", L("Chi-square test", null, "Do the observed counts differ from what independence predicts?")],
+          ["Three or more group averages", L("ANOVA", "anova-chi-square", "One test across all groups before comparing pairs.")],
+          ["Counts or shares across categories", L("Chi-square test", "anova-chi-square", "Do the observed counts differ from what independence predicts?")],
           ["Before vs after a change in a series", L("Change-point detection", "change-points", "Find when the level of a series shifted.")],
         ])],
+        ["How big must my trial be?", L("A/B test power and sample size", "ab-power", "Stores or weeks needed to detect the lift you care about.")],
         ["How sure is my estimate?", Q("What are you estimating?", [
           ["A mean, with a decent sample", L("t confidence interval", "confidence-intervals", "Mean ± t × standard error.")],
           ["A median, P90 or anything odd", L("Bootstrap interval", "confidence-intervals", "Resample your own data many times; no formula needed.")],
+          ["A rate, with little data and a sensible prior", L("Bayesian updating", "bayesian-updating", "Blend a prior from similar cases with the new data; get a credible interval.")],
           ["Why do averages look normal?", L("Central limit theorem", "central-limit", "Averages of many values are close to normal whatever the raw shape.")],
         ])],
         ["How are two things related?", Q("What do you want from it?", [
@@ -102,6 +104,7 @@
           ["No, I want to find structure", L("PCA and clustering", "pca-clustering", "Unsupervised: groups and main directions in the data.")],
           ["Yes, a number", Q("What matters more?", [
             ["Explaining the effect of each driver", L("Linear regression", "least-squares", "One coefficient per driver, easy to read.")],
+            ["Many drivers, not much data", L("Ridge or lasso regression", "regularisation", "Penalise big coefficients; lasso also drops useless drivers.")],
             ["Accuracy, with curves and interactions", L("Random forest / gradient boosting", "random-forest", "Many trees capture non-linear effects without hand-made features.")],
           ])],
           ["Yes, a category (yes/no, A/B/C)", Q("What matters more?", [
