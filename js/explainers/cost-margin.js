@@ -92,7 +92,7 @@ Lab.register({
         <div class="ctrl"><label for="dWo">Fewer write-offs <output id="dWoV"></output></label><input type="range" id="dWo" min="0" max="2" step="0.25" value="1"></div>
         <div class="ctrl"><label for="dFob">Better supplier price <output id="dFobV"></output></label><input type="range" id="dFob" min="0" max="10" step="0.5" value="2"></div>
         <div class="readouts" id="ro"></div>
-        <div class="btns"><button class="btn" id="reset" type="button">Reset numbers</button></div>`,
+        <div class="btns"><button class="btn" id="reset" type="button">Reset everything</button></div>`,
       notes: `
         <section>
           <h2>Landed cost</h2>
@@ -238,7 +238,7 @@ Lab.register({
     inputsEl.addEventListener("input", (e) => { const k = e.target.dataset.k; if (!k || e.target.value === "") return; V[k] = Math.max(0, +e.target.value); if (k === "lost" || k === "wo") V[k] = Math.min(V[k], 90); draw(); });
     $("#basis").addEventListener("click", (e) => { const v = e.target.closest("button")?.dataset.v; if (!v) return; basis = v; $("#basis").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === v)); draw(); });
     ["#dLost", "#dCover", "#dFrt", "#dWo", "#dFob"].forEach((s) => $(s).addEventListener("input", draw));
-    $("#reset").addEventListener("click", () => { V = { ...DEF }; basis = "CIF"; $("#basis").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === "CIF")); buildInputs(); draw(); });
+    $("#reset").addEventListener("click", () => { root.querySelectorAll("input[type=range]").forEach((e) => (e.value = e.defaultValue)); V = { ...DEF }; basis = "CIF"; $("#basis").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.v === "CIF")); buildInputs(); draw(); });
     draw();
   },
 });

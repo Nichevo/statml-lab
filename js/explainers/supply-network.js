@@ -221,7 +221,7 @@ Lab.register({
     $("#st").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { strat = b.dataset.v; $("#st").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); update(); }));
     ["#sl", "#hd", "#hs", "#rho"].forEach((s) => $(s).addEventListener("input", update));
     $("#wdc").addEventListener("change", drawTables);
-    $("#reset").addEventListener("click", () => { DCS = JSON.parse(JSON.stringify(DEF.DCS)); STORES = JSON.parse(JSON.stringify(DEF.STORES)); editors(); update(); });
+    $("#reset").addEventListener("click", () => { root.querySelectorAll("input[type=range]").forEach((e) => (e.value = e.defaultValue)); DCS = JSON.parse(JSON.stringify(DEF.DCS)); STORES = JSON.parse(JSON.stringify(DEF.STORES)); editors(); update(); });
     editors(); update();
     return watch([], () => drawNet());
   },

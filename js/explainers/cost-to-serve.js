@@ -165,7 +165,7 @@ Lab.register({
     buildEd();
     $("#ed").addEventListener("input", (e) => { const t = e.target; if (!t.dataset.i || t.value === "") return; D[+t.dataset.i][+t.dataset.j] = Math.max(0, +t.value); draw(); });
     ["#rOrd", "#rLine", "#rDrop", "#rKm", "#rRet", "#wacc", "#pick"].forEach((s) => $(s).addEventListener("input", draw));
-    $("#reset").addEventListener("click", () => { D = DEF.map((r) => r.slice()); buildEd(); draw(); });
+    $("#reset").addEventListener("click", () => { root.querySelectorAll("input[type=range]").forEach((e) => (e.value = e.defaultValue)); D = DEF.map((r) => r.slice()); buildEd(); draw(); });
     draw();
     return watch([pW.c], (resized) => { if (resized) pW.resize(); draw(); });
   },
