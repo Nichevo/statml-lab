@@ -1,5 +1,14 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Landed cost", "The full cost of getting a unit onto your shelf: supplier price plus freight, insurance, duty, broker and handling.", "cost-margin"],
+  ["FOB / CIF", "Incoterms. FOB (free on board): the buyer pays from the ship onward. CIF: the seller's price includes insurance and freight to the destination port.", "cost-margin"],
+  ["Gross margin", "Revenue minus cost of goods sold, often as a % of revenue. Not the same as markup, which is a % of cost.", "cost-margin"],
+  ["Markup", "Profit on a unit as a % of its cost: (price − cost) ÷ cost.", "cost-margin"],
+  ["Contribution margin", "Revenue minus all variable costs. What each extra sale adds towards fixed costs and profit.", "cost-margin"],
+  ["Working capital", "Money tied up in running the business, mainly inventory plus customer debts minus supplier credit. Cutting stock releases it once.", "cost-margin"],
+  ["Carrying cost", "The yearly cost of holding stock (capital, space, insurance, obsolescence, shrink), usually 20–30% of its value.", "carrying-cost"],
+  ["Newsvendor model", "Single-period buying decision: order the demand quantile given by the critical ratio Cu ÷ (Cu + Co).", "newsvendor"],
+  ["Critical ratio", "Cu ÷ (Cu + Co): the probability of not selling out that maximises expected profit in the newsvendor model.", "newsvendor"],
   ["Multi-echelon inventory", "Planning stock across several levels of a network at once (e.g. supplier, DC, store) instead of setting each location's buffer on its own.", "supply-network"],
   ["Guaranteed-service model", "A multi-echelon method where each stocking point promises a fixed service time to its customers and holds enough stock to keep that promise.", "supply-network"],
   ["Net replenishment time", "The time a stocking point must cover with its own safety stock: inbound lead time plus the promise it receives, minus the promise it gives.", "supply-network"],
