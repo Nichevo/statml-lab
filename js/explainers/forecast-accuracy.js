@@ -179,7 +179,7 @@ Lab.register({
     }
 
     const show = (id, v) => {
-      if (!isFinite(v)) return id === "mape" ? "undefined" : "∞";
+      if (!isFinite(v)) return id === "mape" ? "can’t divide by 0" : "∞";
       if (["mape", "smape", "wape", "xacc"].includes(id)) return v.toFixed(1) + "%";
       if (id === "mase") return v.toFixed(2);
       if (id === "bias") return (v > 0 ? "+" : "") + fmt(v);
@@ -238,7 +238,7 @@ Lab.register({
       const hl = METRICS.find((x) => x.id === sel).col;
       const cols = [["a", "Actual A"], ["f", "Forecast F"], ["err", "Error e = A − F"], ["abs", "|e|"], ["sq", "e²"], ["ape", "|e|/A"], ["sape", "2|e|/(A+F)"], ["xape", "|e|/max(A,F)"], ["scaled", "|e| ÷ naive"]];
       const cell = (k, r, i) => {
-        if (k === "a" || k === "f") return `<input type="number" step="any" data-k="${k}" data-i="${i}" value="${+(k === "a" ? r.a : r.f).toFixed(2)}" aria-label="${k === "a" ? "Actual" : "Forecast"} for period ${i + 1}" style="width:84px;font:inherit;font-family:var(--font-mono);text-align:right;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">`;
+        if (k === "a" || k === "f") return `<input type="text" inputmode="decimal" data-k="${k}" data-i="${i}" value="${+(k === "a" ? r.a : r.f).toFixed(2)}" aria-label="${k === "a" ? "Actual" : "Forecast"} for period ${i + 1}" style="width:84px;font:inherit;font-family:var(--font-mono);text-align:right;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">`;
         const v = k === "err" ? r.e : r[k];
         if (!isFinite(v)) return `<span style="color:var(--bad)">÷ 0</span>`;
         if (k === "ape" || k === "sape" || k === "xape") return v.toFixed(1) + "%";
@@ -258,11 +258,15 @@ Lab.register({
         res.rows.map((r, i) => `<tr><td style="padding:3px 6px;border-bottom:1px solid var(--grid);color:var(--muted)">${i + 1}</td>${cols.map(([k]) => `<td style="${bg(k)}text-align:right;padding:3px 6px;border-bottom:1px solid var(--grid);font-family:var(--font-mono);white-space:nowrap">${cell(k, r, i)}</td>`).join("")}</tr>`).join("") +
         `<tr><td style="padding:6px;font-weight:600">mean</td><td></td><td></td>${cols.slice(2).map(([k]) => `<td style="${bg(k)}text-align:right;padding:6px;font-family:var(--font-mono);font-weight:600">${tot(k)}</td>`).join("")}</tr>` +
         `<tr><td colspan="10" style="padding:6px;color:var(--muted);font-size:.8rem">Naive scale for MASE = mean |A<sub>t</sub> − A<sub>t−1</sub>| = ${fmt(res.scale)}. WAPE = Σ|e| ÷ Σ|A| = ${show("wape", res.m.wape)}.</td></tr>`;
-      $("#tbl").querySelectorAll("input").forEach((inp) => inp.addEventListener("change", () => {
+      $("#tbl").querySelectorAll("input").forEach((inp) => inp.addEventListener("input", () => {
         const v = parseFloat(inp.value);
-        if (!isFinite(v)) { inp.value = inp.dataset.k === "a" ? A[+inp.dataset.i] : F[+inp.dataset.i]; return; }
+        if (!isFinite(v)) return; // wait until the typed value is a number
         (inp.dataset.k === "a" ? A : F)[+inp.dataset.i] = v;
+        const k = inp.dataset.k, i = inp.dataset.i, typed = inp.value;
         draw();
+        // the table is rebuilt; put the cursor back where the person was typing
+        const again = $("#tbl").querySelector(`input[data-k="${k}"][data-i="${i}"]`);
+        if (again) { again.value = typed; again.focus(); try { again.setSelectionRange(typed.length, typed.length); } catch (e) {} }
       }));
     }
 

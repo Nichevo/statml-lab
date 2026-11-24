@@ -1,6 +1,7 @@
 // Registry + hash router. Each explainer file calls Lab.register({...}).
 (function () {
   const explainers = [];
+  Lab.explainers = explainers;
   const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Optimization", "Data quality"];
   Lab.register = (ex) => explainers.push(ex);
   Lab.titleOf = (id) => (explainers.find((e) => e.id === id) || { title: id }).title;
@@ -44,13 +45,13 @@
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
       ["prediction-intervals", "reorder-point", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "bullwhip-effect", "plant-shutdown"]],
     ["Supply chain money", "Landed cost, margins and how to put a dollar value on supply chain improvements.",
-      ["cost-margin", "tariffs", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi"]],
+      ["cost-margin", "rollup", "tariffs", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi"]],
     ["Optimization and network design", "From a two-product LP to routing heuristics and choosing DC locations.",
       ["linear-programming", "tsp", "simulated-annealing", "network-design", "supply-network"]],
     ["Data quality", "Check your data before you trust it: outliers, gaps, shifts, shapes and misleading correlations.",
       ["outliers", "distributions", "missing-data", "ts-anomalies", "change-points", "correlation-traps", "benford", "pca-clustering"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
-      ["central-limit", "hypothesis-test", "r-squared", "least-squares"]],
+      ["central-limit", "hypothesis-test", "rollup", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
       ["least-squares", "bias-variance", "gradient-descent", "random-forest"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",

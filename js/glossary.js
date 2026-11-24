@@ -1,5 +1,9 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Bottom-up (roll-up)", "Aggregating by adding numerators and denominators first and dividing once, e.g. total margin $ ÷ total revenue.", "rollup"],
+  ["Weighted average", "An average where each item counts in proportion to a weight. Matches the bottom-up figure when the weight is the ratio's denominator.", "rollup"],
+  ["Mix effect", "Change in a total ratio caused by a shift in the weights (e.g. more sales of low-margin products), not by any item's own ratio changing.", "rollup"],
+  ["Simpson's paradox", "Every group moves one way while the combined total moves the other, because the group sizes changed.", "rollup"],
   ["Tariff (import duty)", "A tax on imported goods, paid by the importer to customs when the goods enter the country.", "tariffs"],
   ["Ad valorem duty", "A tariff charged as a percentage of the goods' customs value.", "tariffs"],
   ["Specific duty", "A tariff charged as a fixed amount per unit, kilo or litre, whatever the value.", "tariffs"],
