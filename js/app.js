@@ -41,7 +41,7 @@
   // Suggested reading orders. Ids that don't exist yet are skipped, so paths can list pages before they're built.
   const PATHS = [
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
-      ["exponential-smoothing", "seasonal-decomposition", "forecast-accuracy", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "forecast-lab", "forecast-value-added"]],
+      ["exponential-smoothing", "seasonal-decomposition", "forecast-accuracy", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "pinball-crps", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
       ["prediction-intervals", "reorder-point", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "bullwhip-effect", "plant-shutdown"]],
     ["Supply chain money", "Landed cost, margins and how to put a dollar value on supply chain improvements.",

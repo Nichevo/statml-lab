@@ -15,11 +15,11 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
 - **Glossary links**: plain-language definitions of 175+ terms, cross-linked to the pages that use them.
 
-## Contents (61 explainers)
+## Contents (64 explainers)
 
 | Area | Pages |
 |---|---|
-| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, accuracy measures (MAE, MAPE, RMSE, MASE, bias), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions |
+| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, accuracy measures (MAE, MAPE, RMSE, MASE, bias), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions, pinball loss and CRPS, new-product forecasting (Bass model and analogues), global ML forecasting across many SKUs |
 | Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design |
 | Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, k-means clustering and PCA |
 | Statistics | R², least squares, central limit theorem, confidence intervals and the bootstrap, hypothesis tests and p-values, rolling up numbers (bottom-up vs averages) |
@@ -52,7 +52,7 @@ js/app.js               routing, home page, groups, learning paths, quiz / DIY /
 js/papers.js            one-line summaries shown under research-paper links
 js/glossary.js          glossary terms and their cross-links
 js/cnn-data.js          weights of the small digit-reading CNN, plus sample MNIST digits
-js/gbm.js               small gradient-boosting helper (not used by any page yet)
+js/gbm.js               small gradient-boosting helper (used by global ML forecasting)
 js/explainers/*.js      one file per explainer
 ```
 

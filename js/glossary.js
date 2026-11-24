@@ -202,6 +202,19 @@ Lab.terms = [
   ["Safety stock", "Stock held above the point forecast to cover uncertainty. Equals the chosen service-level quantile minus the forecast.", "prediction-intervals"],
   ["Newsvendor rule", "Stock to the quantile cu / (cu + co), where cu is the cost of a lost sale and co the cost of a leftover unit.", "prediction-intervals"],
   ["Rolling-origin evaluation", "Testing a forecast method from many starting points in turn, rather than on a single held-out window.", "forecast-lab"],
+  ["Pinball loss", "Score for a quantile forecast. Misses on the costly side are weighted by τ, on the other side by 1 − τ. Lowest at the true quantile. Also called quantile loss.", "pinball-crps"],
+  ["CRPS", "Continuous ranked probability score: scores a whole forecast distribution against the actual, in demand units. Equals the absolute error for a single-number forecast.", "pinball-crps"],
+  ["Calibration", "A probabilistic forecast is calibrated when its 80% intervals contain about 80% of actuals, its 90% quantile is beaten 10% of the time, and so on.", "pinball-crps"],
+  ["Sharpness", "How narrow a forecast's intervals are. The aim is the sharpest forecast that is still calibrated.", "pinball-crps"],
+  ["Proper scoring rule", "A score that, on average, is best when the forecast distribution matches the real one, so it never rewards hedging or overconfidence. Pinball loss and CRPS are proper.", "pinball-crps"],
+  ["Bass diffusion model", "New-product sales curve driven by innovators (p, who buy on their own) and imitators (q, who buy because others have). m is the total market.", "new-product"],
+  ["Forecasting by analogy", "Forecasting a new item from the sales curves of similar past launches, scaled to the new item's plan or early sales.", "new-product"],
+  ["Cold start", "Forecasting an item with little or no sales history, such as a new product. Needs analogues, attributes or a global model.", "new-product"],
+  ["Global model", "One forecasting model trained on many series at once (usually scaled), so items share what they learn. The opposite of a local, per-series model.", "global-forecasting"],
+  ["Local model", "A forecasting model fitted to one series using only its own history, such as exponential smoothing per SKU.", "global-forecasting"],
+  ["Gradient boosting", "Builds many small decision trees in sequence, each one fitted to the errors left by the trees before it. LightGBM and XGBoost are popular versions.", "global-forecasting"],
+  ["Feature importance", "How much a model's tree splits on each input reduced error. Shows what the model relies on, not what causes the outcome.", "global-forecasting"],
+  ["Data leakage", "Training or testing with information that wouldn't be known at forecast time. It makes back-tests look better than real life.", "global-forecasting"],
 ];
 
 Lab.glossaryPage = (main) => {

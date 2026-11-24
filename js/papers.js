@@ -128,5 +128,17 @@
     "https://doi.org/10.1257/jep.33.4.187": "Found the 2018 US tariffs were passed almost fully into US import prices. US buyers, not foreign exporters, bore the cost.",
     "https://doi.org/10.1093/qje/qjz036": "Estimated the 2018 trade war cost US consumers and firms about $51 billion. Foreign exporters cut prices very little.",
     "https://doi.org/10.1257/aeri.20190536": "Tariffs were almost fully passed through to US importers at the border. Retail shelf prices rose much less, so retailers absorbed much of the cost in their margins.",
+    // Probabilistic scoring, new products, global models
+    "https://doi.org/10.1198/016214506000001437": "The standard reference on proper scoring rules: scores that can't be gamed, because you get the best expected score only by reporting what you really believe. Covers CRPS, pinball (quantile) loss and interval scores.",
+    "https://doi.org/10.1287/mnsc.22.10.1087": "Extended scoring rules from yes/no events to forecasts of continuous quantities, introducing what became the CRPS.",
+    "https://doi.org/10.1016/j.ijforecast.2021.10.009": "Results of the M5 uncertainty track: teams forecast nine quantiles of Walmart unit sales, scored with weighted pinball loss. A large, real test of probabilistic forecasting at scale.",
+    "https://doi.org/10.1287/mnsc.15.5.215": "The original diffusion model: adoption of a new durable product is driven by innovators (who adopt on their own) and imitators (who adopt because others have), giving the familiar rise-peak-decline sales curve.",
+    "https://doi.org/10.1177/002224299005400101": "Review of 20 years of Bass-model research: how the model is estimated and used, its extensions, and where research should go next.",
+    "https://doi.org/10.1093/imaman/dpr025": "Studies forecasting the first-year sales of new electronics products by looking at the sales of similar past products (analogies).",
+    "https://doi.org/10.1016/j.ijforecast.2021.03.004": "Shows that one global model fitted to many series can be as flexible as separate local models, and often more accurate, even when the series aren't obviously similar.",
+    "https://doi.org/10.1016/j.ijforecast.2021.11.013": "Results of the M5 accuracy track on 42,840 Walmart series. LightGBM models trained across many series dominated, beating classic per-series statistical methods.",
+    "https://doi.org/10.1016/j.ijforecast.2019.05.008": "Proposes criteria for sorting forecasting methods, including whether a model is global (shared across series) or local (one per series).",
+    "https://doi.org/10.1214/aos/1013203451": "The paper that introduced gradient boosting: build a strong model by adding many small trees, each fitted to the errors the earlier ones left.",
+    "https://doi.org/10.1016/j.eswa.2019.112896": "Groups similar time series by clustering, then trains one recurrent neural network per group, so each model learns from many related series.",
   };
 })();
