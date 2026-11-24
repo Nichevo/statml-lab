@@ -47,6 +47,8 @@
       ["cost-margin", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi"]],
     ["Optimization and network design", "From a two-product LP to routing heuristics and choosing DC locations.",
       ["linear-programming", "tsp", "simulated-annealing", "network-design", "supply-network"]],
+    ["Data quality", "Check your data before you trust it: outliers, gaps, shifts, shapes and misleading correlations.",
+      ["outliers", "distributions", "missing-data", "ts-anomalies", "change-points", "correlation-traps", "benford", "pca-clustering"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
       ["central-limit", "hypothesis-test", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
