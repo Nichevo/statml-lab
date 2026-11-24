@@ -24,7 +24,19 @@ Lab.register({
         f: (x, y) => (x * x - 1) ** 2 + 0.5 * y * y + 0.3 * x, g: (x, y) => [4 * x * (x * x - 1) + 0.3, y],
         formula: "L(w₁, w₂) = (w₁² − 1)² + ½w₂² + 0.3·w₁",
       },
+      bumpy: {
+        name: "Bumpy landscape (many minima)", x: [-3, 3], y: [-3, 3], start: [1.9, 2.4], lr: 0.1,
+        wells: [[1.5, 1.0, 1.3, 0.5], [-1.6, -1.2, 2.0, 0.6], [1.3, -1.6, 1.0, 0.35], [-1.2, 1.6, 0.9, 0.4], [0.1, 0.1, 0.6, 0.25]],
+        f(x, y) { return 0.1 * (x * x + y * y) - this.wells.reduce((s, [a, b, h, w]) => s + h * Math.exp(-((x - a) ** 2 + (y - b) ** 2) / w), 0); },
+        g(x, y) {
+          let gx = 0.2 * x, gy = 0.2 * y;
+          for (const [a, b, h, w] of this.wells) { const e = h * Math.exp(-((x - a) ** 2 + (y - b) ** 2) / w); gx += (2 * (x - a) / w) * e; gy += (2 * (y - b) / w) * e; }
+          return [gx, gy];
+        },
+        formula: "L = 0.1(w₁² + w₂²) − Σ hᵢ·exp(−‖w − cᵢ‖² / sᵢ)  (five wells of different depth)",
+      },
     };
+    Object.values(SURF).forEach((s) => { s.f = s.f.bind(s); s.g = s.g.bind(s); });
 
     root.innerHTML = Lab.page(this, {
       figure: `
@@ -59,11 +71,14 @@ Lab.register({
           <button class="btn primary" id="play" type="button">Run</button>
           <button class="btn" id="step" type="button">One step</button>
           <button class="btn" id="reset" type="button">Reset</button>
+          <button class="btn" id="multi" type="button">Try 20 random starts</button>
         </div>
         <div class="readouts">
           <div class="ro"><b>Status</b><span id="status"></span></div>
           <div class="ro"><b>Step</b><span class="num" id="it"></span></div>
           <div class="ro"><b>Loss</b><span class="num" id="lossV"></span></div>
+          <div class="ro"><b>Ended in</b><span id="which"></span></div>
+          <p class="hint" id="multiOut" style="margin:0"></p>
         </div>
         <div>
           <h4>Last step, worked out</h4>
@@ -88,6 +103,17 @@ Lab.register({
           </ol>
         </section>
         <section>
+          <h2>Local vs global minima</h2>
+          <p>A <b>global minimum</b> is the lowest point anywhere. A <b>local minimum</b> is a dip that is lowest only compared with its neighbours. Gradient descent only feels the slope where it stands, so it rolls into whichever dip is downhill from its start and stops there.</p>
+          <ul>
+            <li>Pick "Bumpy landscape" and press "Try 20 random starts". Some paths reach the global minimum (green ring), others get trapped (black rings).</li>
+            <li><b>Random restarts</b>: run from many starts and keep the best. Cheap and effective in low dimensions.</li>
+            <li><b>Momentum</b> can carry the ball over a small bump into a deeper valley. Try β = 0.9 with 20 random starts and compare the count.</li>
+            <li><b>Convex</b> problems, like least squares and logistic regression, have a single bowl, so any minimum is the global one.</li>
+            <li>Neural networks are not convex, but in very high dimensions most local minima turn out to be nearly as good as the best, which is part of why training works.</li>
+          </ul>
+        </section>
+        <section>
           <h2>How this connects to real models</h2>
           <ul>
             <li>A neural network has millions of weights instead of two, but each training step is this same update.</li>
@@ -100,7 +126,7 @@ Lab.register({
     const $ = (s) => root.querySelector(s);
     const map = new Plot($("#gdc"), { pad: { l: 40, b: 32 } });
     const lossP = new Plot($("#gdl"), { x: [0, 50], y: [-6, 2], pad: { b: 30, t: 10 } });
-    let S, fmin, path, losses, vel, running = false, raf = 0, last = null, status = "idle", bg = null;
+    let minima = [], multi = [], S, fmin, path, losses, vel, running = false, raf = 0, last = null, status = "idle", bg = null;
 
     const hex = (h) => { h = h.replace("#", ""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
     const lr = () => 10 ** +$("#lr").value;
@@ -113,6 +139,17 @@ Lab.register({
         const x = S.x[0] + (i / 300) * (S.x[1] - S.x[0]), y = S.y[0] + (j / 300) * (S.y[1] - S.y[0]);
         fmin = Math.min(fmin, S.f(x, y));
       }
+      // find the minima: run small-step descent from a grid of starts and merge endpoints
+      minima = [];
+      for (let i = 0; i < 9; i++) for (let j = 0; j < 9; j++) {
+        let x = S.x[0] + ((i + 0.5) / 9) * (S.x[1] - S.x[0]), y = S.y[0] + ((j + 0.5) / 9) * (S.y[1] - S.y[0]);
+        for (let k = 0; k < 4000; k++) { const g = S.g(x, y), st = 0.01; x -= st * g[0]; y -= st * g[1]; if (Math.hypot(...g) < 1e-6) break; }
+        if (x < S.x[0] || x > S.x[1] || y < S.y[0] || y > S.y[1]) continue;
+        if (!minima.some((m) => Math.hypot(m.x - x, m.y - y) < 0.05)) minima.push({ x, y, L: S.f(x, y) });
+      }
+      minima.sort((a, b) => a.L - b.L);
+      multi = [];
+      $("#multiOut").textContent = "";
       if (!keepLr) $("#lr").value = Math.log10(S.lr);
       $("#formula").textContent = S.formula;
       bg = null;
@@ -201,7 +238,7 @@ Lab.register({
         const p = path[path.length - 1];
         if (isFinite(p[0]) && isFinite(p[1])) {
           const gr = S.g(p[0], p[1]), m = Math.hypot(...gr);
-          if (m > 1e-6) {
+          if (m > 1e-3) {
             g.strokeStyle = css("--violet"); g.lineWidth = 2.5;
             const len = 34;
             arrow(g, map.sx(p[0]), map.sy(p[1]), map.sx(p[0]) - (gr[0] / m) * len, map.sy(p[1]) + (gr[1] / m) * len);
@@ -210,6 +247,23 @@ Lab.register({
         }
       });
       map.dot(path[0][0], path[0][1], 4, css("--ink"));
+      map.clip((g) => {
+        multi.forEach((m) => {
+          g.strokeStyle = css(m.global ? "--good" : "--warm"); g.globalAlpha = 0.55; g.lineWidth = 1.3; g.beginPath();
+          m.path.forEach((p, i) => (i ? g.lineTo(map.sx(p[0]), map.sy(p[1])) : g.moveTo(map.sx(p[0]), map.sy(p[1])))); g.stroke();
+          g.globalAlpha = 1; g.fillStyle = g.strokeStyle; g.beginPath(); g.arc(map.sx(m.path[0][0]), map.sy(m.path[0][1]), 2.5, 0, 7); g.fill();
+        });
+        if (minima.length > 1) minima.forEach((m, i) => {
+          const px = map.sx(m.x), py = map.sy(m.y);
+          g.lineWidth = 2; g.strokeStyle = css(i ? "--ink" : "--good"); g.fillStyle = css("--surface");
+          g.beginPath(); g.arc(px, py, i ? 6 : 8, 0, 7); g.fill(); g.stroke();
+          if (!i) { g.fillStyle = css("--good"); g.beginPath(); g.arc(px, py, 3.5, 0, 7); g.fill(); }
+          g.font = `600 11px ${css("--font-mono")}`; g.textAlign = "left"; g.textBaseline = "middle";
+          const txt = i ? `local ${m.L.toFixed(2)}` : `global ${m.L.toFixed(2)}`;
+          g.lineWidth = 3; g.strokeStyle = css("--surface"); g.strokeText(txt, px + 11, py);
+          g.fillStyle = css(i ? "--ink" : "--good"); g.fillText(txt, px + 11, py);
+        });
+      });
 
       const ys = losses.map((L) => Math.log10(Math.max(1e-6, L - fmin)));
       lossP.x = [0, Math.max(50, losses.length)];
@@ -218,7 +272,13 @@ Lab.register({
       lossP.path(ys.map((_, i) => i), ys.map((v) => Math.min(v, 2.5)), css("--warm"), 2);
 
       const labels = { idle: ["idle", "Ready"], descending: ["ok", "Descending"], converged: ["ok", "Converged"], zigzag: ["warn", "Zig-zagging"], diverging: ["bad", "Loss rising"], diverged: ["bad", "Blew up"] };
-      const st = labels[status];
+      let st = labels[status];
+      const endP = path[path.length - 1];
+      const near = minima.map((m, i) => [Math.hypot(m.x - endP[0], m.y - endP[1]), i]).sort((a, b) => a[0] - b[0])[0];
+      if (status === "converged" && minima.length > 1 && near && near[0] < 0.1) st = near[1] === 0 ? ["ok", "Found the global minimum"] : ["warn", "Stuck in a local minimum"];
+      $("#which").innerHTML = minima.length > 1 && near && near[0] < 0.1
+        ? (near[1] === 0 ? `<span class="pill ok">Global minimum</span>` : `<span class="pill warn">Local minimum ${near[1] + 1} of ${minima.length}</span>`)
+        : `<span class="hint">${minima.length > 1 ? "Not at a minimum yet" : "Only one minimum here"}</span>`;
       $("#status").innerHTML = `<span class="pill ${st[0]}">${st[1]}</span>`;
       $("#it").textContent = path.length - 1;
       $("#lossV").textContent = fmt(losses[losses.length - 1], 4);
@@ -237,7 +297,27 @@ Lab.register({
     ["#lr", "#mom"].forEach((s) => $(s).addEventListener("input", () => reset(path[0])));
     $("#play").addEventListener("click", () => (running ? stop() : play()));
     $("#step").addEventListener("click", () => { stop(); if (status !== "diverged") stepOnce(); draw(); });
-    $("#reset").addEventListener("click", () => reset(path[0]));
+    $("#reset").addEventListener("click", () => { multi = []; $("#multiOut").textContent = ""; reset(path[0]); });
+    $("#multi").addEventListener("click", () => {
+      const r = Lab.rng(Date.now() % 100000), eta = lr(), beta = +$("#mom").value;
+      multi = [];
+      for (let k = 0; k < 20; k++) {
+        let x = S.x[0] + r() * (S.x[1] - S.x[0]), y = S.y[0] + r() * (S.y[1] - S.y[0]), v = [0, 0];
+        const pth = [[x, y]];
+        for (let s = 0; s < 800; s++) {
+          const gr = S.g(x, y); v = [beta * v[0] - eta * gr[0], beta * v[1] - eta * gr[1]]; x += v[0]; y += v[1];
+          if (!isFinite(x) || Math.abs(x) > 1e3) break;
+          pth.push([x, y]); if (Math.hypot(...gr) < 1e-4 && Math.hypot(...v) < 1e-5) break;
+        }
+        const g0 = minima[0], global = g0 ? Math.hypot(g0.x - x, g0.y - y) < 0.1 : true;
+        multi.push({ path: pth, global });
+      }
+      const hits = multi.filter((m) => m.global).length;
+      $("#multiOut").innerHTML = minima.length > 1
+        ? `<b>${hits} of 20</b> random starts reached the global minimum (green paths). The other ${20 - hits} settled in a local one (orange).`
+        : `All 20 starts head for the same single minimum.`;
+      draw();
+    });
     map.c.addEventListener("pointerdown", (e) => {
       const r = map.c.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
       if (px < map.pad.l || px > map.w - map.pad.r || py < map.pad.t || py > map.h - map.pad.b) return;

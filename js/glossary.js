@@ -40,6 +40,25 @@ Lab.terms = [
   ["Trend", "A long-run upward or downward movement in a time series.", "exponential-smoothing"],
   ["Underfitting", "When a model is too simple to capture the real pattern. High bias.", "bias-variance"],
   ["Variance (of a model)", "How much a model's predictions change when it is trained on a different sample. Flexible models have high variance.", "bias-variance"],
+  ["ACF and PACF", "Autocorrelation: how much a series correlates with itself k steps back. Partial autocorrelation removes the effect of the lags in between. Their shapes suggest ARIMA orders.", "arima"],
+  ["AIC", "Akaike information criterion: model fit penalized by the number of parameters. Lower is better; used to choose between models.", "arima"],
+  ["ARIMA", "AutoRegressive Integrated Moving Average: a time-series model where today depends on past values (AR), past surprises (MA), after differencing (I).", "arima"],
+  ["Bagging (bootstrap aggregating)", "Train many models, each on a random resample of the data drawn with replacement, then average or vote.", "random-forest"],
+  ["Bias (of a forecast)", "The average of actual minus forecast. Persistently negative means over-forecasting; positive means under-forecasting.", "forecast-accuracy"],
+  ["Decision tree", "A model that predicts by asking a sequence of yes/no questions about the inputs, ending in a leaf that gives the answer.", "random-forest"],
+  ["Differencing", "Replacing a series by its period-to-period changes. Removes a wandering level or trend.", "arima"],
+  ["Forecast Value Added (FVA)", "The change in forecast error caused by a process step, such as a planner override. Positive means the step improved the forecast.", "forecast-value-added"],
+  ["Gini impurity", "How mixed the classes are in a group: 0 when all one class, 0.5 for a 50/50 split of two classes. Trees split to reduce it.", "random-forest"],
+  ["MAE", "Mean absolute error: the average size of the errors, ignoring sign. In the data's units.", "forecast-accuracy"],
+  ["MASE", "Mean absolute scaled error: MAE divided by the MAE of the naive forecast. Below 1 beats naive. Scale-free and safe with zeros.", "forecast-accuracy"],
+  ["Moving average forecast", "Forecast the next value as the plain average of the last k values.", "exponential-smoothing"],
+  ["Naive forecast", "The simplest benchmark: next period equals the last actual. Seasonal naive uses the same period last year.", "forecast-value-added"],
+  ["Out-of-bag (OOB) error", "In a random forest, scoring each point only with the trees that did not train on it. A free estimate of test error.", "random-forest"],
+  ["Random forest", "Many decision trees, each trained on a bootstrap sample with random feature choices, voting together.", "random-forest"],
+  ["sMAPE", "Symmetric MAPE: divides each error by the average of actual and forecast, which caps the damage from near-zero actuals.", "forecast-accuracy"],
+  ["Stationary", "A series whose mean, spread and correlations do not drift over time. ARMA models assume it; differencing can create it.", "arima"],
+  ["WAPE", "Weighted absolute percentage error: total absolute error divided by total actuals. Weights big periods more and avoids MAPE's blow-ups.", "forecast-accuracy"],
+  ["White noise", "A series of independent random values with no pattern. A good model's residuals should look like it.", "arima"],
 ];
 
 Lab.glossaryPage = (main) => {
@@ -57,7 +76,7 @@ Lab.glossaryPage = (main) => {
     </div>`;
   const render = (q) => {
     q = q.trim().toLowerCase();
-    const list = Lab.terms.filter(([t, d]) => !q || t.toLowerCase().includes(q) || d.toLowerCase().includes(q));
+    const list = Lab.terms.slice().sort((a, b) => a[0].localeCompare(b[0])).filter(([t, d]) => !q || t.toLowerCase().includes(q) || d.toLowerCase().includes(q));
     main.querySelector("#gl").innerHTML = list.length
       ? list.map(([t, d, see]) => `<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px">
           <dt style="font:700 1rem/1.3 var(--font-display);margin-bottom:6px">${t}</dt>
