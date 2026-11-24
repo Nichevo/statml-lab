@@ -65,6 +65,11 @@ Lab.terms = [
   ["1 − xMAPE", "An accuracy score: the average of 1 − |actual − forecast| / max(actual, forecast). Runs from 0% to 100%, higher is better, symmetric for over- and under-forecasts, and safe with zeros.", "forecast-accuracy"],
   ["Croston's method", "A forecast for intermittent demand that smooths order size and the gap between orders separately, then divides one by the other.", "intermittent-demand"],
   ["Intermittent demand", "Demand that is zero in many periods, with occasional orders of varying size. Typical of spare parts and slow sellers.", "intermittent-demand"],
+  ["Prediction interval", "A range that should contain a future value with a stated probability, such as 80%. Wider than a confidence interval because it includes the noise of a single outcome.", "prediction-intervals"],
+  ["Quantile forecast", "A forecast of a specific point in the distribution, such as the 90th percentile: demand should be at or below it 90% of the time.", "prediction-intervals"],
+  ["Safety stock", "Stock held above the point forecast to cover uncertainty. Equals the chosen service-level quantile minus the forecast.", "prediction-intervals"],
+  ["Newsvendor rule", "Stock to the quantile cu / (cu + co), where cu is the cost of a lost sale and co the cost of a leftover unit.", "prediction-intervals"],
+  ["Rolling-origin evaluation", "Testing a forecast method from many starting points in turn, rather than on a single held-out window.", "forecast-lab"],
 ];
 
 Lab.glossaryPage = (main) => {
