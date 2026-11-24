@@ -15,7 +15,7 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
 - **Glossary links**: plain-language definitions of 175+ terms, cross-linked to the pages that use them.
 
-## Contents (57 explainers)
+## Contents (58 explainers)
 
 | Area | Pages |
 |---|---|
@@ -23,7 +23,7 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 | Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design |
 | Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, k-means clustering and PCA |
 | Statistics | R², least squares, central limit theorem, hypothesis tests and p-values, rolling up numbers (bottom-up vs averages) |
-| Machine learning | Bias–variance, gradient descent, attention in transformers, decision trees and random forests, convolutional neural networks (draw a digit and watch a real CNN read it) |
+| Machine learning | Bias–variance, gradient descent, attention in transformers, decision trees and random forests, neural networks from scratch (perceptron to hidden layers), convolutional neural networks (draw a digit and watch a real CNN read it) |
 | Optimization | Linear programming, simulated annealing |
 
 The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, and Statistics for decisions.

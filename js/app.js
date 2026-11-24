@@ -53,7 +53,7 @@
     ["Statistics for decisions", "What a sample can and can't tell you.",
       ["central-limit", "hypothesis-test", "rollup", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
-      ["least-squares", "bias-variance", "gradient-descent", "random-forest", "cnn"]],
+      ["least-squares", "bias-variance", "gradient-descent", "random-forest", "neural-net", "cnn"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",
       ["gradient-descent", "attention"]],
   ];

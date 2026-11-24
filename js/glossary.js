@@ -1,5 +1,10 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Perceptron", "The simplest artificial neuron: a weighted sum of inputs that outputs 1 if it is above zero, else 0. Learns by nudging weights after each mistake.", "neural-net"],
+  ["Sigmoid", "The S-shaped function 1/(1+e^−x), which squashes any number into 0 to 1. Used as a smooth on/off switch in neural networks and logistic regression.", "neural-net"],
+  ["Hidden layer", "A layer of units between a network's inputs and outputs. Lets the network build intermediate features, such as 'plus shape' or 'X shape'.", "neural-net"],
+  ["Backpropagation", "The method for working out how much each weight contributed to the error, by passing the error backwards through the layers (the chain rule).", "neural-net"],
+  ["Linearly separable", "When one straight line (or flat plane) can split the two classes. A single neuron can only learn problems like this, which is why it fails on XOR.", "neural-net"],
   ["Convolutional neural network (CNN)", "A neural network that scans its input with small learned filters, reusing the same weights at every position. The standard design for images.", "cnn"],
   ["Convolution", "Sliding a small grid of weights over an image (or a series), multiplying and summing at each position to produce a feature map.", "cnn"],
   ["Filter (kernel)", "The small grid of weights in a convolution, e.g. 5×5. Each filter learns to respond to one pattern, such as a stroke edge.", "cnn"],

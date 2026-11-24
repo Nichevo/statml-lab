@@ -92,6 +92,10 @@
     "https://doi.org/10.1016/0377-0427(87)90125-7": "Introduced the silhouette score, which compares each point's distance to its own cluster with its distance to the nearest other cluster. Used to choose the number of clusters.",
     "https://doi.org/10.1098/rsta.2015.0202": "A modern review of PCA: what it does, how to read loadings, when to standardise, and newer variants. A good next read after this page.",
 
+    // Neural networks
+    "https://doi.org/10.1037/h0042519": "Proposed the perceptron, a machine that learns to classify by adjusting weights after each error. It sparked the first wave of neural network research.",
+    "https://doi.org/10.1038/323533a0": "Showed that backpropagation can train hidden layers, which then learn useful internal features by themselves. This revived neural networks in the 1980s.",
+
     // CNNs
     "https://doi.org/10.1109/5.726791": "Introduced LeNet-5 and the MNIST digit benchmark: convolution, pooling and gradient descent, trained end to end. It read millions of bank cheques in the 1990s.",
     "https://doi.org/10.1007/BF00344251": "The neocognitron, inspired by the visual cortex: layers of local feature detectors with pooling-like steps, giving tolerance to shifts. CNNs grew from this idea.",
