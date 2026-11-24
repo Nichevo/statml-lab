@@ -38,7 +38,7 @@
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
       ["exponential-smoothing", "seasonal-decomposition", "forecast-accuracy", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
-      ["prediction-intervals", "reorder-point", "bullwhip-effect"]],
+      ["prediction-intervals", "reorder-point", "lead-time-error", "monthly-to-weekly", "frozen-zones", "demand-sensing", "bullwhip-effect"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
       ["central-limit", "hypothesis-test", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",

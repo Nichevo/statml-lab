@@ -1,5 +1,14 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Lag (forecast lag)", "How far ahead a forecast was made. A lag-4 forecast for week 10 is the one published in week 6.", "lead-time-error"],
+  ["Forecast waterfall", "A table showing each period's forecast as it stood at each lag, so you can see how it changed as the period approached.", "lead-time-error"],
+  ["Lead-time demand", "Total demand over the time between placing an order and receiving it. Safety stock protects against its uncertainty.", "lead-time-error"],
+  ["Frozen zone (time fence)", "The near-term window in which a plan can no longer be changed.", "frozen-zones"],
+  ["Schedule nervousness", "Frequent changes to a plan from one planning run to the next, which disrupt materials, labour and suppliers.", "frozen-zones"],
+  ["Demand sensing", "Adjusting the short-term forecast using the latest signals, such as last week's sales or this week's partial sales.", "demand-sensing"],
+  ["Nowcasting", "Estimating the current period's total from the partial data available so far.", "demand-sensing"],
+  ["Daily profile (phasing)", "The share of a week's or month's demand that usually falls on each day, used to split a forecast into smaller time buckets.", "monthly-to-weekly"],
+  ["ISO week", "A Monday-to-Sunday week, numbered by the year and assigned to the month that contains its Thursday.", "monthly-to-weekly"],
   ["Bullwhip effect", "Order swings that grow larger at each step up a supply chain, even when end-customer demand is steady.", "bullwhip-effect"],
   ["Order-up-to policy", "Each period, order enough to bring the inventory position back up to a target level S.", "bullwhip-effect"],
   ["Inventory position", "Stock on hand plus stock on order minus backorders. Reorder decisions use this, not just what's on the shelf.", "bullwhip-effect"],
