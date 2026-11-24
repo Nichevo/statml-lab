@@ -25,7 +25,10 @@
             ])],
             ["No", Q("What pattern do you see?", [
               ["A repeating season", L("Holt-Winters / decomposition", "exponential-smoothing", "Smoothing with level, trend and seasonal parts; decomposition shows the parts.")],
-              ["A trend, no season", L("Holt's linear method", "exponential-smoothing", "Smoothing with a level and a trend.")],
+              ["A trend, no season", Q("Will the trend keep going at the same pace?", [
+                ["Yes, it looks steady", L("Holt's linear method", "exponential-smoothing", "Smoothing with a level and a trend.")],
+                ["Not sure, it may fade", L("Theta method", "theta", "Simple smoothing plus half the long-run trend: a strong, cheap benchmark.")],
+              ])],
               ["Just noise around a level", L("Moving average / simple smoothing", "exponential-smoothing", "Average recent periods; simple smoothing weights recent ones more.")],
               ["Each period depends on the last few", L("ARIMA (read the ACF/PACF first)", "arima", "Models autocorrelation directly; the ACF and PACF charts suggest the orders.")],
             ])],
@@ -68,6 +71,7 @@
           ["Three or more group averages", L("ANOVA", "anova-chi-square", "One test across all groups before comparing pairs.")],
           ["Counts or shares across categories", L("Chi-square test", "anova-chi-square", "Do the observed counts differ from what independence predicts?")],
           ["Before vs after a change in a series", L("Change-point detection", "change-points", "Find when the level of a series shifted.")],
+          ["The effect of a change, with a comparison group", L("Difference-in-differences", "diff-in-diff", "Compare how much the changed group moved with how much an untouched group moved.")],
         ])],
         ["How big must my trial be?", L("A/B test power and sample size", "ab-power", "Stores or weeks needed to detect the lift you care about.")],
         ["How sure is my estimate?", Q("What are you estimating?", [
@@ -91,30 +95,36 @@
         ["What shape is my data?", L("Distributions", "distributions", "Normal, Poisson, log-normal and friends, and when each appears.")],
         ["Find groups or simplify many variables", L("PCA and clustering", "pca-clustering", "Reduce many columns to a few directions; group similar rows.")],
       ]),
-      after: [["Check the result on fresh data", "cross-validation"]],
+      after: [["Check a regression for curves, outliers and missing drivers", "regression-pitfalls"], ["Check the result on fresh data", "cross-validation"]],
     },
     {
       key: "ml", name: "Machine-learning model",
       intro: "The kind of data narrows things quickly. For tables, start simple and only add complexity if cross-validation says it helps.",
       tree: Q("What does your data look like?", [
         ["Images", L("Convolutional neural network", "cnn", "Small learned filters scan the image for patterns.")],
-        ["Text or long sequences", L("Transformer (attention)", "attention", "Each position looks at every other to decide what matters.")],
+        ["Text or long sequences", L("Transformer", "transformer", "Embeddings, attention and feed-forward layers, stacked; each position looks back at what matters.")],
         ["Many related time series", L("Global ML forecasting", "global-forecasting", "One tree model across all series with lag and calendar features.")],
         ["A table of rows and columns", Q("Do you have a target to predict?", [
           ["No, I want to find structure", L("PCA and clustering", "pca-clustering", "Unsupervised: groups and main directions in the data.")],
           ["Yes, a number", Q("What matters more?", [
             ["Explaining the effect of each driver", L("Linear regression", "least-squares", "One coefficient per driver, easy to read.")],
             ["Many drivers, not much data", L("Ridge or lasso regression", "regularisation", "Penalise big coefficients; lasso also drops useless drivers.")],
-            ["Accuracy, with curves and interactions", L("Random forest / gradient boosting", "random-forest", "Many trees capture non-linear effects without hand-made features.")],
+            ["Accuracy, with curves and interactions", Q("How much tuning can you do?", [
+              ["Little: want robust defaults", L("Random forest", "random-forest", "Many trees capture non-linear effects without hand-made features.")],
+              ["Some: want the best accuracy", L("Gradient-boosted trees", "gradient-boosting", "Trees added one at a time to fix the errors so far; tune learning rate and tree count.")],
+            ])],
           ])],
           ["Yes, a category (yes/no, A/B/C)", Q("What matters more?", [
             ["Explaining and probabilities", L("Logistic regression", "logistic-regression", "Readable coefficients and calibrated probabilities.")],
-            ["Accuracy, with curves and interactions", L("Random forest / gradient boosting", "random-forest", "Usually the strongest choice for tabular data.")],
+            ["Accuracy, with curves and interactions", Q("How much tuning can you do?", [
+              ["Little: want robust defaults", L("Random forest", "random-forest", "Usually a strong choice for tabular data with almost no tuning.")],
+              ["Some: want the best accuracy", L("Gradient-boosted trees", "gradient-boosting", "Often the most accurate for tabular data once tuned.")],
+            ])],
             ["Learning raw patterns from scratch", L("Neural network", "neural-net", "Hidden layers build their own features; needs more data.")],
           ])],
         ])],
       ]),
-      after: [["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
+      after: [["Explain a model's predictions with SHAP", "shap"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
     },
     {
       key: "supply", name: "Inventory and supply decision",

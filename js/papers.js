@@ -157,5 +157,23 @@
     "https://sites.stat.columbia.edu/gelman/book/": "Home page of the standard Bayesian statistics textbook, with a free PDF for non-commercial use. Chapter 2 works through single-parameter models like the beta-binomial used here.",
     "https://doi.org/10.1093/biomet/65.2.297": "Proposed the Ljung–Box test, which checks whether a set of autocorrelations (usually of a model's residuals) is jointly larger than chance would produce.",
     "https://doi.org/10.2307/1401322": "Gave the recursive method (now called Durbin–Levinson) for fitting autoregressive models of increasing order, which is also how partial autocorrelations are computed.",
+
+    // Batch 4: boosting, SHAP, Theta, causal impact, regression checks, transformer block
+    "https://doi.org/10.1145/2939672.2939785": "Described XGBoost, a fast, regularised gradient-boosting library that handles missing values and sparse data and scales across machines. It went on to win a large share of tabular-data competitions.",
+    "https://doi.org/10.3389/fnbot.2013.00021": "A hands-on tutorial on gradient boosting: how each new tree fits the errors left so far, which loss functions to use, and how learning rate and tree size control overfitting, with worked examples.",
+    "https://arxiv.org/abs/1705.07874": "Showed that several popular ways of explaining predictions are special cases of one idea, Shapley values, and that only this choice has a set of fairness properties. Named the result SHAP.",
+    "https://doi.org/10.1038/s42256-019-0138-9": "Gave TreeSHAP, a fast exact way to compute SHAP values for tree models, plus ways to combine many local explanations into a global picture of the model, including interaction effects.",
+    "https://doi.org/10.1515/9781400881970-018": "Shapley's game-theory result: there is exactly one fair way to divide a team's payoff among players, averaging each player's added value over all orders of joining. SHAP applies it to model inputs.",
+    "https://doi.org/10.1016/S0169-2070(00)00066-2": "Introduced the Theta method: split a series into lines with different curvature, forecast each simply, and combine. It was simple and won the M3 forecasting competition.",
+    "https://doi.org/10.1016/S0169-2070(01)00143-1": "Proved that the standard Theta method is equivalent to simple exponential smoothing with a drift equal to half the trend slope, which explains why it works and how to get prediction intervals.",
+    "https://doi.org/10.1016/S0169-2070(00)00057-1": "Results of the M3 competition: 3,003 series forecast by 24 methods. Simple and combined methods often beat complex ones, and the Theta method did best overall.",
+    "https://doi.org/10.1016/j.ijforecast.2016.02.005": "Generalised Theta by optimising the weight on the trend line instead of fixing it at one half, linked it to state space models, and showed the optimised versions forecast better on M3 and M4-style data.",
+    "https://doi.org/10.1214/14-AOAS788": "Introduced CausalImpact: build a Bayesian time-series model of what a metric would have done without an intervention, using unaffected series as controls, and read the effect as the gap, with uncertainty.",
+    "https://doi.org/10.1198/jasa.2009.ap08746": "Introduced synthetic control: when no single region is a good comparison, build one from a weighted mix of untreated regions that matches the treated one before the change.",
+    "https://doi.org/10.1080/00401706.1977.10489493": "Proposed Cook's distance, a single number for how much the fitted regression would change if one observation were dropped, combining how unusual its x is with how badly it fits.",
+    "https://doi.org/10.2307/1912934": "Showed how to get valid standard errors when the noise in a regression is uneven (heteroskedastic), without modelling its shape, and gave a test for it. Now called robust or White standard errors.",
+    "https://arxiv.org/abs/1301.3781": "Introduced word2vec: cheap models that learn word vectors from huge text by predicting nearby words. Similar words get similar vectors, and directions carry meaning (king − man + woman ≈ queen).",
+    "https://arxiv.org/abs/1607.06450": "Introduced layer normalisation: rescale each example's activations to mean 0 and spread 1 inside the network. It speeds up and stabilises training and became standard in transformers.",
+    "https://arxiv.org/abs/2002.04745": "Showed that putting layer norm before each attention and feed-forward sub-layer (pre-LN), rather than after, keeps gradients well behaved, so transformers train without a delicate warm-up.",
   };
 })();
