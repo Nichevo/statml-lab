@@ -240,5 +240,14 @@
     return ((((((a[0] * s + a[1]) * s + a[2]) * s + a[3]) * s + a[4]) * s + a[5]) * r) / (((((b[0] * s + b[1]) * s + b[2]) * s + b[3]) * s + b[4]) * s + 1);
   }
 
-  window.Lab = { css, niceTicks, fmt, Plot, watch, dragPoints, rng, ols, solve, el, qnorm };
+  // Standard normal density, CDF (Abramowitz-Stegun 7.1.26 via erf) and loss function G(z) = E[(Z - z)+]
+  const dnorm = (x) => Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+  function pnorm(x) {
+    const t = 1 / (1 + 0.3275911 * Math.abs(x) / Math.SQRT2);
+    const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x / 2);
+    return x >= 0 ? 0.5 * (1 + y) : 0.5 * (1 - y);
+  }
+  const gloss = (z) => dnorm(z) - z * (1 - pnorm(z));
+
+  window.Lab = { css, niceTicks, fmt, Plot, watch, dragPoints, rng, ols, solve, el, qnorm, dnorm, pnorm, gloss };
 })();

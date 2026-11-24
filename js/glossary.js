@@ -1,5 +1,17 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Risk pooling", "Combining demand from several sources into one stock, so ups and downs partly cancel and less safety stock is needed.", "risk-pooling"],
+  ["Square-root law", "Pooling n locations with independent demand cuts total safety stock by a factor of √n.", "risk-pooling"],
+  ["Coefficient of variation (CV)", "Standard deviation divided by the mean. A scale-free measure of how variable something is.", "abc-xyz"],
+  ["ABC analysis", "Ranking items by annual value: A items make most of the value, C items little.", "abc-xyz"],
+  ["XYZ analysis", "Ranking items by demand variability: X steady, Y variable, Z erratic.", "abc-xyz"],
+  ["Pareto principle (80/20)", "The pattern where a small share of causes (items, customers) accounts for most of the effect (value, volume).", "abc-xyz"],
+  ["Normal loss function G(z)", "The expected amount by which a standard normal value exceeds z. Used to compute expected units short.", "service-level-cost"],
+  ["Censored demand", "Demand you only observe up to a limit: when stock runs out, sales understate true demand.", "censored-demand"],
+  ["Lost sales imputation", "Estimating what demand would have been in periods when stock ran out.", "censored-demand"],
+  ["S&OP (sales and operations planning)", "The monthly process that balances the demand plan with supply and capacity across the business.", "level-vs-chase"],
+  ["Level strategy", "Producing at a constant rate and letting inventory absorb seasonal swings in demand.", "level-vs-chase"],
+  ["Chase strategy", "Changing the production rate each period to match demand, keeping little inventory.", "level-vs-chase"],
   ["Lag (forecast lag)", "How far ahead a forecast was made. A lag-4 forecast for week 10 is the one published in week 6.", "lead-time-error"],
   ["Forecast waterfall", "A table showing each period's forecast as it stood at each lag, so you can see how it changed as the period approached.", "lead-time-error"],
   ["Lead-time demand", "Total demand over the time between placing an order and receiving it. Safety stock protects against its uncertainty.", "lead-time-error"],
