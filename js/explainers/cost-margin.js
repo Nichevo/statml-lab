@@ -54,11 +54,11 @@ Lab.register({
           <div id="stackLeg" class="legend" style="margin-top:8px"></div>
         </div>
         <div class="plot" style="padding:14px">
-          <h4 class="cm-h">From revenue to profit, per year: today vs after improvements</h4>
+          <h4 class="cm-h">From revenue to profit, per year: today vs after the changes</h4>
           <div id="ladder"></div>
         </div>
         <div class="plot" style="padding:14px">
-          <h4 class="cm-h">What the improvements are worth</h4>
+          <h4 class="cm-h">What each change is worth</h4>
           <div id="levers"></div>
           <p class="hint" id="leverNote" style="margin:10px 0 0"></p>
         </div>
@@ -82,15 +82,16 @@ Lab.register({
           .cm-in{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.86rem;padding:3px 0}
           .cm-in small{color:var(--muted)}
           .cm-in input{width:96px;font:inherit;font-family:var(--font-mono);padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
-          @media (max-width:560px){.cm-row{grid-template-columns:110px 1fr 76px;font-size:.8rem}}
+          #levers .cm-row{grid-template-columns:minmax(110px,190px) 1fr 150px}
+          @media (max-width:560px){.cm-row{grid-template-columns:110px 1fr 76px;font-size:.8rem} #levers .cm-row{grid-template-columns:96px 1fr 116px}}
         </style>`,
       panel: `
-        <p class="hint" style="margin:0">Improvements. Move a slider and the landed cost, the P&amp;L and the margins update to show the result. The value panel shows each one on its own, then all together.</p>
-        <div class="ctrl"><label for="dLost">Win back lost sales <output id="dLostV"></output></label><input type="range" id="dLost" min="0" max="4" step="0.5" value="2"></div>
-        <div class="ctrl"><label for="dCover">Hold less stock <output id="dCoverV"></output></label><input type="range" id="dCover" min="0" max="6" step="0.5" value="2"></div>
-        <div class="ctrl"><label for="dFrt">Cheaper freight (all legs) <output id="dFrtV"></output></label><input type="range" id="dFrt" min="0" max="25" step="1" value="10"></div>
-        <div class="ctrl"><label for="dWo">Fewer write-offs <output id="dWoV"></output></label><input type="range" id="dWo" min="0" max="2" step="0.25" value="1"></div>
-        <div class="ctrl"><label for="dFob">Better supplier price <output id="dFobV"></output></label><input type="range" id="dFob" min="0" max="10" step="0.5" value="2"></div>
+        <p class="hint" style="margin:0">Changes to test. Slide left for an improvement, right for things getting worse. The landed cost, the P&amp;L and the margins all update; the value panel shows each change on its own, then all together.</p>
+        <div class="ctrl"><label for="dLost">Lost sales (stockouts) <output id="dLostV"></output></label><input type="range" id="dLost" min="-4" max="10" step="0.5" value="-2"></div>
+        <div class="ctrl"><label for="dCover">Stock held <output id="dCoverV"></output></label><input type="range" id="dCover" min="-7" max="12" step="0.5" value="-2"></div>
+        <div class="ctrl"><label for="dFrt">Freight cost (all legs) <output id="dFrtV"></output></label><input type="range" id="dFrt" min="-50" max="150" step="5" value="-10"></div>
+        <div class="ctrl"><label for="dWo">Write-offs <output id="dWoV"></output></label><input type="range" id="dWo" min="-2" max="8" step="0.25" value="-1"></div>
+        <div class="ctrl"><label for="dFob">Supplier price <output id="dFobV"></output></label><input type="range" id="dFob" min="-30" max="50" step="1" value="-2"></div>
         <div class="readouts" id="ro"></div>
         <div class="btns"><button class="btn" id="reset" type="button">Reset everything</button></div>`,
       notes: `
@@ -152,15 +153,17 @@ Lab.register({
 
     function draw() {
       const d = { lost: +$("#dLost").value, cover: +$("#dCover").value, frt: +$("#dFrt").value, wo: +$("#dWo").value, fob: +$("#dFob").value };
-      $("#dLostV").textContent = `−${d.lost} pts (${V.lost}% → ${Math.max(0, V.lost - d.lost)}%)`;
-      $("#dCoverV").textContent = `−${d.cover} wk (${V.cover} → ${Math.max(0, V.cover - d.cover)})`;
-      $("#dFrtV").textContent = `−${d.frt}%`;
-      $("#dWoV").textContent = `−${d.wo} pts (${V.wo}% → ${Math.max(0, V.wo - d.wo)}%)`;
-      $("#dFobV").textContent = `−${d.fob}%`;
+      const sg = (v, u) => (v > 0 ? "+" : v < 0 ? "−" : "±") + Math.abs(v) + u;
+      const nLost = Math.min(90, Math.max(0, V.lost + d.lost)), nCover = Math.max(0, V.cover + d.cover), nWo = Math.min(90, Math.max(0, V.wo + d.wo));
+      $("#dLostV").textContent = `${sg(d.lost, " pts")} (${V.lost}% → ${nLost}%)`;
+      $("#dCoverV").textContent = `${sg(d.cover, " wk")} (${V.cover} → ${nCover} wk)`;
+      $("#dFrtV").textContent = sg(d.frt, "%");
+      $("#dWoV").textContent = `${sg(d.wo, " pts")} (${V.wo}% → ${nWo}%)`;
+      $("#dFobV").textContent = sg(d.fob, "%");
 
       const b = model(V);
-      const fr = () => 1 - d.frt / 100;
-      const all = { ...V, lost: Math.max(0, V.lost - d.lost), cover: Math.max(0, V.cover - d.cover), frt: V.frt * fr(), inland: V.inland * fr(), out: V.out * fr(), wo: Math.max(0, V.wo - d.wo), fob: V.fob * (1 - d.fob / 100) };
+      const fr = () => 1 + d.frt / 100;
+      const all = { ...V, lost: nLost, cover: nCover, frt: V.frt * fr(), inland: V.inland * fr(), out: V.out * fr(), wo: nWo, fob: V.fob * (1 + d.fob / 100) };
       const mAll = model(all);
       // ---- landed cost stack: today vs after the improvements
       const segsOf = (p, m) => [["Supplier price (FOB)", p.fob, "--accent"], ["Insurance", m.cifIns, "--violet"], ["International freight", p.frt, "--warm"], ["Duty", m.duty, "--bad"], ["Broker and port", p.broker, "--muted"], ["Port → DC", p.inland, "--violet-soft"]];
@@ -171,10 +174,10 @@ Lab.register({
       const changed = Math.abs(mAll.landed - b.landed) > 1e-9;
       $("#stack").innerHTML = `
         <div class="cm-row"><span>Landed cost today</span><div class="cm-track">${stackOf(segs)}</div><span class="v">${money(b.landed, 2)}</span></div>
-        <div class="cm-row"><span>After improvements</span><div class="cm-track">${stackOf(segsA)}</div><span class="v">${money(mAll.landed, 2)}${changed ? `<br><small style="color:var(--good)">−${money(b.landed - mAll.landed, 2)}</small>` : ""}</span></div>
+        <div class="cm-row"><span>After the changes</span><div class="cm-track">${stackOf(segsA)}</div><span class="v">${money(mAll.landed, 2)}${changed ? `<br><small style="color:var(${mAll.landed < b.landed ? "--good" : "--bad"})">${mAll.landed < b.landed ? "−" : "+"}${money(Math.abs(b.landed - mAll.landed), 2)}</small>` : ""}</span></div>
         <div class="cm-row"><span>Selling price</span><div class="cm-track">${bar(0, mAll.landed, "--line")}${bar(mAll.landed, V.price - mAll.landed, "--good")}</div><span class="v">${money(V.price, 2)}</span></div>
         <div class="cm-row" style="color:var(--muted)"><span>Gross margin / unit</span><div class="cm-track"></div><span class="v">${money(V.price - b.landed, 2)} → ${money(V.price - mAll.landed, 2)}</span></div>
-        <p class="hint" style="margin:6px 0 0">The second bar applies the freight and supplier-price sliders. Cheaper freight also lowers duty when duty is on CIF. Outbound freight isn't part of landed cost; it shows up further down the P&amp;L.</p>`;
+        <p class="hint" style="margin:6px 0 0">The second bar applies the freight and supplier-price sliders, up or down. Freight also changes the duty when duty is charged on CIF. Outbound freight isn't part of landed cost; it shows up further down the P&amp;L.</p>`;
       $("#stackLeg").innerHTML = segs.map(([l, v, c], i) => { const a = segsA[i][1]; return `<span><i style="background:var(${c})"></i>${l} ${money(v, 2)}${Math.abs(a - v) > 1e-9 ? ` → ${money(a, 2)}` : ""}</span>`; }).join("") + `<span><i style="background:var(--good)"></i>Margin</span>`;
 
       // ---- P&L ladder: today (faint) vs after the improvements (solid)
@@ -185,7 +188,7 @@ Lab.register({
         ["Operating profit", Math.min(0, m.profit), Math.max(0, m.profit), m.profit >= 0 ? "--good" : "--bad", true, m.profit / m.rev]];
       const val = (l, lo, hi, m) => (l.startsWith("−") ? -(hi - lo) : l === "Operating profit" ? m.profit : hi);
       const S0 = stepsOf(b), S1 = stepsOf(mAll);
-      $("#ladder").innerHTML = `<div class="legend" style="margin:0 0 8px"><span><i style="background:var(--line)"></i>Today</span><span><i style="background:var(--good)"></i>After the improvements in the sliders</span></div>` + S1.map(([l, lo, hi, c, sub, mg], k) => {
+      $("#ladder").innerHTML = `<div class="legend" style="margin:0 0 8px"><span><i style="background:var(--line)"></i>Today</span><span><i style="background:var(--good)"></i>After the changes in the sliders</span></div>` + S1.map(([l, lo, hi, c, sub, mg], k) => {
         const [, lo0, hi0, , , mg0] = S0[k];
         const v0 = val(l, lo0, hi0, b), v1 = val(l, lo, hi, mAll), dv = v1 - v0;
         const ghost = `<div class="cm-bar" style="left:${(Math.max(0, lo0) / R) * 100}%;width:${(Math.max(0, hi0 - Math.max(0, lo0)) / R) * 100}%;background:var(--line);top:-3px;bottom:-3px"></div>`;
@@ -196,20 +199,23 @@ Lab.register({
 
       // ---- levers
       const L = [
-        ["Win back lost sales", { ...V, lost: Math.max(0, V.lost - d.lost) }, "--accent"],
-        ["Hold less stock", { ...V, cover: Math.max(0, V.cover - d.cover) }, "--violet"],
-        ["Cheaper freight", { ...V, frt: V.frt * fr(), inland: V.inland * fr(), out: V.out * fr() }, "--warm"],
-        ["Fewer write-offs", { ...V, wo: Math.max(0, V.wo - d.wo) }, "--bad"],
-        ["Better supplier price", { ...V, fob: V.fob * (1 - d.fob / 100) }, "--good"],
+        ["Lost sales", { ...V, lost: nLost }, "--accent"],
+        ["Stock held", { ...V, cover: nCover }, "--violet"],
+        ["Freight cost", { ...V, frt: V.frt * fr(), inland: V.inland * fr(), out: V.out * fr() }, "--warm"],
+        ["Write-offs", { ...V, wo: nWo }, "--warm"],
+        ["Supplier price", { ...V, fob: V.fob * (1 + d.fob / 100) }, "--good"],
       ];
       const rows = L.map(([l, p, c]) => { const m = model(p); return [l, m.profit - b.profit, c, b.inv - m.inv]; });
       const tot = mAll.profit - b.profit;
       const mx = Math.max(1, ...rows.map((r) => Math.abs(r[1])), Math.abs(tot));
       const cm = b.contrib / b.rev; // contribution margin %
-      const vbar = (v, c) => `<div class="cm-bar" style="left:0;width:${(Math.abs(v) / mx) * 100}%;background:var(${c})"></div>`;
-      $("#levers").innerHTML = rows.map(([l, v, c, cash]) => `<div class="cm-row"><span>${l}</span><div class="cm-track">${vbar(v, c)}</div><span class="v">${money(v)}/yr${cash > 1 ? `<br><small style="color:var(--muted)">+ ${money(cash)} cash once</small>` : ""}</span></div>`).join("")
-        + `<div class="cm-row sub"><span>All together</span><div class="cm-track">${vbar(tot, "--ink")}</div><span class="v">${money(tot)}/yr</span></div>`;
-      $("#leverNote").innerHTML = `To add ${money(tot)} of profit through extra sales alone, you'd need about <b>${money(tot / cm)}</b> more revenue a year (${pct((tot / cm) / b.rev, 0)} growth), because each extra sales dollar only contributes ${pct(cm)}. Holding less stock also releases <b>${money(b.inv - mAll.inv)}</b> of cash once (working capital), which is separate from profit.`;
+      const vbar = (v, c) => `<div class="cm-bar" style="${v >= 0 ? "left:50%" : `left:${50 - (Math.abs(v) / mx) * 50}%`};width:${(Math.abs(v) / mx) * 50}%;background:var(${v >= 0 ? c : "--bad"})"></div><div style="position:absolute;left:50%;top:-3px;bottom:-3px;border-left:1px solid var(--muted)"></div>`;
+      $("#levers").innerHTML = rows.map(([l, v, c, cash]) => `<div class="cm-row"><span>${l}</span><div class="cm-track">${vbar(v, c)}</div><span class="v"><span style="color:${v < -0.5 ? "var(--bad)" : "inherit"}">${v >= 0 ? "+" : ""}${money(v)}/yr</span>${Math.abs(cash) > 1 ? `<br><small style="color:var(--muted)">${cash > 0 ? "+" : "−"} ${money(Math.abs(cash))} cash once</small>` : ""}</span></div>`).join("")
+        + `<div class="cm-row sub"><span>All together</span><div class="cm-track">${vbar(tot, "--ink")}</div><span class="v" style="color:${tot < -0.5 ? "var(--bad)" : "inherit"}">${tot >= 0 ? "+" : ""}${money(tot)}/yr</span></div><p class="hint" style="margin:6px 0 0">Bars right of the line add profit; bars left of it (red) cost profit.</p>`;
+      const cashTxt = Math.abs(b.inv - mAll.inv) > 1 ? ` The change in stock ${b.inv > mAll.inv ? "releases" : "ties up"} <b>${money(Math.abs(b.inv - mAll.inv))}</b> of cash once (working capital), which is separate from profit.` : "";
+      $("#leverNote").innerHTML = (tot >= 0
+        ? `To add ${money(tot)} of profit through extra sales alone, you'd need about <b>${money(tot / cm)}</b> more revenue a year (${pct((tot / cm) / b.rev, 0)} growth), because each extra sales dollar only contributes ${pct(cm)}.`
+        : `These changes cost ${money(-tot)} of profit a year. Winning it back through sales alone would take about <b>${money(-tot / cm)}</b> more revenue (${pct((-tot / cm) / b.rev, 0)} growth), because each extra sales dollar only contributes ${pct(cm)}.`) + cashTxt;
 
       $("#ro").innerHTML = `
         <div class="ro"><b>Landed cost / unit</b><span class="num">${money(b.landed, 2)} → ${money(mAll.landed, 2)}</span></div>
@@ -224,13 +230,13 @@ Lab.register({
         `CIF = ${m2(V.fob)} + ${V.ins}% × ${m2(V.fob)} + ${m2(V.frt)} = ${B(m2(b.cif))}`,
         `duty = ${V.duty}% × ${basis} ${m2(basis === "CIF" ? b.cif : V.fob)} = ${B(m2(b.duty))}`,
         `landed = ${m2(b.cif)} + ${m2(b.duty)} + ${m2(V.broker)} + ${m2(V.inland)} = ${B(m2(b.landed))}`,
-        `after improvements: FOB ${m2(all.fob)}, freight ${m2(all.frt)}, inland ${m2(all.inland)} → CIF ${m2(mAll.cif)}, duty ${m2(mAll.duty)} → landed ${B(m2(mAll.landed))} ${M(`(saves ${m2(b.landed - mAll.landed)} a unit, ${money((b.landed - mAll.landed) * mAll.bought)} a year on ${Math.round(mAll.bought).toLocaleString()} units bought)`)}`,
+        `after the changes: FOB ${m2(all.fob)}, freight ${m2(all.frt)}, inland ${m2(all.inland)} → CIF ${m2(mAll.cif)}, duty ${m2(mAll.duty)} → landed ${B(m2(mAll.landed))} ${M(`(${mAll.landed <= b.landed ? "saves" : "adds"} ${m2(Math.abs(b.landed - mAll.landed))} a unit, ${money(Math.abs(b.landed - mAll.landed) * mAll.bought)} a year on ${Math.round(mAll.bought).toLocaleString()} units bought)`)}`,
         `units bought = ${Math.round(b.sold).toLocaleString()} sold ÷ (1 − ${V.wo}%) = ${Math.round(b.bought).toLocaleString()} → written off ${Math.round(b.bought - b.sold).toLocaleString()} × ${m2(b.landed)} = ${B(money(b.wo))}`,
         `gross margin = ${money(b.rev)} − ${money(b.cogs)} − ${money(b.wo)} = ${B(money(b.gm))} ${M(`(${pct(b.gm / b.rev)})`)}`,
         `stock held = ${m2(b.landed)} × ${Math.round(b.sold).toLocaleString()} ÷ 52 × ${V.cover} wk = ${money(b.inv)} → carrying ${V.carry}% = ${B(money(b.carryC))}`,
         `contribution = ${money(b.gm)} − ${money(b.whC)} − ${money(b.outC)} − ${money(b.carryC)} = ${B(money(b.contrib))} ${M(`(${pct(cm)} of revenue)`)}`,
         `profit = ${money(b.contrib)} − ${money(V.oh)} = ${B(money(b.profit))}`,
-        `lost sales: demand ${Math.round(b.demand).toLocaleString()}, recovering ${d.lost} pts = ${Math.round(b.demand * d.lost / 100).toLocaleString()} units × ${m2(rows[0][1] / Math.max(1, b.demand * d.lost / 100))} contribution each = ${B(money(rows[0][1]))} ${M("(price − landed − warehousing − freight − extra stock to carry − extra write-offs)")}`,
+        `lost sales: demand ${Math.round(b.demand).toLocaleString()}, ${V.lost}% → ${nLost}% lost = ${Math.round(Math.abs(b.demand * (V.lost - nLost) / 100)).toLocaleString()} units ${nLost <= V.lost ? "gained" : "lost"} × ${m2(Math.abs(rows[0][1]) / Math.max(1, Math.abs(b.demand * (V.lost - nLost) / 100)))} contribution each = ${B(money(rows[0][1]))} ${M("(price − landed − warehousing − freight − extra stock to carry − extra write-offs)")}`,
       ].map((l) => `<div style="padding-left:2ch;text-indent:-2ch">${l}</div>`).join("");
     }
 
