@@ -8,6 +8,8 @@ Lab.register({
     ["A DC is 4 weeks from the supplier and 1 week from its stores. If the DC holds no stock, what lead time must each store cover?", "4 + 1 = 5 weeks. The store's safety stock has to cover demand uncertainty over the full 5 weeks, plus any lead-time variability on both links."],
     ["Holding the buffer at the DC lets demand cancel out across stores. Why can it still need more units in total?", "Because the cover time is split between two levels. Safety stock grows with √time, so covering 4 weeks at the DC and 1 week at the store (√4 + √1 = 3) needs more than 5 weeks at one point (√5 ≈ 2.24). Pooling saves units only when it outweighs this split penalty: many stores, low correlation, short last legs. Lead-time variability shared by every store can't be pooled at all."],
     ["When would you still put most of the safety stock at the stores?", "When stock costs much more to hold at the DC than at the store (rare), when the DC-to-store leg is long and unreliable, or when the DC serves only one or two stores so there's little to pool."],
+    ["The supplier's lead time to a DC rises from 4 to 10 weeks. Why does the cheapest plan usually hold more of the extra stock at the DC rather than the stores?", "The extra 6 weeks have to be covered somewhere. At the DC they're covered once, against the pooled demand of all its stores, whose ups and downs partly cancel. At the stores each one covers them separately. So the longer the upstream leg, the more pooling at the DC is worth (Trade-off 2, first option)."],
+    ["Why do all three strategies rise together when the supplier becomes unreliable, with no strategy escaping it?", "A late delivery from the supplier delays stock for every store at once, so those shortfalls don't cancel out across stores. Pooling cancels independent demand noise, not a shared lead-time shock. Only a more reliable supplier, or more stock, fixes it."],
     ["What does a DC 'service time' of 2 weeks mean?", "The DC promises to ship a store's order within 2 weeks. It needs less stock than a DC that ships immediately, but each store must then cover 2 more weeks itself. The optimizer searches for the cheapest promise."],
   ],
   diy: {
@@ -48,6 +50,24 @@ Lab.register({
       { id: "opt", name: "Cheapest split", col: "--accent" },
     ];
 
+    // Lead-time scenarios, each a change to the starting network.
+    const SCEN = [
+      { name: "Starting network", why: "The network as first loaded.", f: () => {} },
+      { name: "Slow supplier (+6 wk)", why: "Both DCs now wait 6 weeks longer for the supplier: North 10 wk, South 12 wk.", f: (D) => D.forEach((d) => (d.L += 6)) },
+      { name: "Unreliable supplier", why: "Supplier lead times stay the same length but swing much more: ±2.5 wk to North, ±3 wk to South.", f: (D) => { D[0].sL = 2.5; D[1].sL = 3; } },
+      { name: "Long last leg (+3 wk)", why: "Every DC→store delivery takes 3 weeks longer, e.g. stores far from their DC or a slow carrier.", f: (D, S) => S.forEach((s) => (s.L += 3)) },
+      { name: "One remote store", why: "Store 3 is now 6 weeks from DC North, ±2 weeks.", f: (D, S) => { S[2].L = 6; S[2].sL = 2; } },
+      { name: "Fast local supplier", why: "The supplier is 1 week from North and 2 from South, and always on time.", f: (D) => { D[0].L = 1; D[1].L = 2; D.forEach((d) => (d.sL = 0)); } },
+    ];
+    // Things to vary in trade-off chart 2. set(D, S, x) changes a copy of the network; prm(x) changes the sliders.
+    const SWEEPS = [
+      { name: "Supplier lead time to DC North", xl: "weeks from supplier to DC North", xs: [...Array(17).keys()], cur: (D) => D[0].L, set: (D, S, x) => (D[0].L = x) },
+      { name: "Supplier lead time to DC South", xl: "weeks from supplier to DC South", xs: [...Array(17).keys()], cur: (D) => D[1] ? D[1].L : 0, set: (D, S, x) => D[1] && (D[1].L = x) },
+      { name: "DC→store lead time (all stores)", xl: "weeks from DC to every store", xs: [...Array(11).keys()], cur: (D, S) => S[0] ? S[0].L : 0, set: (D, S, x) => S.forEach((s) => (s.L = x)) },
+      { name: "Supplier reliability (± SD, both DCs)", xl: "± weeks of supplier lead-time SD", xs: Array.from({ length: 17 }, (_, i) => i * 0.25), cur: (D) => D[0].sL, set: (D, S, x) => D.forEach((d) => (d.sL = x)) },
+      { name: "Service level", xl: "service level at stores (%)", xs: Array.from({ length: 40 }, (_, i) => 80 + i * 0.5), cur: () => +$("#sl").value, set: () => {}, prm: (p, x) => (p.z = qnorm(x / 100)) },
+    ];
+
     root.innerHTML = Lab.page(this, {
       figure: `
         <div class="plot" style="padding:14px">
@@ -58,6 +78,32 @@ Lab.register({
           <div style="overflow-x:auto"><svg id="net" viewBox="0 0 760 330" style="width:100%;min-width:600px;display:block"></svg></div>
           <p class="hint">Numbers on links are lead times in weeks (± their standard deviation). The bar and number in each node are its safety stock under the chosen strategy. "Promise" is how quickly the DC guarantees to ship to its stores.</p>
         </div>
+        <div class="plot" style="padding:14px">
+          <h4 style="margin:0 0 8px;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">What if lead times were longer somewhere?</h4>
+          <div class="btns" id="scn">${SCEN.map((c, i) => `<button class="btn" type="button" data-i="${i}" aria-pressed="${i === 0}">${c.name}</button>`).join("")}</div>
+          <p id="scnTxt" style="margin:10px 0 0;font-size:.92rem"></p>
+        </div>
+        <figure class="plot wide" style="padding:8px 8px 4px">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:4px 6px 6px">
+            <h4 style="margin:0;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Trade-off 1: how fast should the DC promise to ship?</h4>
+            <select id="tdc" aria-label="DC for the promise trade-off" style="width:auto"></select>
+          </div>
+          <canvas id="cPro"></canvas>
+          <div class="legend"><span><i style="background:var(--violet)"></i>DC holding cost</span><span><i style="background:var(--warm)"></i>store holding cost</span><span><i style="background:var(--accent)"></i>total</span></div>
+          <figcaption id="proCap"></figcaption>
+        </figure>
+        <figure class="plot wide" style="padding:8px 8px 4px">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:4px 6px 6px">
+            <h4 style="margin:0;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Trade-off 2: what happens as one thing changes</h4>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <select id="sv" aria-label="What to vary" style="width:auto">${SWEEPS.map((w, i) => `<option value="${i}">${w.name}</option>`).join("")}</select>
+              <div class="seg" id="sy" style="min-width:170px"><button type="button" data-v="cost" aria-pressed="true">Cost / week</button><button type="button" data-v="units" aria-pressed="false">Units</button></div>
+            </div>
+          </div>
+          <canvas id="cSw"></canvas>
+          <div class="legend">${STRATS.map((s) => `<span><i style="background:var(${s.col})"></i>${s.name}</span>`).join("")}<span><i style="background:var(--muted);height:2px"></i>today's value</span></div>
+          <figcaption id="swCap"></figcaption>
+        </figure>
         <div class="plot" style="padding:14px">
           <h4 style="margin:0 0 10px;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Comparing the strategies</h4>
           <div style="overflow-x:auto"><table id="cmp" style="width:100%;border-collapse:collapse;font-size:.86rem;font-variant-numeric:tabular-nums"></table></div>
@@ -97,6 +143,12 @@ Lab.register({
           <p>Pipeline stock (goods in transit) is the same under every strategy, so it's left out.</p>
         </section>
         <section>
+          <h2>Reading the trade-off charts</h2>
+          <p><b>Trade-off 1</b> shows one DC's choice. Promise 0 weeks and the DC holds the buffer for the whole supplier leg; promise the full supplier lead time and the DC just passes stock through, so the stores hold it all. Every week of promise moves cover from the DC (violet) to the stores (orange). The total (blue) usually bottoms out at an end, because safety stock grows with √time and splitting the cover is wasteful. That's why guaranteed-service plans tend to be "all or nothing" at each stage.</p>
+          <p><b>Trade-off 2</b> re-runs the whole network for every value of one setting and plots the three strategies. The gap between the dashed lines and the solid blue line is what good stock placement is worth. The dotted line marks today's value.</p>
+          <p><b>Scenarios</b> change lead times at different points and compare with the starting network, so you can see where a longer or less reliable lead time hurts most.</p>
+        </section>
+        <section>
           <h2>Try this</h2>
           <ol>
             <li>Compare the totals. Surprise: with these numbers, pooling at the DCs needs <i>more</i> units, yet it's cheaper because DC stock costs less to hold. Two forces fight. Pooling lets demands cancel out, but splitting one long cover period into two shorter ones costs extra, because √4 + √1 = 3 is more than √5 ≈ 2.24. Supplier lead-time variability hits every store at once, so pooling can't cancel it.</li>
@@ -114,8 +166,11 @@ Lab.register({
     const DEF = { DCS: JSON.parse(JSON.stringify(DCS)), STORES: JSON.parse(JSON.stringify(STORES)) };
     let strat = "opt", R = null;
 
-    function compute() {
-      const z = qnorm(+$("#sl").value / 100), hd = +$("#hd").value, hs = +$("#hs").value, rho = +$("#rho").value;
+    const clone = (x) => JSON.parse(JSON.stringify(x));
+    const params = () => ({ z: qnorm(+$("#sl").value / 100), hd: +$("#hd").value, hs: +$("#hs").value, rho: +$("#rho").value });
+
+    // The whole calculation for one network: every DC promise option, and the three strategies' totals.
+    function model(DCS, STORES, { z, hd, hs, rho }) {
       const ssStore = (s, promise, dcSL) => z * Math.sqrt((promise + s.L) * s.sd * s.sd + s.mu * s.mu * (s.sL * s.sL + (promise > 0 ? dcSL * dcSL : 0)));
       const dcs = DCS.map((d, j) => {
         const st = STORES.filter((s) => s.dc === j);
@@ -126,10 +181,10 @@ Lab.register({
         const ssDc = (promise) => (d.L - promise <= 0 ? 0 : z * Math.sqrt((d.L - promise) * sd * sd + mu * mu * d.sL * d.sL));
         const options = [];
         for (let p = 0; p <= d.L; p++) {
-          const sdc = ssDc(p), ss = st.map((s) => ssStore(s, p, d.sL));
-          options.push({ p, sdc, ss, cost: hd * sdc + hs * ss.reduce((a, b) => a + b, 0) });
+          const sdc = ssDc(p), ss = st.map((s) => ssStore(s, p, d.sL)), sst = ss.reduce((a, b) => a + b, 0);
+          options.push({ p, sdc, ss, cDc: hd * sdc, cSt: hs * sst, cost: hd * sdc + hs * sst });
         }
-        const best = options.reduce((a, b) => (b.cost < a.cost ? b : a));
+        const best = options.reduce((a, b) => (b.cost < a.cost - 1e-9 ? b : a));
         return { d, j, st, mu, sd, options, pick: { store: options[d.L], dc: options[0], opt: best } };
       });
       const tot = Object.fromEntries(STRATS.map((s) => {
@@ -137,7 +192,12 @@ Lab.register({
         dcs.forEach((x) => { const o = x.pick[s.id]; u += o.sdc + o.ss.reduce((a, b) => a + b, 0); uDc += o.sdc; c += o.cost; });
         return [s.id, { units: u, cost: c, uDc }];
       }));
-      R = { dcs, tot, z, hd, hs };
+      return { dcs, tot };
+    }
+
+    function compute() {
+      const prm = params();
+      R = Object.assign(model(DCS, STORES, prm), prm);
     }
 
     function drawNet() {
@@ -196,6 +256,77 @@ Lab.register({
       $("#work").innerHTML = lines.map((l) => `<div style="white-space:nowrap">${l}</div>`).join("");
     }
 
+    const pPro = new Lab.Plot($("#cPro"), { pad: { l: 52, b: 40 } });
+    const pSw = new Lab.Plot($("#cSw"), { pad: { l: 52, b: 40 } });
+    let sy = "cost", scn = 0;
+
+    function drawPromise() {
+      const j = Math.min(+$("#tdc").value || 0, R.dcs.length - 1), x = R.dcs[j];
+      if (!x) return;
+      const O = x.options, ps = O.map((o) => o.p), top = Math.max(1, ...O.map((o) => o.cost)) * 1.1;
+      pPro.resize(); pPro.x = [0, Math.max(1, x.d.L)]; pPro.y = [0, top];
+      pPro.clear();
+      pPro.axes({ xLabel: "DC promise to its stores (weeks)", yLabel: "holding cost per week", xTicks: x.d.L <= 12 ? ps : undefined, yFormat: (v) => fmt(v, 0) });
+      pPro.path(ps, O.map((o) => o.cDc), css("--violet"), 2);
+      pPro.path(ps, O.map((o) => o.cSt), css("--warm"), 2);
+      pPro.path(ps, O.map((o) => o.cost), css("--accent"), 3);
+      O.forEach((o) => pPro.dot(o.p, o.cost, 3, css("--accent")));
+      const b = x.pick.opt, g = pPro.ctx;
+      pPro.dot(b.p, b.cost, 7, null, css("--good"));
+      g.save(); g.fillStyle = css("--good"); g.font = `600 12px ${css("--font-body")}`; g.textAlign = b.p > x.d.L / 2 ? "right" : "left";
+      g.fillText(`cheapest: ${b.p} wk, ${fmt(b.cost, 0)}/wk`, pPro.sx(b.p) + (b.p > x.d.L / 2 ? -10 : 10), pPro.sy(b.cost) - 10); g.restore();
+      const o0 = O[0], oL = O[O.length - 1];
+      $("#proCap").innerHTML = `${x.d.name}: promising <b>0 weeks</b> (DC holds the buffer) costs ${fmt(o0.cost, 0)}/wk; promising the full <b>${x.d.L} weeks</b> (stores hold it all) costs ${fmt(oL.cost, 0)}/wk. ` +
+        (b.p === 0 ? "Here it's cheapest for the DC to hold everything." : b.p === x.d.L ? "Here it's cheapest to push everything to the stores." : `The cheapest is in between, at ${b.p} weeks.`) +
+        ` Each extra week of promise moves stock from the violet line to the orange one. Try the scenarios above and watch the low point move.`;
+    }
+
+    function sweepData() {
+      const w = SWEEPS[+$("#sv").value], prm0 = params();
+      const out = { w, xs: w.xs, cur: w.cur(DCS, STORES), s: Object.fromEntries(STRATS.map((t) => [t.id, []])) };
+      w.xs.forEach((xv) => {
+        const D = clone(DCS), S = clone(STORES), prm = Object.assign({}, prm0);
+        w.set(D, S, xv); if (w.prm) w.prm(prm, xv);
+        const m = model(D, S, prm);
+        STRATS.forEach((t) => out.s[t.id].push(m.tot[t.id][sy]));
+      });
+      return out;
+    }
+
+    function drawSweep() {
+      const d = sweepData(), all = STRATS.flatMap((t) => d.s[t.id]);
+      pSw.resize(); pSw.x = [d.xs[0], d.xs[d.xs.length - 1]]; pSw.y = [0, Math.max(1, ...all) * 1.08];
+      pSw.clear();
+      pSw.axes({ xLabel: d.w.xl, yLabel: sy === "cost" ? "holding cost per week" : "safety stock units", yFormat: (v) => fmt(v, 0) });
+      [...STRATS].reverse().forEach((t) => pSw.path(d.xs, d.s[t.id], css(t.col), t.id === "opt" ? 4 : 2, t.id === "opt" ? null : [6, 4]));
+      const g = pSw.ctx, cx = pSw.sx(d.cur);
+      g.save(); g.strokeStyle = css("--muted"); g.setLineDash([3, 3]); g.beginPath(); g.moveTo(cx, pSw.pad.t); g.lineTo(cx, pSw.h - pSw.pad.b); g.stroke();
+      g.fillStyle = css("--muted"); g.font = `11px ${css("--font-mono")}`; g.textAlign = cx > pSw.w * 0.7 ? "right" : "left"; g.fillText("today", cx + (cx > pSw.w * 0.7 ? -5 : 5), pSw.pad.t + 22); g.restore();
+      // caption: compare the ends of the range
+      const i0 = 0, i1 = d.xs.length - 1, f = (v) => fmt(v, 0), u = sy === "cost" ? "/wk" : " units";
+      const gap = (i) => d.s.store[i] - d.s.opt[i];
+      const lbl = (v) => (d.w.name === "Service level" ? v + "%" : d.w.xl.includes("SD") ? "±" + v + " wk" : v + " wk");
+      $("#swCap").innerHTML = `From ${lbl(d.xs[i0])} to ${lbl(d.xs[i1])}, the cheapest split goes from ${f(d.s.opt[i0])} to ${f(d.s.opt[i1])}${u}, ` +
+        `while holding everything at the stores goes from ${f(d.s.store[i0])} to ${f(d.s.store[i1])}${u}. ` +
+        `The saving from placing stock well is ${f(gap(i0))}${u} at the left end and ${f(gap(i1))}${u} at the right. ` +
+        (d.w.name.startsWith("Supplier lead time") ? "Longer upstream lead times make a pooled DC buffer more valuable, because the DC covers that long leg once for all its stores." :
+          d.w.name.startsWith("DC→store") ? "Longer last legs can't be pooled: every store must cover its own leg whatever the DC does, so the advantage of holding stock at the DC shrinks." :
+          d.w.name.startsWith("Supplier reliability") ? "Lead-time swings hit every store at the same time, so pooling can't cancel them out, and every strategy rises steeply. An unreliable supplier is often costlier than a slow one." :
+          "Safety stock rises slowly at first, then steeply near 100%, because z grows faster and faster.");
+    }
+
+    function scenarioText() {
+      const prm = params(), base = model(DEF.DCS, DEF.STORES, prm), now = R;
+      const c = SCEN[scn], f = (v) => fmt(v, 0);
+      const pr = (m) => m.dcs.map((x) => `${x.d.name} ${x.pick.opt.p} wk`).join(", ");
+      const d = now.tot.opt.cost - base.tot.opt.cost;
+      $("#scnTxt").innerHTML = scn === -1 ? "You've edited the network by hand. Pick a scenario to compare, or keep exploring." :
+        `<b>${c.name}.</b> ${c.why} ` + (scn === 0 ? `With the cheapest split, the network holds ${f(now.tot.opt.units)} units of safety stock at ${f(now.tot.opt.cost)}/wk. Best promises: ${pr(now)}.` :
+        `Cheapest split: ${f(base.tot.opt.units)} → <b>${f(now.tot.opt.units)} units</b>, ${f(base.tot.opt.cost)} → <b>${f(now.tot.opt.cost)}/wk</b> (<span style="color:var(${d > 0 ? "--bad" : "--good"})">${d > 0 ? "+" : "−"}${f(Math.abs(d))}/wk</span>). ` +
+        `All at stores: ${f(base.tot.store.cost)} → ${f(now.tot.store.cost)}/wk. Pooled at DCs: ${f(base.tot.dc.cost)} → ${f(now.tot.dc.cost)}/wk. ` +
+        `Best promises: ${pr(base)} → <b>${pr(now)}</b>.`);
+    }
+
     function editors() {
       const inp = (v, attrs) => `<input type="number" ${attrs} value="${v}" style="width:68px;font:inherit;font-family:var(--font-mono);padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink)">`;
       const th = (t) => `<th style="text-align:left;padding:4px 8px;font-weight:500;color:var(--muted)">${t}</th>`;
@@ -208,21 +339,30 @@ Lab.register({
         const v = Math.max(0, +el.value); if (!isFinite(v)) return;
         const tgt = el.dataset.t === "dc" ? DCS[+el.dataset.i] : STORES[+el.dataset.i];
         tgt[el.dataset.k] = el.dataset.k === "L" ? Math.round(v) : v;
-        update();
+        setScn(-1); update();
       }));
       $("#wdc").innerHTML = DCS.map((d, j) => `<option value="${j}">${d.name}</option>`).join("");
+      const t = $("#tdc").value; $("#tdc").innerHTML = $("#wdc").innerHTML; if (t) $("#tdc").value = t;
     }
 
     function update() {
       $("#slV").textContent = $("#sl").value + "%"; $("#hdV").textContent = (+$("#hd").value).toFixed(1); $("#hsV").textContent = (+$("#hs").value).toFixed(1); $("#rhoV").textContent = (+$("#rho").value).toFixed(2);
-      compute(); drawNet(); drawTables();
+      compute(); drawNet(); drawTables(); drawPromise(); drawSweep(); scenarioText();
     }
+    function setScn(i) { scn = i; $("#scn").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.i === i))); }
+    $("#scn").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+      const D = clone(DEF.DCS), S = clone(DEF.STORES); SCEN[+b.dataset.i].f(D, S); DCS = D; STORES = S;
+      setScn(+b.dataset.i); editors(); update();
+    }));
+    $("#tdc").addEventListener("change", drawPromise);
+    $("#sv").addEventListener("change", drawSweep);
+    $("#sy").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { sy = b.dataset.v; $("#sy").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); drawSweep(); }));
 
     $("#st").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { strat = b.dataset.v; $("#st").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); update(); }));
     ["#sl", "#hd", "#hs", "#rho"].forEach((s) => $(s).addEventListener("input", update));
     $("#wdc").addEventListener("change", drawTables);
-    $("#reset").addEventListener("click", () => { root.querySelectorAll("input[type=range]").forEach((e) => (e.value = e.defaultValue)); DCS = JSON.parse(JSON.stringify(DEF.DCS)); STORES = JSON.parse(JSON.stringify(DEF.STORES)); editors(); update(); });
+    $("#reset").addEventListener("click", () => { root.querySelectorAll("input[type=range]").forEach((e) => (e.value = e.defaultValue)); DCS = clone(DEF.DCS); STORES = clone(DEF.STORES); setScn(0); editors(); update(); });
     editors(); update();
-    return watch([], () => drawNet());
+    return watch([$("#cPro"), $("#cSw")], () => { drawNet(); drawPromise(); drawSweep(); });
   },
 });
