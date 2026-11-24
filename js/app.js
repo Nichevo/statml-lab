@@ -51,9 +51,9 @@
     ["Data quality", "Check your data before you trust it: outliers, gaps, shifts, shapes and misleading correlations.",
       ["outliers", "distributions", "missing-data", "ts-anomalies", "change-points", "correlation-traps", "benford", "pca-clustering"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
-      ["central-limit", "hypothesis-test", "rollup", "r-squared", "least-squares"]],
+      ["central-limit", "confidence-intervals", "hypothesis-test", "rollup", "r-squared", "least-squares"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
-      ["least-squares", "bias-variance", "gradient-descent", "random-forest", "neural-net", "cnn"]],
+      ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "gradient-descent", "random-forest", "neural-net", "cnn"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",
       ["gradient-descent", "attention"]],
   ];
