@@ -1,5 +1,15 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Tariff (import duty)", "A tax on imported goods, paid by the importer to customs when the goods enter the country.", "tariffs"],
+  ["Ad valorem duty", "A tariff charged as a percentage of the goods' customs value.", "tariffs"],
+  ["Specific duty", "A tariff charged as a fixed amount per unit, kilo or litre, whatever the value.", "tariffs"],
+  ["HS code", "Harmonized System code: the international product classification (6 digits, extended nationally) that decides which tariff rate applies.", "tariffs"],
+  ["Customs value", "The value duty is charged on: usually the price paid, on an FOB or CIF basis depending on the country.", "tariffs"],
+  ["Rules of origin", "The criteria that decide which country goods 'come from', and so whether a trade agreement's lower rate applies.", "tariffs"],
+  ["Free trade agreement (FTA)", "A treaty that cuts tariffs between member countries for goods that meet its rules of origin.", "tariffs"],
+  ["Tariff pass-through", "The share of a tariff that ends up in the price paid by the buyer, rather than absorbed by the supplier or importer.", "tariffs"],
+  ["Duty drawback", "A refund of import duty on goods (or their components) that are later exported.", "tariffs"],
+  ["Anti-dumping duty", "An extra tariff on goods judged to be sold below their normal value in the exporting country.", "tariffs"],
   ["Outlier", "A value far from the rest of the data. Could be an error or a real but rare event; investigate before removing.", "outliers"],
   ["Median absolute deviation (MAD)", "The median of the distances from the median. A spread measure that a few extreme values can't inflate; 1.4826 × MAD estimates the SD for normal data.", "outliers"],
   ["Interquartile range (IQR)", "Q3 − Q1: the spread of the middle half of the data. Tukey's outlier fences sit 1.5 × IQR beyond the quartiles.", "outliers"],

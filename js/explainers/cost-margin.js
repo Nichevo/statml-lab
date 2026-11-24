@@ -54,7 +54,7 @@ Lab.register({
           <div id="stackLeg" class="legend" style="margin-top:8px"></div>
         </div>
         <div class="plot" style="padding:14px">
-          <h4 class="cm-h">From revenue to profit, per year (today, before improvements)</h4>
+          <h4 class="cm-h">From revenue to profit, per year: today vs after improvements</h4>
           <div id="ladder"></div>
         </div>
         <div class="plot" style="padding:14px">
@@ -85,7 +85,7 @@ Lab.register({
           @media (max-width:560px){.cm-row{grid-template-columns:110px 1fr 76px;font-size:.8rem}}
         </style>`,
       panel: `
-        <p class="hint" style="margin:0">Improvements to value. Each one is worked out on its own, then all together.</p>
+        <p class="hint" style="margin:0">Improvements. Move a slider and the landed cost, the P&amp;L and the margins update to show the result. The value panel shows each one on its own, then all together.</p>
         <div class="ctrl"><label for="dLost">Win back lost sales <output id="dLostV"></output></label><input type="range" id="dLost" min="0" max="4" step="0.5" value="2"></div>
         <div class="ctrl"><label for="dCover">Hold less stock <output id="dCoverV"></output></label><input type="range" id="dCover" min="0" max="6" step="0.5" value="2"></div>
         <div class="ctrl"><label for="dFrt">Cheaper freight (all legs) <output id="dFrtV"></output></label><input type="range" id="dFrt" min="0" max="25" step="1" value="10"></div>
@@ -177,15 +177,21 @@ Lab.register({
         <p class="hint" style="margin:6px 0 0">The second bar applies the freight and supplier-price sliders. Cheaper freight also lowers duty when duty is on CIF. Outbound freight isn't part of landed cost; it shows up further down the P&amp;L.</p>`;
       $("#stackLeg").innerHTML = segs.map(([l, v, c], i) => { const a = segsA[i][1]; return `<span><i style="background:var(${c})"></i>${l} ${money(v, 2)}${Math.abs(a - v) > 1e-9 ? ` → ${money(a, 2)}` : ""}</span>`; }).join("") + `<span><i style="background:var(--good)"></i>Margin</span>`;
 
-      // ---- P&L ladder (waterfall on a revenue scale)
-      const R = Math.max(b.rev, 1);
-      const steps = [["Revenue", 0, b.rev, "--accent", false], ["− Cost of goods sold (landed)", b.rev - b.cogs, b.rev, "--warm", false], ["− Write-offs", b.rev - b.cogs - b.wo, b.rev - b.cogs, "--bad", false],
-        ["Gross margin", 0, b.gm, "--good", true, b.gm / b.rev], ["− Warehousing", b.gm - b.whC, b.gm, "--muted", false], ["− Outbound freight", b.gm - b.whC - b.outC, b.gm - b.whC, "--warm", false],
-        ["− Carrying cost of stock", b.contrib, b.contrib + b.carryC, "--violet", false], ["Contribution", 0, b.contrib, "--good", true, b.contrib / b.rev], ["− Fixed overheads", Math.min(b.contrib, b.profit), Math.max(b.contrib, b.profit), "--muted", false],
-        ["Operating profit", Math.min(0, b.profit), Math.max(0, b.profit), b.profit >= 0 ? "--good" : "--bad", true, b.profit / b.rev]];
-      $("#ladder").innerHTML = steps.map(([l, lo, hi, c, sub, m]) => {
-        const lo2 = Math.max(0, lo), w = Math.max(0, hi - lo2);
-        return `<div class="cm-row${sub ? " sub" : ""}"><span>${l}</span><div class="cm-track">${bar(lo2 * scale / R, w * scale / R, c)}</div><span class="v">${money(l.startsWith("−") ? -(hi - lo) : (l === "Operating profit" ? b.profit : hi))}${m !== undefined ? `<br><small style="color:var(--muted)">${pct(m)}</small>` : ""}</span></div>`;
+      // ---- P&L ladder: today (faint) vs after the improvements (solid)
+      const R = Math.max(b.rev, mAll.rev, 1);
+      const stepsOf = (m) => [["Revenue", 0, m.rev, "--accent", false], ["− Cost of goods sold (landed)", m.rev - m.cogs, m.rev, "--warm", false], ["− Write-offs", m.rev - m.cogs - m.wo, m.rev - m.cogs, "--bad", false],
+        ["Gross margin", 0, m.gm, "--good", true, m.gm / m.rev], ["− Warehousing", m.gm - m.whC, m.gm, "--muted", false], ["− Outbound freight", m.gm - m.whC - m.outC, m.gm - m.whC, "--warm", false],
+        ["− Carrying cost of stock", m.contrib, m.contrib + m.carryC, "--violet", false], ["Contribution", 0, m.contrib, "--good", true, m.contrib / m.rev], ["− Fixed overheads", Math.min(m.contrib, m.profit), Math.max(m.contrib, m.profit), "--muted", false],
+        ["Operating profit", Math.min(0, m.profit), Math.max(0, m.profit), m.profit >= 0 ? "--good" : "--bad", true, m.profit / m.rev]];
+      const val = (l, lo, hi, m) => (l.startsWith("−") ? -(hi - lo) : l === "Operating profit" ? m.profit : hi);
+      const S0 = stepsOf(b), S1 = stepsOf(mAll);
+      $("#ladder").innerHTML = `<div class="legend" style="margin:0 0 8px"><span><i style="background:var(--line)"></i>Today</span><span><i style="background:var(--good)"></i>After the improvements in the sliders</span></div>` + S1.map(([l, lo, hi, c, sub, mg], k) => {
+        const [, lo0, hi0, , , mg0] = S0[k];
+        const v0 = val(l, lo0, hi0, b), v1 = val(l, lo, hi, mAll), dv = v1 - v0;
+        const ghost = `<div class="cm-bar" style="left:${(Math.max(0, lo0) / R) * 100}%;width:${(Math.max(0, hi0 - Math.max(0, lo0)) / R) * 100}%;background:var(--line);top:-3px;bottom:-3px"></div>`;
+        const solid = `<div class="cm-bar" style="left:${(Math.max(0, lo) / R) * 100}%;width:${(Math.max(0, hi - Math.max(0, lo)) / R) * 100}%;background:var(${c});top:3px;bottom:3px"></div>`;
+        const ch = Math.abs(dv) >= 0.5 ? `<br><small style="color:var(${dv > 0 ? "--good" : "--bad"})">${dv > 0 ? "+" : "−"}${money(Math.abs(dv))}${mg !== undefined ? ` · ${pct(mg0)} → ${pct(mg)}` : ""}</small>` : mg !== undefined ? `<br><small style="color:var(--muted)">${pct(mg)}</small>` : "";
+        return `<div class="cm-row${sub ? " sub" : ""}"><span>${l}</span><div class="cm-track">${ghost}${solid}</div><span class="v">${money(v1)}${ch}</span></div>`;
       }).join("");
 
       // ---- levers
@@ -207,8 +213,9 @@ Lab.register({
 
       $("#ro").innerHTML = `
         <div class="ro"><b>Landed cost / unit</b><span class="num">${money(b.landed, 2)} → ${money(mAll.landed, 2)}</span></div>
-        <div class="ro"><b>Gross margin</b><span class="num">${pct(b.gm / b.rev)}</span></div>
-        <div class="ro"><b>Markup on landed cost</b><span class="num">${pct((V.price - b.landed) / b.landed)}</span></div>
+        <div class="ro"><b>Gross margin</b><span class="num">${pct(b.gm / b.rev)} → ${pct(mAll.gm / mAll.rev)}</span></div>
+        <div class="ro"><b>Markup on landed cost</b><span class="num">${pct((V.price - b.landed) / b.landed)} → ${pct((V.price - mAll.landed) / mAll.landed)}</span></div>
+        <div class="ro"><b>Contribution</b><span class="num">${money(b.contrib)} → ${money(mAll.contrib)}</span></div>
         <div class="ro"><b>Operating profit</b><span class="num">${money(b.profit)} → ${money(mAll.profit)}</span></div>
         <div class="ro"><b>Stock value held</b><span class="num">${money(b.inv)} → ${money(mAll.inv)}</span></div>`;
 
