@@ -1,5 +1,18 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Bullwhip effect", "Order swings that grow larger at each step up a supply chain, even when end-customer demand is steady.", "bullwhip-effect"],
+  ["Order-up-to policy", "Each period, order enough to bring the inventory position back up to a target level S.", "bullwhip-effect"],
+  ["Inventory position", "Stock on hand plus stock on order minus backorders. Reorder decisions use this, not just what's on the shelf.", "bullwhip-effect"],
+  ["Lead time", "The time between placing an order and having the goods ready to use.", "reorder-point"],
+  ["Reorder point", "The inventory position at which a new order is triggered: expected demand over the lead time plus safety stock.", "reorder-point"],
+  ["Economic order quantity (EOQ)", "The order size that minimizes ordering plus holding cost: √(2 × annual demand × order cost / holding cost).", "reorder-point"],
+  ["Cycle stock", "The part of inventory that runs down between deliveries, on average half the order quantity.", "reorder-point"],
+  ["Cycle service level", "The share of replenishment cycles that finish without any stockout.", "reorder-point"],
+  ["Fill rate", "The share of units demanded that were shipped from stock straight away.", "reorder-point"],
+  ["Periodic review", "Checking stock at fixed intervals and ordering up to a level, rather than watching it continuously.", "reorder-point"],
+  ["Backorder", "Demand that couldn't be met from stock and is waiting to be filled later.", "bullwhip-effect"],
+  ["Ensemble forecast", "A forecast made by combining several forecasts, usually by averaging. Often more accurate than any single one.", "ensemble-forecasts"],
+  ["Forecast combination puzzle", "The finding that a simple equal-weight average often beats combinations with weights estimated from past errors.", "ensemble-forecasts"],
   ["Alpha (α), significance level", "The cutoff you pick in advance for calling a result significant, often 0.05. It is also the false-positive rate you accept when there is truly no effect.", "hypothesis-test"],
   ["Attention", "A way for each word (token) in a sequence to pull in information from other words, weighted by how relevant they are. The core building block of transformers.", "attention"],
   ["Bias (of a model)", "How far a model's average prediction, over many possible training sets, sits from the truth. Too-simple models have high bias.", "bias-variance"],

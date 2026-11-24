@@ -173,3 +173,29 @@ footer .wrap { padding-block: 20px; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* Check yourself / Go deeper */
+.quiz details { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 0 0 8px; }
+.quiz summary { cursor: pointer; padding: 10px 14px; font-weight: 500; list-style: none; display: flex; gap: 10px; align-items: baseline; }
+.quiz summary::-webkit-details-marker { display: none; }
+.quiz summary::after { content: "Show answer"; margin-left: auto; font: 500 .72rem/1 var(--font-mono); color: var(--accent); white-space: nowrap; }
+.quiz details[open] summary::after { content: "Hide"; }
+.quiz .qn { font: 600 .75rem/1 var(--font-mono); color: var(--accent); }
+.quiz details > div { padding: 0 14px 12px; color: var(--ink); border-top: 1px dashed var(--line); padding-top: 10px; }
+.deeper ul { padding-left: 1.1em; }
+.deeper li { margin: 0 0 6px; }
+.deeper li span { color: var(--muted); font-size: .92em; }
+.notes .quiz { grid-column: 1 / -1; }
+.quiz .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 8px; align-items: start; }
+.quiz .qgrid details { margin: 0; }
+
+/* Learning paths on the home page */
+.paths { padding-block: 8px 28px; }
+.paths h2 { font: 600 0.78rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 0 0 14px; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.path { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.path h3 { margin: 0 0 4px; font: 700 1.05rem/1.25 var(--font-display); }
+.path p { margin: 0 0 8px; color: var(--muted); font-size: .88rem; }
+.path ol { margin: 0; padding-left: 1.3em; font-size: .9rem; }
+.path li { margin: 0 0 3px; }
+.path li::marker { color: var(--accent); font-family: var(--font-mono); font-size: .8em; }

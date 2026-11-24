@@ -18,7 +18,10 @@ Lab.register({
       { id: "reg", name: "Regression: trend + months", col: "--good", dash: [8, 3] },
       { id: "arima", name: "ARIMA(2,1,0)", col: "--bad", dash: [3, 2] },
       { id: "croston", name: "Croston", col: "--warm", dash: [8, 2] },
+      { id: "ensall", name: "Ensemble: average of all", col: "#2f8f8f", dash: [1, 0] },
+      { id: "ens3", name: "Ensemble: best 3 averaged", col: "#6b5bd6", dash: [10, 3] },
     ];
+    const BASE = M.filter((m) => !m.id.startsWith("ens"));
     const ABOUT = {
       naive: ["Next value = last value.", "Free, instant, and a fair benchmark. Hard to beat for random-walk data like prices.", "Ignores trend and season. Chases every bit of noise.", "As the baseline every other method must beat."],
       snaive: ["Next value = same period last season.", "Captures seasonality with zero effort. Strong benchmark for seasonal data.", "Copies last year's noise and one-offs. Misses growth since last year.", "Seasonal data with a stable pattern; as a seasonal benchmark."],
@@ -28,6 +31,8 @@ Lab.register({
       hw: ["Level + trend + a seasonal index for each period, all updated as data arrives.", "Handles trend and season together. Fast, transparent, widely used in business.", "Needs at least two full seasons. Three parameters to tune. Seasonal pattern assumed fairly stable.", "Monthly or weekly sales with clear seasonality."],
       reg: ["Least-squares line through time plus a fixed effect for each period of the season.", "Easy to interpret (each month's uplift is a coefficient). Easy to add drivers like price or promotions.", "Assumes trend and season never change. Does not adapt to recent shifts.", "Stable patterns; when you want explainable effects or extra drivers."],
       arima: ["Models changes as depending on the last two changes (fitted by least squares).", "Captures momentum and short-term correlation. Very flexible family.", "This simple version has no seasonal terms. Choosing orders takes skill; less intuitive to explain.", "Non-seasonal series with autocorrelation; seasonal ARIMA for seasonal data."],
+      ensall: ["The plain average of every other method's forecast, each weighted equally.", "Errors from different methods partly cancel out, so it is rarely the worst and often near the top. Nothing to tune, and very robust.", "Bad methods drag it down: averaging in naive or Croston on seasonal data hurts. Harder to explain one number.", "When you don't know which method suits the data, or you forecast thousands of items with no time to choose."],
+      ens3: ["Hold back the last stretch of training data, find the three methods that forecast it best, then average those three.", "Keeps the benefit of averaging while leaving out methods that clearly don't fit. Often beats every single method.", "The selection step can be fooled by a short validation window. Three methods that make the same mistake don't cancel.", "A strong default in practice. Forecasting competitions (M3, M4) were often won by combinations like this."],
       croston: ["Smooths order size and the gap between orders separately; forecast = size ÷ gap.", "Built for lumpy demand with many zeros. Steadier than SES there.", "Slightly biased high; never notices an item has died; poor for regular demand.", "Spare parts, slow sellers, intermittent demand."],
     };
     const PRESETS = {
@@ -174,20 +179,36 @@ Lab.register({
       }
       return best.p;
     }
-    const pdesc = (p) => Object.entries(p).map(([k, v]) => `${{ a: "α", b: "β", g: "γ", k: "k" }[k]}=${v}`).join(" ");
+    const pdesc = (p) => p.of ? "of " + p.of.join(", ") : p.members ? `of ${p.members} methods` : Object.entries(p).map(([k, v]) => `${{ a: "α", b: "β", g: "γ", k: "k" }[k]}=${v}`).join(" ");
 
     function compute() {
       const h = Math.min(+$("#h").value, Math.floor(y.length / 3)), m = +$("#m").value, tr = y.slice(0, y.length - h), te = y.slice(y.length - h);
       let nd = 0; for (let t = 1; t < tr.length; t++) nd += Math.abs(tr[t] - tr[t - 1]);
       const scale = nd / (tr.length - 1);
-      res = M.map((meth) => {
+      // validation: the last h periods of training, used only to pick the "best 3" ensemble members
+      const vh = Math.min(h, Math.floor(tr.length / 4)), vtr = tr.slice(0, tr.length - vh), vte = tr.slice(tr.length - vh);
+      const valid = {};
+      res = BASE.map((meth) => {
         if (meth.id === "hw" && tr.length < 2 * m + 2) return { ...meth, na: "needs two full seasons" };
         if ((meth.id === "snaive" || meth.id === "reg") && tr.length <= m + 2) return { ...meth, na: "needs a full season" };
         const p = tune(meth.id, tr, m), out = run(meth.id, tr, h, m, p);
+        const okV = !((meth.id === "hw" && vtr.length < 2 * m + 2) || ((meth.id === "snaive" || meth.id === "reg") && vtr.length <= m + 2));
+        if (okV) { const vf = run(meth.id, vtr, vh, m, tune(meth.id, vtr, m)).fc; valid[meth.id] = Math.sqrt(mean(vf.map((f, i) => (vte[i] - f) ** 2))); }
+        return { ...meth, p, ...out };
+      });
+      const usable = res.filter((r) => !r.na);
+      const avg = (rs) => ({ fc: rs[0].fc.map((_, i) => mean(rs.map((r) => r.fc[i]))), fit: rs[0].fit.map((_, t) => { const v = rs.map((r) => r.fit[t]).filter(isFinite); return v.length === rs.length ? mean(v) : NaN; }) });
+      const top3 = usable.filter((r) => isFinite(valid[r.id])).sort((a, b) => valid[a.id] - valid[b.id]).slice(0, 3);
+      res.push({ ...M.find((x) => x.id === "ensall"), p: { members: usable.length }, ...avg(usable) });
+      if (top3.length >= 2) res.push({ ...M.find((x) => x.id === "ens3"), p: { of: top3.map((r) => r.name) }, ...avg(top3) });
+      else res.push({ ...M.find((x) => x.id === "ens3"), na: "not enough data to validate" });
+      res = res.map((r) => {
+        if (r.na) return r;
+        const out = r, p = r.p;
         let ae = 0, se = 0, ape = 0, xa = 0, e = 0;
         out.fc.forEach((f, i) => { const a = te[i], d = a - f; ae += Math.abs(d); se += d * d; e += d; ape += a ? Math.abs(d / a) : Infinity; const mx = Math.max(Math.abs(a), Math.abs(f)); xa += mx ? Math.abs(d) / mx : 0; });
         const sa = te.reduce((s, v) => s + Math.abs(v), 0);
-        return { ...meth, p, ...out, mae: ae / h, rmse: Math.sqrt(se / h), mape: (ape / h) * 100, wape: sa ? (ae / sa) * 100 : Infinity, mase: ae / h / scale, xacc: 100 - (xa / h) * 100, bias: e / h };
+        return { ...r, mae: ae / h, rmse: Math.sqrt(se / h), mape: (ape / h) * 100, wape: sa ? (ae / sa) * 100 : Infinity, mase: ae / h / scale, xacc: 100 - (xa / h) * 100, bias: e / h };
       });
       return { h, tr, te };
     }
