@@ -1,5 +1,16 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Cost to serve", "All the costs of serving a customer beyond the product itself: orders, picking, delivery, returns, credit. Used to find truly profitable customers.", "cost-to-serve"],
+  ["Activity-based costing", "Assigning overhead costs by the activities that cause them (orders, lines, drops) instead of spreading them by sales.", "cost-to-serve"],
+  ["Whale curve", "Cumulative profit by customer, sorted most to least profitable. Often peaks well above 100% of total profit.", "cost-to-serve"],
+  ["FTL / LTL", "Full truckload (one flat price per truck) vs less-than-truckload (priced per pallet or weight with rate breaks).", "freight"],
+  ["Cash-to-cash cycle", "Days inventory + days sales outstanding − days payables outstanding: how long cash is tied up in operations.", "cash-to-cash"],
+  ["DIO / DSO / DPO", "Days inventory outstanding, days sales outstanding, days payables outstanding: stock, receivables and payables expressed in days.", "cash-to-cash"],
+  ["MOQ", "Minimum order quantity: the smallest order a supplier will accept.", "moq"],
+  ["All-units discount", "A price break where, once an order reaches the threshold, the lower price applies to every unit in it.", "moq"],
+  ["NPV", "Net present value: future cash flows discounted to today, minus the up-front cost. Positive means the project beats the cost of capital.", "roi"],
+  ["IRR", "Internal rate of return: the discount rate at which a project's NPV is zero.", "roi"],
+  ["Payback period", "How long until cumulative cash flow from a project turns positive.", "roi"],
   ["Landed cost", "The full cost of getting a unit onto your shelf: supplier price plus freight, insurance, duty, broker and handling.", "cost-margin"],
   ["FOB / CIF", "Incoterms. FOB (free on board): the buyer pays from the ship onward. CIF: the seller's price includes insurance and freight to the destination port.", "cost-margin"],
   ["Gross margin", "Revenue minus cost of goods sold, often as a % of revenue. Not the same as markup, which is a % of cost.", "cost-margin"],
