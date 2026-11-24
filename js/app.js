@@ -1,7 +1,7 @@
 // Registry + hash router. Each explainer file calls Lab.register({...}).
 (function () {
   const explainers = [];
-  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Optimization"];
+  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Optimization", "Data quality"];
   Lab.register = (ex) => explainers.push(ex);
   Lab.titleOf = (id) => (explainers.find((e) => e.id === id) || { title: id }).title;
 
@@ -23,6 +23,10 @@
   // "Check yourself" questions and "Go deeper" links, declared on the explainer as quiz / deeper.
   Lab.extras = (ex) => {
     let h = "";
+    if (ex.diy) {
+      const d = Array.isArray(ex.diy) ? { steps: ex.diy } : ex.diy;
+      h += `<section class="diy"><h2>Do it yourself</h2>${d.intro ? `<p>${d.intro}</p>` : ""}<ol>${d.steps.map(([s, f]) => `<li>${s}${f ? `<div class="xl"><code>${f.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</code><button class="cp" type="button">Copy</button></div>` : ""}</li>`).join("")}</ol></section>`;
+    }
     if (ex.quiz && ex.quiz.length) h += `<section class="quiz"><h2>Check yourself</h2><div class="qgrid">${ex.quiz.map(([q, a], i) => `
       <details><summary><span class="qn">Q${i + 1}</span>${q}</summary><div>${a}</div></details>`).join("")}</div></section>`;
     if (ex.deeper && ex.deeper.length) h += `<section class="deeper"><h2>Go deeper</h2><ul>${ex.deeper.map(([t, u, d]) => `
@@ -97,6 +101,51 @@
     cleanup = ex.mount(main()) || null;
     window.scrollTo(0, 0);
   }
+
+  // ---------- settings: theme and colour palette, remembered per browser
+  const store = { get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+  const PALETTES = [["calm", "Calm", "The original blended tones"], ["contrast", "High contrast", "Strong blue vs red"], ["cvd", "Colour-blind safe", "Okabe–Ito colours"]];
+  function applySettings() {
+    const th = store.get("lab-theme") || "system", pa = store.get("lab-palette") || "calm", r = document.documentElement;
+    if (th === "system") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", th);
+    if (pa === "calm") r.removeAttribute("data-palette"); else r.setAttribute("data-palette", pa);
+    return { th, pa };
+  }
+  applySettings();
+  function settingsUI() {
+    const wrap = document.querySelector(".topbar .wrap"), nav = wrap && wrap.querySelector("nav");
+    if (!nav || document.getElementById("settingsBtn")) return;
+    const btn = document.createElement("button");
+    btn.id = "settingsBtn"; btn.className = "settings-btn"; btn.type = "button"; btn.setAttribute("aria-expanded", "false"); btn.setAttribute("aria-controls", "settingsPop");
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/></svg><span class="lbl">Settings</span>`; btn.setAttribute("aria-label", "Settings");
+    nav.appendChild(btn);
+    const pop = document.createElement("div");
+    pop.id = "settingsPop"; pop.className = "settings-pop"; pop.hidden = true; pop.setAttribute("role", "dialog"); pop.setAttribute("aria-label", "Display settings");
+    const chips = (k) => ({ calm: ["#0a6c88", "#cf5f22", "#6a4cc0", "#2c8549"], contrast: ["#1f5fd1", "#d62828", "#222b33", "#1a7f37"], cvd: ["#0072b2", "#d55e00", "#cc79a7", "#009e73"] })[k];
+    const render = () => {
+      const { th, pa } = applySettings();
+      pop.innerHTML = `<div><h3>Theme</h3><div class="seg" id="setTheme">${[["system", "System"], ["light", "Light"], ["dark", "Dark"]].map(([v, l]) => `<button type="button" data-v="${v}" aria-pressed="${v === th}">${l}</button>`).join("")}</div></div>
+        <div><h3>Chart colours</h3><div class="swatches" id="setPal">${PALETTES.map(([v, l, d]) => `<button class="swatch" type="button" data-v="${v}" aria-pressed="${v === pa}"><span>${l}<small>${d}</small></span><span class="chips">${chips(v).map((c) => `<i style="background:${c}"></i>`).join("")}</span></button>`).join("")}</div></div>`;
+    };
+    render();
+    wrap.appendChild(pop);
+    btn.addEventListener("click", () => { pop.hidden = !pop.hidden; btn.setAttribute("aria-expanded", String(!pop.hidden)); });
+    pop.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-v]"); if (!b) return;
+      store.set(b.closest("#setTheme") ? "lab-theme" : "lab-palette", b.dataset.v); render();
+    });
+    document.addEventListener("click", (e) => { if (!pop.hidden && e.target.isConnected && !pop.contains(e.target) && !btn.contains(e.target)) { pop.hidden = true; btn.setAttribute("aria-expanded", "false"); } });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !pop.hidden) { pop.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.focus(); } });
+  }
+  // copy buttons on DIY formulas
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest(".diy .cp"); if (!b) return;
+    const code = b.previousElementSibling, txt = code.textContent;
+    const done = () => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1200); };
+    const sel = () => { const r = document.createRange(); r.selectNodeContents(code); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected"; setTimeout(() => (b.textContent = "Copy"), 1200); };
+    try { navigator.clipboard.writeText(txt).then(done, sel); } catch (err) { sel(); }
+  });
+  window.addEventListener("DOMContentLoaded", settingsUI);
 
   window.addEventListener("hashchange", route);
   window.addEventListener("DOMContentLoaded", route);

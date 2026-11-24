@@ -199,3 +199,64 @@ footer .wrap { padding-block: 20px; }
 .path ol { margin: 0; padding-left: 1.3em; font-size: .9rem; }
 .path li { margin: 0 0 3px; }
 .path li::marker { color: var(--accent); font-family: var(--font-mono); font-size: .8em; }
+
+
+/* ---------- colour palettes (Settings) ---------- */
+:root[data-palette="contrast"] {
+  --accent: #1f5fd1; --accent-soft: #1f5fd122; --warm: #d62828; --warm-soft: #d6282830;
+  --violet: #222b33; --violet-soft: #222b3326; --good: #1a7f37; --bad: #b3001b;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="contrast"]:not([data-theme="light"]) {
+    --accent: #5b9bff; --accent-soft: #5b9bff2e; --warm: #ff5c5c; --warm-soft: #ff5c5c38;
+    --violet: #e8eef2; --violet-soft: #e8eef22a; --good: #4cd07a; --bad: #ff4d6d;
+  }
+}
+:root[data-theme="dark"][data-palette="contrast"] {
+  --accent: #5b9bff; --accent-soft: #5b9bff2e; --warm: #ff5c5c; --warm-soft: #ff5c5c38;
+  --violet: #e8eef2; --violet-soft: #e8eef22a; --good: #4cd07a; --bad: #ff4d6d;
+}
+/* Okabe-Ito colours, distinguishable with the common forms of colour blindness */
+:root[data-palette="cvd"] {
+  --accent: #0072b2; --accent-soft: #0072b222; --warm: #d55e00; --warm-soft: #d55e0030;
+  --violet: #cc79a7; --violet-soft: #cc79a72e; --good: #009e73; --bad: #a3480b;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="cvd"]:not([data-theme="light"]) {
+    --accent: #56b4e9; --accent-soft: #56b4e92e; --warm: #e69f00; --warm-soft: #e69f0038;
+    --violet: #e08cbd; --violet-soft: #e08cbd30; --good: #2fc49a; --bad: #f07a3a;
+  }
+}
+:root[data-theme="dark"][data-palette="cvd"] {
+  --accent: #56b4e9; --accent-soft: #56b4e92e; --warm: #e69f00; --warm-soft: #e69f0038;
+  --violet: #e08cbd; --violet-soft: #e08cbd30; --good: #2fc49a; --bad: #f07a3a;
+}
+
+.topbar .wrap { position: relative; }
+.settings-btn { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 8px; padding: 5px 10px; font: 500 0.88rem/1 var(--font-body); cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.settings-btn:hover, .settings-btn[aria-expanded="true"] { color: var(--ink); border-color: var(--muted); }
+.settings-pop { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); top: calc(100% + 6px); z-index: 20; width: min(320px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.14); padding: 14px; display: grid; gap: 14px; }
+.settings-pop h3 { margin: 0 0 6px; font: 600 .72rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.settings-pop .seg { grid-auto-flow: column; }
+.swatches { display: grid; gap: 6px; }
+.swatch { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; background: transparent; color: var(--ink); font: 500 .86rem/1.2 var(--font-body); cursor: pointer; text-align: left; }
+.swatch[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.swatch .chips { display: flex; gap: 3px; margin-left: auto; }
+.swatch .chips i { width: 14px; height: 14px; border-radius: 3px; display: block; }
+.swatch small { display: block; color: var(--muted); font-size: .76rem; }
+@media (max-width: 560px) { .topbar nav { gap: 10px; font-size: .84rem; } }
+
+/* ---------- Do it yourself ---------- */
+.diy { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 16px 18px; margin: 8px 0 20px; }
+.diy h2 { margin-top: 0; }
+.diy > p { color: var(--muted); margin: 0 0 10px; }
+.diy ol { margin: 0; padding-left: 1.4em; display: grid; gap: 10px; }
+.diy li::marker { color: var(--accent); font-family: var(--font-mono); font-size: .85em; }
+.diy .xl { display: flex; align-items: flex-start; gap: 8px; margin-top: 4px; }
+.diy code { display: block; flex: 1; min-width: 0; overflow-x: auto; white-space: pre; font: .8rem/1.6 var(--font-mono); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; color: var(--ink); }
+.diy .cp { flex: none; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 6px; padding: 4px 8px; font: 500 .72rem/1.4 var(--font-mono); cursor: pointer; }
+.diy .cp:hover { color: var(--ink); }
+@media (max-width: 560px) { .settings-btn .lbl { display: none; } .settings-btn { padding: 6px 8px; } .topbar .wrap { gap: 8px; } .brand { font-size: 1.02rem; } }
+.notes .diy { grid-column: 1 / -1; }
+.diy ol { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); column-gap: 32px; }
+.diy li { max-width: none; }

@@ -128,7 +128,7 @@
     const onTheme = () => redraw(false);
     mq.addEventListener("change", onTheme);
     const mo = new MutationObserver(onTheme);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-palette", "class"] });
     return () => { ro.disconnect(); mq.removeEventListener("change", onTheme); mo.disconnect(); };
   }
 
