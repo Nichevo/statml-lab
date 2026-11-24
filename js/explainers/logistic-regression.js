@@ -27,7 +27,6 @@ Lab.register({
     ["Cox (1958), The regression analysis of binary sequences, JRSS B 20(2)", "https://doi.org/10.1111/j.2517-6161.1958.tb00292.x", "the paper that established logistic regression"],
     ["Fawcett (2006), An introduction to ROC analysis, Pattern Recognition Letters 27(8)", "https://doi.org/10.1016/j.patrec.2005.10.010", "ROC curves, AUC and choosing cut-offs"],
     ["Saito & Rehmsmeier (2015), The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets, PLoS ONE", "https://doi.org/10.1371/journal.pone.0118432", "why rare events need precision and recall"],
-    ["Elkan (2001), The foundations of cost-sensitive learning, IJCAI", "https://www.ijcai.org/Proceedings/01/IJCAI-2001-e.pdf", "the cost-based cut-off rule"],
     ["James et al., An Introduction to Statistical Learning, ch. 4 (free PDF)", "https://www.statlearning.com/", "logistic regression and classification"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 54 C 36 54, 40 10, 90 10" stroke-width="2.5"/><g fill="currentColor"><circle cx="12" cy="58" r="2.5"/><circle cx="22" cy="58" r="2.5"/><circle cx="30" cy="58" r="2.5"/><circle cx="44" cy="58" r="2.5"/><circle cx="40" cy="6" r="2.5"/><circle cx="58" cy="6" r="2.5"/><circle cx="70" cy="6" r="2.5"/><circle cx="84" cy="6" r="2.5"/></g><path d="M4 32 H92" stroke-dasharray="3 3" stroke-width="1.4"/></svg>`,

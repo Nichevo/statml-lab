@@ -98,7 +98,6 @@
     "https://doi.org/10.1111/j.2517-6161.1958.tb00292.x": "Set out regression for yes/no outcomes using the logistic (log-odds) link. It became the standard model for binary data in medicine, credit scoring and beyond.",
     "https://doi.org/10.1016/j.patrec.2005.10.010": "A clear tutorial on ROC curves and AUC: how to draw them, what AUC means and how to choose an operating point using costs and class balance.",
     "https://doi.org/10.1371/journal.pone.0118432": "Showed that when positives are rare, ROC curves can look reassuring while precision is poor. Precision-recall plots reveal the problem, so use them for rare events.",
-    "https://www.ijcai.org/Proceedings/01/IJCAI-2001-e.pdf": "Derives the optimal decision threshold from the costs of each kind of mistake: p* = cost(FP) / (cost(FP) + cost(FN)). It also shows how to adjust for changed class balance.",
     "https://doi.org/10.1111/j.2517-6161.1974.tb00994.x": "Formalised cross-validation for choosing and judging models. Assess predictions on data left out of fitting, not on the data used to fit.",
     "https://doi.org/10.1214/09-SS054": "Surveys the many forms of cross-validation (k-fold, leave-one-out, repeated, Monte Carlo) and when each gives reliable model choices.",
     "https://doi.org/10.1016/j.csda.2017.11.003": "Showed that ordinary k-fold CV is valid for purely autoregressive models with uncorrelated errors. Otherwise, use rolling-origin evaluation for time series.",
