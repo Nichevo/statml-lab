@@ -1,5 +1,8 @@
 // Plain-language glossary. `see` links a term to the explainer where you can watch it happen.
 Lab.terms = [
+  ["Multi-echelon inventory", "Planning stock across several levels of a network at once (e.g. supplier, DC, store) instead of setting each location's buffer on its own.", "supply-network"],
+  ["Guaranteed-service model", "A multi-echelon method where each stocking point promises a fixed service time to its customers and holds enough stock to keep that promise.", "supply-network"],
+  ["Net replenishment time", "The time a stocking point must cover with its own safety stock: inbound lead time plus the promise it receives, minus the promise it gives.", "supply-network"],
   ["Risk pooling", "Combining demand from several sources into one stock, so ups and downs partly cancel and less safety stock is needed.", "risk-pooling"],
   ["Square-root law", "Pooling n locations with independent demand cuts total safety stock by a factor of √n.", "risk-pooling"],
   ["Coefficient of variation (CV)", "Standard deviation divided by the mean. A scale-free measure of how variable something is.", "abc-xyz"],
