@@ -26,7 +26,7 @@ Lab.register({
     ["Simchi-Levi & Simchi-Levi (2020), We need a stress test for critical supply chains, Harvard Business Review", "https://hbr.org/2020/04/we-need-a-stress-test-for-critical-supply-chains", "the case for supply chain stress tests"],
     ["Ivanov (2020), Predicting the impacts of epidemic outbreaks on global supply chains, Transportation Research Part E 136", "https://doi.org/10.1016/j.tre.2020.101922", "simulating a pandemic shock: timing matters more than size"],
     ["Basel Committee (2018), Stress testing principles", "https://www.bis.org/bcbs/publ/d450.htm", "how banks design scenarios, including reverse stress tests"],
-    ["Tomlin (2006), On the value of mitigation and contingency strategies for managing supply chain disruption risks, Management Science 52(5)", "https://doi.org/10.1287/mnsc.1050.0487", "stock versus flexible capacity"],
+    ["Tomlin (2006), On the value of mitigation and contingency strategies for managing supply chain disruption risks, Management Science 52(5)", "https://doi.org/10.1287/mnsc.1060.0515", "stock versus flexible capacity"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 20 H28 L36 50 H52 L60 22 H90"/><rect x="30" y="8" width="26" height="48" fill="currentColor" fill-opacity=".12" stroke="none"/><path d="M6 56 H90" stroke-opacity=".5"/></svg>`,
 

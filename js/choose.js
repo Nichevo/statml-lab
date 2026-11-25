@@ -178,6 +178,24 @@
       ]),
       after: [["What forecast error costs you", "lead-time-error"], ["Cash tied up in stock", "cash-to-cash"]],
     },
+    {
+      key: "risk", name: "Risk measure",
+      intro: "Start from the question you're being asked. Probabilities help when you can estimate them; when you can't, measure impact and test scenarios.",
+      tree: Q("What do you need to know?", [
+        ["How bad a bad month or year could be", Q("What do you have to work with?", [
+          ["A history of results", L("VaR and CVaR", "var-cvar", "Read the loss beaten 1 time in 20, and the average beyond it, off your sorted history.")],
+          ["Ranges for each driver", L("Monte Carlo risk simulation", "monte-carlo-risk", "Simulate thousands of combinations of the drivers and read off P10, P90 and the chance of a loss.")],
+        ])],
+        ["Which suppliers or sites could hurt us most", L("Time to recover / time to survive", "supplier-disruption", "Compare recovery time with how long you can last without each site; add concentration (HHI).")],
+        ["How to rank a long list of risks quickly", Q("What kind of list?", [
+          ["Business risks in a register", L("Risk matrix", "risk-matrix", "Likelihood × impact bands; quick, but check the top risks in money.")],
+          ["Ways a process or product can fail", L("FMEA", "risk-matrix", "Severity, occurrence and detection; put severity first.")],
+        ])],
+        ["What one specific scenario would do to us", L("Stress test", "stress-test", "Play a named shock through a model of the operation; reverse it to find the breaking point.")],
+        ["Whether more data, a test or a forecast is worth paying for", L("Value of information", "value-of-information", "EVPI caps what any information is worth; EVSI prices a real, imperfect test.")],
+      ]),
+      after: [["Simulate the drivers once you have ranges", "monte-carlo-risk"], ["Read the tail with VaR and CVaR", "var-cvar"], ["Update beliefs with new evidence", "bayesian-updating"]],
+    },
   ];
 
   // ---------- layout: left-to-right tree, leaves stacked, each box sized to its wrapped text

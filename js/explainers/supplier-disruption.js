@@ -25,7 +25,7 @@ Lab.register({
   deeper: [
     ["Simchi-Levi, Schmidt & Wei (2014), From superstorms to factory fires, Harvard Business Review", "https://hbr.org/2014/01/from-superstorms-to-factory-fires-managing-unpredictable-supply-chain-disruptions", "the TTR/TTS risk exposure index"],
     ["Simchi-Levi et al. (2015), Identifying risks and mitigating disruptions in the automotive supply chain, Interfaces 45(5)", "https://doi.org/10.1287/inte.2015.0804", "the Ford case in detail"],
-    ["Tomlin (2006), On the value of mitigation and contingency strategies for managing supply chain disruption risks, Management Science 52(5)", "https://doi.org/10.1287/mnsc.1050.0487", "when to hold stock, dual-source or wait"],
+    ["Tomlin (2006), On the value of mitigation and contingency strategies for managing supply chain disruption risks, Management Science 52(5)", "https://doi.org/10.1287/mnsc.1060.0515", "when to hold stock, dual-source or wait"],
     ["Sheffi & Rice (2005), A supply chain view of the resilient enterprise, MIT Sloan Management Review", "https://sloanreview.mit.edu/article/a-supply-chain-view-of-the-resilient-enterprise/", "redundancy versus flexibility"],
     ["US Department of Justice, Herfindahl-Hirschman Index", "https://www.justice.gov/atr/herfindahl-hirschman-index", "the concentration measure and its thresholds"],
   ],

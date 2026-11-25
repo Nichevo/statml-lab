@@ -25,7 +25,7 @@ Lab.register({
   },
   deeper: [
     ["Cox (2008), What's wrong with risk matrices? Risk Analysis 28(2)", "https://doi.org/10.1111/j.1539-6924.2008.01030.x", "range compression and rankings worse than random"],
-    ["Bowles (2003), An assessment of RPN prioritization in a failure modes effects and criticality analysis, RAMS", "https://doi.org/10.1109/RAMS.2003.1181990", "the arithmetic problems with RPN"],
+    ["Bowles (2003), An assessment of RPN prioritization in a failure modes effects and criticality analysis, RAMS", "https://doi.org/10.1109/RAMS.2003.1182019", "the arithmetic problems with RPN"],
     ["Liu, Liu & Liu (2013), Risk evaluation approaches in failure mode and effects analysis: a literature review, Expert Systems with Applications 40(2)", "https://doi.org/10.1016/j.eswa.2012.08.010", "what people use instead of RPN"],
     ["ISO 31000 Risk management", "https://www.iso.org/iso-31000-risk-management.html", "the general framework"],
   ],

@@ -13,9 +13,9 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Do it yourself**: step-by-step Excel formulas to rebuild the calculation in a spreadsheet.
 - **Check yourself**: a short quiz with the answers hidden until you open them.
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
-- **Glossary links**: plain-language definitions of 300 terms, cross-linked to the pages that use them.
+- **Glossary links**: plain-language definitions of 330 terms, cross-linked to the pages that use them.
 
-## Contents (87 explainers)
+## Contents (93 explainers)
 
 | Area | Pages |
 |---|---|
@@ -24,11 +24,12 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 | Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, isolation forest, k-means clustering and PCA |
 | Statistics | R², least squares, central limit theorem, confidence intervals and the bootstrap, hypothesis tests and p-values, ANOVA and chi-square, A/B tests and power, difference-in-differences and causal impact, Bayesian updating, ridge and lasso regularisation, regression pitfalls (curves, uneven noise, outliers, extrapolation, missing drivers, collinearity), rolling up numbers (bottom-up vs averages) |
 | Machine learning | Logistic regression and the confusion matrix, overfitting and cross-validation, bias–variance, gradient descent, attention in transformers, a whole transformer block with embeddings (a tiny model trains in the browser), decision trees and random forests, gradient-boosted trees step by step, SHAP values, neural networks from scratch (perceptron to hidden layers), convolutional neural networks (draw a digit and watch a real CNN read it), decision trees, k-nearest neighbours, naive Bayes, support vector machines, an eight-model comparison, rare events and calibration, feature engineering and leakage, hyperparameter tuning with PDP/ICE plots, model drift, how chatbots sample words, embeddings search and RAG |
+| Risk | Value at Risk and expected shortfall (VaR/CVaR), Monte Carlo risk simulation, supplier disruption (time to recover / time to survive, HHI), risk matrix and FMEA, supply chain stress tests, value of information (EVPI/EVSI) |
 | Optimization | Linear programming, simulated annealing |
 
-A **Which method when?** page has flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model or supply chain tool, each ending at the relevant explainer.
+A **Which method when?** page has flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model, supply chain tool or risk measure, each ending at the relevant explainer.
 
-The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, Statistics for decisions, Machine learning foundations, More machine-learning models, and How LLMs work.
+The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Supply chain risk, Optimization and network design, Data quality, Statistics for decisions, Machine learning foundations, More machine-learning models, and How LLMs work.
 
 ## Run it locally
 
