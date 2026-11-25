@@ -341,3 +341,13 @@ footer .wrap { padding-block: 20px; }
 .rs-how { margin: 0 0 12px; max-width: 78ch; font-size: .92rem; }
 .rs-how summary { cursor: pointer; color: var(--muted); }
 .rs-how ul { padding-left: 20px; }
+/* Forecast lab: who wins where */
+.fw-ctrl { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 10px; }
+.fw-ctrl .seg { min-width: min(100%, 330px); }
+.fw-table { border-collapse: collapse; font-size: .82rem; font-variant-numeric: tabular-nums; width: 100%; min-width: 640px; }
+.fw-table th { font-weight: 500; color: var(--muted); padding: 6px; text-align: center; border-bottom: 1px solid var(--line); line-height: 1.2; }
+.fw-table th:first-child, .fw-table td:first-child { text-align: left; white-space: nowrap; }
+.fw-table td { padding: 6px; text-align: center; border: 1px solid var(--surface); }
+.fw-table td:first-child { background: transparent; color: var(--ink); }
+.fw-table th.cur { color: var(--ink); font-weight: 700; }
+.fw-table td.cur { outline: 2px solid var(--ink); outline-offset: -2px; }

@@ -83,6 +83,17 @@ Lab.register({
         <div class="plot" style="padding:14px">
           <h4 style="margin:0 0 10px;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Strengths and weaknesses</h4>
           <div id="about" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px"></div>
+        </div>
+        <div class="plot" style="padding:14px">
+          <h4 style="margin:0 0 6px;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Who wins where: ${Lab.flWins ? Lab.flWins.n * 36 : 0} simulated series</h4>
+          <p class="hint" style="margin:0 0 10px">Every method was run on ${Lab.flWins ? Lab.flWins.n : 0} random draws of each pattern, at three noise levels and two forecast lengths, and ranked by RMSE on the held-out periods. Darker cells win more often. The column for the pattern you're looking at is outlined.</p>
+          <div class="fw-ctrl">
+            <div class="seg" id="fwMetric" role="group" aria-label="Measure"><button type="button" data-v="win" aria-pressed="true">% ranked 1st</button><button type="button" data-v="top3" aria-pressed="false">% in top 3</button><button type="button" data-v="rank" aria-pressed="false">Average rank</button></div>
+            <label class="rs-sel">Noise <select id="fwNoise"><option value="all">all levels</option><option value="0.3">low (0.3)</option><option value="1">medium (1)</option><option value="2">high (2)</option></select></label>
+            <label class="rs-sel">Held out <select id="fwH"><option value="all">3 and 12 periods</option><option value="3">3 periods (short)</option><option value="12">12 periods (long)</option></select></label>
+          </div>
+          <div style="overflow-x:auto"><table id="fwTable" class="fw-table"></table></div>
+          <p class="hint" id="fwNote" style="margin:8px 0 0"></p>
         </div>`,
       panel: `
         <div class="ctrl"><label for="pre">Data pattern</label>
@@ -331,6 +342,29 @@ Lab.register({
     ["#noise"].forEach((s) => $(s).addEventListener("input", () => { if ($("#pre").value !== "own") { makeData(); draw(); } }));
     $("#m").addEventListener("change", () => { if ($("#pre").value !== "own") makeData(); draw(); });
     $("#h").addEventListener("input", draw);
+    // ---- who wins where (precomputed in js/forecast-lab-wins.js) ----
+    const FW = Lab.flWins, PATS = Object.keys(PRESETS);
+    let fwMetric = "win";
+    function drawWins() {
+      if (!FW) return;
+      const nzSel = $("#fwNoise").value, hSel = $("#fwH").value, cur = $("#pre").value;
+      const keys = (pat) => FW.noise.filter((z) => nzSel === "all" || String(z) === nzSel).flatMap((z) => FW.held.filter((hh) => hSel === "all" || String(hh) === hSel).map((hh) => `${pat}|${z}|${hh}`));
+      const val = (meth, pat) => { let a = 0, b = 0, c = 0, n = 0; keys(pat).forEach((k) => { const v = FW.cells[k][meth]; a += v[0]; b += v[1]; c += v[2]; n += FW.n; }); return fwMetric === "win" ? (100 * a) / n : fwMetric === "top3" ? (100 * b) / n : c / n; };
+      const nM = FW.methods.length, overall = (meth) => PATS.reduce((sum, p) => sum + val(meth, p), 0) / PATS.length;
+      const rows = FW.methods.slice().sort((p, q) => (fwMetric === "rank" ? overall(p) - overall(q) : overall(q) - overall(p)));
+      const shade = (v) => { const t = fwMetric === "rank" ? (nM - v) / (nM - 1) : fwMetric === "win" ? Math.min(1, v / 50) : v / 100; return `color-mix(in srgb, var(--accent) ${Math.round(8 + 72 * t)}%, var(--surface))`; };
+      const ink = (v) => ((fwMetric === "rank" ? (nM - v) / (nM - 1) : fwMetric === "win" ? Math.min(1, v / 50) : v / 100) > 0.55 ? "#fff" : "var(--ink)");
+      const fmtV = (v) => (fwMetric === "rank" ? v.toFixed(1) : Math.round(v) + "%");
+      const best = Object.fromEntries(PATS.map((p) => [p, rows.reduce((bm, m) => ((fwMetric === "rank" ? val(m, p) < val(bm, p) : val(m, p) > val(bm, p)) ? m : bm), rows[0])]));
+      $("#fwTable").innerHTML = `<thead><tr><th>Method</th>${PATS.map((p) => `<th class="${p === cur ? "cur" : ""}">${PRESETS[p]}</th>`).join("")}<th>All patterns</th></tr></thead><tbody>` +
+        rows.map((m) => `<tr><td>${m}</td>${PATS.map((p) => { const v = val(m, p); return `<td class="${p === cur ? "cur" : ""}" style="background:${shade(v)};color:${ink(v)}">${best[p] === m ? "<b>" + fmtV(v) + "</b>" : fmtV(v)}</td>`; }).join("")}<td style="background:${shade(overall(m))};color:${ink(overall(m))}">${fmtV(overall(m))}</td></tr>`).join("") + "</tbody>";
+      const lead = PATS.map((p) => `${PRESETS[p].toLowerCase()}: ${best[p]}`).join("; ");
+      $("#fwNote").innerHTML = `${fwMetric === "rank" ? "Lowest average rank" : "Most often " + (fwMetric === "win" ? "first" : "in the top 3")} by pattern (bold): ${lead}. ${(() => { const mx = Math.max(...PATS.flatMap((p) => FW.methods.map((m) => { let w = 0, n = 0; keys(p).forEach((k) => { w += FW.cells[k][m][0]; n += FW.n; }); return (100 * w) / n; }))); return mx < 60 ? `Even the strongest method in any column wins only ${Math.round(mx)}% of the time, so one holdout on one series is a noisy guide. That's why backtesting from several starting points matters.` : `With these settings the clearest winner takes ${Math.round(mx)}% of draws, but most columns are much closer. Clean patterns like this are rare in real data. Croston wins flat data because, with no zeros, it behaves like simple exponential smoothing.`; })()}`;
+      root.querySelectorAll("#fwMetric button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === fwMetric)));
+    }
+    $("#fwMetric").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; fwMetric = b.dataset.v; drawWins(); });
+    $("#fwNoise").addEventListener("change", drawWins); $("#fwH").addEventListener("change", drawWins); $("#pre").addEventListener("change", drawWins);
+    drawWins();
     $("#newd").addEventListener("click", () => { seed++; if ($("#pre").value === "own") $("#pre").value = "seasonal"; makeData(); draw(); });
     $("#useOwn").addEventListener("click", () => {
       const v = $("#own").value.split(/[\s,;]+/).filter(Boolean).map(Number);
