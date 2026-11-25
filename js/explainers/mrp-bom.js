@@ -25,7 +25,6 @@ Lab.register({
     ["Material requirements planning — Wikipedia", "https://en.wikipedia.org/wiki/Material_requirements_planning", "history, inputs, outputs and problems"],
     ["Bill of materials — Wikipedia", "https://en.wikipedia.org/wiki/Bill_of_materials", "single-level, multi-level and the different BOMs a business keeps"],
     ["Blackburn, Kropp & Millen (1986), A comparison of strategies to dampen nervousness in MRP systems, Management Science 32(4)", "https://doi.org/10.1287/mnsc.32.4.413", "why MRP plans keep changing, and freezing, time fences and safety stock as remedies"],
-    ["Ptak & Smith (2016), Demand Driven Material Requirements Planning (DDMRP), Industrial Press", "https://en.wikipedia.org/wiki/DDMRP", "a modern alternative that puts stock buffers at chosen points to decouple lead times"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="36" y="4" width="24" height="12" rx="2"/><rect x="8" y="26" width="22" height="12" rx="2"/><rect x="38" y="26" width="20" height="12" rx="2"/><rect x="66" y="26" width="22" height="12" rx="2"/><rect x="24" y="48" width="18" height="12" rx="2"/><rect x="54" y="48" width="18" height="12" rx="2"/><path d="M48 16 V22 M19 22 H77 M19 22 V26 M48 22 V26 M77 22 V26 M48 38 V44 M33 44 H63 M33 44 V48 M63 44 V48"/></svg>`,
 

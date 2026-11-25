@@ -24,7 +24,10 @@
                 ["Trees with hand-made lag and calendar features (start here)", L("Global ML model", "global-forecasting", "Gradient-boosted trees on scaled sales with promo, price and calendar features.")],
                 ["A neural network that reads the history itself", L("RNN / LSTM", "rnn-lstm", "Carries a memory from week to week; shines when trained across thousands of series.")],
               ])],
-              ["No, just this item", L("Regression with driver variables", "promo-regression", "Baseline plus a promo uplift term, estimated from this item's own history.")],
+              ["No, just this item", Q("Do the leftovers carry over from day to day?", [
+                ["No, or not sure yet", L("Regression with driver variables", "promo-regression", "Baseline plus a promo uplift term, estimated from this item's own history.")],
+                ["Yes: weather or other drivers, with runs of high and low days", L("Dynamic regression", "dynamic-regression", "Regression on the drivers with AR errors; honest standard errors and better short-term forecasts.")],
+              ])],
             ])],
             ["No", Q("What pattern do you see?", [
               ["A repeating season", L("Holt-Winters / decomposition", "exponential-smoothing", "Smoothing with level, trend and seasonal parts; decomposition shows the parts.")],
@@ -88,6 +91,7 @@
         ])],
         ["How are two things related?", Q("What do you want from it?", [
           ["Predict a number", L("Linear regression", "least-squares", "Fit the line that minimises squared errors; check R² and residuals.")],
+          ["With categories, or effects that depend on each other", L("Dummies and interactions", "dummies-interactions", "0/1 columns for quarters or promotions, and product terms like promo × holiday.")],
           ["Predict yes / no", L("Logistic regression", "logistic-regression", "Probability of the outcome from the drivers.")],
           ["Just how strongly they move together", L("Correlation (with care)", "correlation-traps", "Watch for outliers, curves, hidden groups and confounders.")],
           ["How much of the variation is explained", L("R²", "r-squared", "Share of variance the model accounts for.")],
@@ -99,6 +103,7 @@
           ["Possibly made-up figures", L("Benford's law", "benford", "Leading digits of many real-world amounts follow a known pattern.")],
           ["Gaps and blanks", L("Missing-data handling", "missing-data", "Why values are missing decides how to fill them.")],
         ])],
+        ["How long until something fails or ends?", L("Survival analysis", "survival-analysis", "Kaplan–Meier curves and Weibull fits that use items still running, not just the failures.")],
         ["What shape is my data?", L("Distributions", "distributions", "Normal, Poisson, log-normal and friends, and when each appears.")],
         ["Find groups or simplify many variables", L("PCA and clustering", "pca-clustering", "Reduce many columns to a few directions; group similar rows.")],
       ]),
@@ -115,6 +120,8 @@
           ["Sort short messages into categories", L("Naive Bayes", "naive-bayes", "Word counts and Bayes' rule: a fast, strong baseline for text.")],
         ])],
         ["Many related time series", L("Global ML forecasting", "global-forecasting", "One tree model across all series with lag and calendar features.")],
+        ["Shopping baskets or transactions", L("Market basket analysis", "market-basket", "Support, confidence and lift for items bought together, found with Apriori.")],
+        ["Decisions repeated over time, learned from results", L("Reinforcement learning", "rl-ordering", "An agent learns which action works best in each state by trial and error.")],
         ["A table of rows and columns", Q("Do you have a target to predict?", [
           ["No, I want to find structure", L("PCA and clustering", "pca-clustering", "Unsupervised: groups and main directions in the data.")],
           ["Yes, a number", Q("What matters more?", [
@@ -150,6 +157,8 @@
         ["How much stock to hold", Q("What kind of buying decision?", [
           ["One order for a season or perishable", L("Newsvendor", "newsvendor", "Order up to the quantile set by the cost of too few vs too many.")],
           ["Ongoing replenishment, steady demand", L("Reorder point + safety stock", "reorder-point", "Reorder when stock covers lead-time demand plus a buffer.")],
+          ["Which reorder rule: fixed quantity, order-up-to or periodic review", L("Inventory policies", "inventory-policies", "Compare (s, Q), (s, S), (R, S) and (R, s, S) on the same demand.")],
+          ["Will my policy really hit its service level?", L("Monte Carlo inventory simulation", "inventory-simulation", "Simulate years of days and read the fill rate and stock-outs directly.")],
           ["Ongoing, but demand is lumpy", L("Croston-based stock levels", "intermittent-demand", "Forecast sizes and gaps; set stock from that.")],
           ["Which SKUs deserve the most attention", L("ABC-XYZ segmentation", "abc-xyz", "Split by value and by predictability; set policies per cell.")],
           ["What service level to aim for", L("Service level vs cost", "service-level-cost", "Each extra point of service costs more stock than the last.")],
@@ -164,7 +173,14 @@
           ["Cost of holding stock", L("Carrying cost", "carrying-cost", "Capital, storage, obsolescence and shrink.")],
           ["Freight: full loads vs smaller shipments", L("Freight trade-offs", "freight", "Bigger loads cost less per unit but add stock.")],
         ])],
+        ["What to make or buy, and when", Q("What's the question?", [
+          ["Components for a production schedule", L("MRP and bills of materials", "mrp-bom", "Explode the schedule through the BOM and lead times to get planned orders.")],
+          ["How many weeks each order should cover", L("Lot sizing (Wagner–Whitin)", "lot-sizing", "The optimal plan by dynamic programming, against Silver–Meal and other quick rules.")],
+          ["Not enough stock for every customer", L("Shortage allocation", "shortage-allocation", "First come, pro rata, priority tiers and what each does to fairness and order inflation.")],
+          ["A heuristic rule that adapts by trial and error", L("Reinforcement learning for ordering", "rl-ordering", "A Q-learning agent learns a reorder rule and is compared with the exact optimum.")],
+        ])],
         ["How to plan capacity", Q("What's the situation?", [
+          ["Queues at docks, desks or machines", L("Queues and Little's law", "queues-littles-law", "Waits explode as utilisation nears 100%; L = λW links stock, flow and time.")],
           ["Seasonal demand", L("Level vs chase", "level-vs-chase", "Build ahead at a steady rate, or follow demand.")],
           ["A planned stop", L("Plant shutdown build-ahead", "plant-shutdown", "How much to build before the plant stops.")],
           ["Plans keep changing near-term", L("Frozen zones", "frozen-zones", "Lock the next few weeks to stop churn.")],

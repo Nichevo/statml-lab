@@ -25,7 +25,6 @@ Lab.register({
     ["Little (1961), A proof for the queuing formula L = λW, Operations Research 9(3)", "https://doi.org/10.1287/opre.9.3.383", "the original proof"],
     ["Little (2011), Little's law as viewed on its 50th anniversary, Operations Research 59(3)", "https://doi.org/10.1287/opre.1110.0940", "a readable look back, with uses in operations and services"],
     ["Kingman (1961), The single server queue in heavy traffic, Mathematical Proceedings of the Cambridge Philosophical Society 57(4)", "https://doi.org/10.1017/S0305004100036094", "the heavy-traffic approximation behind the hockey stick"],
-    ["Hopp & Spearman, Factory Physics, 3rd ed.", "https://www.waveland.com/browse.php?t=689", "the 'VUT' equation (variability × utilisation × time) applied to factories and supply chains"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 56 H90" stroke-opacity=".5"/><path d="M6 56 C40 54 60 50 70 40 C78 30 82 18 86 4"/><circle cx="16" cy="18" r="4"/><circle cx="28" cy="18" r="4"/><circle cx="40" cy="18" r="4"/><rect x="52" y="10" width="16" height="16" rx="2"/></svg>`,
 

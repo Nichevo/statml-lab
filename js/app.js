@@ -41,9 +41,9 @@
   // Suggested reading orders. Ids that don't exist yet are skipped, so paths can list pages before they're built.
   const PATHS = [
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
-      ["exponential-smoothing", "seasonal-decomposition", "theta", "forecast-accuracy", "acf-pacf", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "conformal-prediction", "pinball-crps", "kalman-filter", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
+      ["exponential-smoothing", "seasonal-decomposition", "theta", "forecast-accuracy", "acf-pacf", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "conformal-prediction", "pinball-crps", "kalman-filter", "dynamic-regression", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
-      ["prediction-intervals", "reorder-point", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "bullwhip-effect", "plant-shutdown"]],
+      ["prediction-intervals", "reorder-point", "inventory-policies", "inventory-simulation", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "mrp-bom", "lot-sizing", "shortage-allocation", "queues-littles-law", "bullwhip-effect", "plant-shutdown", "rl-ordering"]],
     ["Supply chain money", "Landed cost, margins and how to put a dollar value on supply chain improvements.",
       ["cost-margin", "rollup", "tariffs", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi"]],
     ["Supply chain risk", "Measuring how bad things could get, finding where the exposure is, and deciding what's worth fixing.",
@@ -53,11 +53,11 @@
     ["Data quality", "Check your data before you trust it: outliers, gaps, shifts, shapes and misleading correlations.",
       ["outliers", "distributions", "missing-data", "ts-anomalies", "isolation-forest", "change-points", "correlation-traps", "benford", "pca-clustering"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
-      ["central-limit", "confidence-intervals", "hypothesis-test", "nonparametric-tests", "anova-chi-square", "ab-power", "multiple-testing", "diff-in-diff", "bayesian-updating", "rollup", "r-squared", "least-squares", "regression-pitfalls", "spc-control-charts"]],
+      ["central-limit", "confidence-intervals", "hypothesis-test", "nonparametric-tests", "anova-chi-square", "ab-power", "multiple-testing", "diff-in-diff", "bayesian-updating", "rollup", "r-squared", "least-squares", "dummies-interactions", "regression-pitfalls", "survival-analysis", "spc-control-charts"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
       ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "regularisation", "gradient-descent", "decision-tree", "random-forest", "gradient-boosting", "shap", "neural-net", "cnn"]],
     ["More machine-learning models", "Other classic models, how to compare them, and the practical traps around them.",
-      ["knn", "naive-bayes", "svm", "decision-tree", "model-zoo", "imbalanced-calibration", "feature-engineering", "hyperparameter-tuning", "model-drift"]],
+      ["knn", "naive-bayes", "svm", "decision-tree", "model-zoo", "imbalanced-calibration", "feature-engineering", "hyperparameter-tuning", "model-drift", "market-basket", "rl-ordering"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",
       ["neural-net", "gradient-descent", "rnn-lstm", "attention", "transformer", "llm-sampling-rag"]],
   ];

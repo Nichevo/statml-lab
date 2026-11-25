@@ -25,7 +25,6 @@ Lab.register({
     ["Wagner & Whitin (1958), Dynamic version of the economic lot size model, Management Science 5(1)", "https://doi.org/10.1287/mnsc.5.1.89", "the original dynamic programming algorithm"],
     ["Silver & Meal (1973), A heuristic for selecting lot size quantities for the case of a deterministic time-varying demand rate and discrete opportunities for replenishment, Production and Inventory Management 14(2)", "https://en.wikipedia.org/wiki/Silver%E2%80%93Meal_heuristic", "the heuristic that bears their names"],
     ["Wagelmans, van Hoesel & Kolen (1992), Economic lot-sizing: an O(n log n) algorithm that runs in linear time in the Wagner–Whitin case, Operations Research 40(S1)", "https://doi.org/10.1287/opre.40.1.S145", "how to solve it much faster for long horizons"],
-    ["Wagner–Whitin algorithm — Wikipedia", "https://en.wikipedia.org/wiki/Wagner%E2%80%93Whitin_algorithm", "a short summary with the recursion"],
   ],
   glyph: `<svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 58 H90" stroke-opacity=".5"/><rect x="10" y="40" width="8" height="18"/><rect x="22" y="30" width="8" height="28"/><rect x="34" y="52" width="8" height="6"/><rect x="58" y="24" width="8" height="34"/><rect x="70" y="46" width="8" height="12"/><path d="M14 10 V20 M62 6 V20" stroke-width="3"/><path d="M14 20 L42 20 M62 20 L78 20" stroke-dasharray="3 3"/></svg>`,
 
