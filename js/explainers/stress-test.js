@@ -7,7 +7,7 @@ Lab.register({
   quiz: [
     ["How is a stress test different from Monte Carlo?", "Monte Carlo draws thousands of random futures and gives probabilities. A stress test plays one chosen, severe but plausible scenario and gives its impact. No probability is needed, which is the point when you can't estimate one."],
     ["What does a reverse stress test tell you?", "The smallest shock that breaks a limit you care about, for example fill rate below 95%. Then you ask: is a shock that size plausible? If a 3-week port closure breaks you, that's a finding even if nobody can say how likely it is."],
-    ["Why does a port closure echo weeks after the port reopens?", "Goods stuck at the port arrive in one lump, and no new orders went to the overseas supplier while it was shut. That gap in orders lands six weeks later as a second dip in stock. With less safety stock, the echo turns into a second round of lost sales."],
+    ["Why does a port closure echo weeks after the port reopens?", "Goods stuck at the port arrive in one lump, and no new orders went to the overseas supplier while it was shut. That gap in orders lands six weeks later as a second dip in stock. A planner who doesn't expect it may over-react to the dip and start a bullwhip."],
     ["Which helps more against a long supplier outage: safety stock or flexible capacity at a second supplier?", "For short shocks, stock. For long ones, flexible capacity, because stock runs out and then every extra week is lost, while a second supplier who can ramp up keeps serving. Try both on the 'supplier down' scenario."],
     ["Why test combined scenarios?", "Real crises bundle shocks: a pandemic closes ports, shifts demand and doubles freight at the same time. Effects can interact; a demand surge during a supply gap is far worse than either alone."],
   ],
@@ -83,7 +83,7 @@ Lab.register({
         <section>
           <h2>Try this</h2>
           <ul>
-            <li>Port closure: stock runs out, a lump arrives when the port reopens, and a second dip follows about six weeks later. Set safety stock to 0 and size 1.5×: the echo costs sales too.</li>
+            <li>Port closure: stock runs out, a lump arrives when the port reopens, and a second dip follows about six weeks later. Then try size 1.5× with no safety stock.</li>
             <li>Supplier A down: raise safety stock to 6 weeks, then instead set it to 1 week and B's ramp-up to 200%. Compare the cost.</li>
             <li>Demand surge alone is handled; the pandemic scenario, with a smaller surge plus a closure, is not.</li>
             <li>Freight ×2 costs money but no sales: not every stress shows up in service.</li>
