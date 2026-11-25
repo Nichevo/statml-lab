@@ -30,6 +30,8 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 
 A **Which method when?** page has flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model, supply chain tool or risk measure, each ending at the relevant explainer.
 
+A **Research** page lists recent studies and posts in these areas, each with a plain-English summary, why it matters, and links to the explainers that cover the idea. Filter by topic, type and date; sort newest or oldest first. The list lives in `js/research.js` and is refreshed weekly.
+
 The home page also groups pages into **learning paths**: Start-to-finish case studies, Forecasting from zero, Inventory and supply chain, Supply chain money, Supply chain risk, Optimization and network design, Data quality, Statistics for decisions, Machine learning foundations, More machine-learning models, and How LLMs work.
 
 ## Run it locally
@@ -56,6 +58,8 @@ js/app.js               routing, home page, groups, learning paths, quiz / DIY /
 js/papers.js            one-line summaries shown under research-paper links
 js/glossary.js          glossary terms and their cross-links
 js/choose.js            "Which method when?" decision flowcharts
+js/research.js          Research list (one object per study or post)
+js/research-page.js     Research page: filters, sorting, cards
 js/cnn-data.js          weights of the small digit-reading CNN, plus sample MNIST digits
 js/gbm.js               small gradient-boosting helper (used by global ML forecasting, the model zoo and tuning)
 js/explainers/*.js      one file per explainer
