@@ -49,13 +49,15 @@
     ["Optimization and network design", "From a two-product LP to routing heuristics and choosing DC locations.",
       ["linear-programming", "tsp", "simulated-annealing", "network-design", "supply-network"]],
     ["Data quality", "Check your data before you trust it: outliers, gaps, shifts, shapes and misleading correlations.",
-      ["outliers", "distributions", "missing-data", "ts-anomalies", "change-points", "correlation-traps", "benford", "pca-clustering"]],
+      ["outliers", "distributions", "missing-data", "ts-anomalies", "isolation-forest", "change-points", "correlation-traps", "benford", "pca-clustering"]],
     ["Statistics for decisions", "What a sample can and can't tell you.",
       ["central-limit", "confidence-intervals", "hypothesis-test", "anova-chi-square", "ab-power", "diff-in-diff", "bayesian-updating", "rollup", "r-squared", "least-squares", "regression-pitfalls"]],
     ["Machine learning foundations", "How models learn, and why they overfit.",
-      ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "regularisation", "gradient-descent", "random-forest", "gradient-boosting", "shap", "neural-net", "cnn"]],
+      ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "regularisation", "gradient-descent", "decision-tree", "random-forest", "gradient-boosting", "shap", "neural-net", "cnn"]],
+    ["More machine-learning models", "Other classic models, how to compare them, and the practical traps around them.",
+      ["knn", "naive-bayes", "svm", "decision-tree", "model-zoo", "imbalanced-calibration", "feature-engineering", "hyperparameter-tuning", "model-drift"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",
-      ["neural-net", "gradient-descent", "attention", "transformer"]],
+      ["neural-net", "gradient-descent", "rnn-lstm", "attention", "transformer", "llm-sampling-rag"]],
   ];
   function paths() {
     const known = new Set(explainers.map((e) => e.id));

@@ -24,7 +24,7 @@ Lab.register({
   },
   deeper: [
     ["Saito & Rehmsmeier (2015), The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets, PLOS ONE 10(3)", "https://doi.org/10.1371/journal.pone.0118432", "why PR beats ROC for rare events"],
-    ["Elkan (2001), The foundations of cost-sensitive learning, IJCAI", "https://www.ijcai.org/Proceedings/01/IJCAI-2001-e.pdf", "thresholds from costs, and reweighting"],
+    ["Elkan (2001), The foundations of cost-sensitive learning, IJCAI", "https://cseweb.ucsd.edu/~elkan/rescale.pdf", "thresholds from costs, and reweighting"],
     ["Niculescu-Mizil & Caruana (2005), Predicting good probabilities with supervised learning, ICML", "https://doi.org/10.1145/1102351.1102430", "which models are calibrated, and how to fix them"],
     ["Platt (1999), Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods", "https://home.cs.colorado.edu/~mozer/Teaching/syllabi/6622/papers/Platt1999.pdf", "Platt scaling"],
     ["He & Garcia (2009), Learning from imbalanced data, IEEE TKDE 21(9)", "https://doi.org/10.1109/TKDE.2008.239", "survey of resampling and cost-sensitive methods"],

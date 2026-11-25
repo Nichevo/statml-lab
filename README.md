@@ -13,22 +13,22 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Do it yourself**: step-by-step Excel formulas to rebuild the calculation in a spreadsheet.
 - **Check yourself**: a short quiz with the answers hidden until you open them.
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
-- **Glossary links**: plain-language definitions of 175+ terms, cross-linked to the pages that use them.
+- **Glossary links**: plain-language definitions of 300 terms, cross-linked to the pages that use them.
 
-## Contents (75 explainers)
+## Contents (87 explainers)
 
 | Area | Pages |
 |---|---|
-| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, the Theta method, accuracy measures (MAE, MAPE, RMSE, MASE, bias), autocorrelation (ACF/PACF), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions, pinball loss and CRPS, new-product forecasting (Bass model and analogues), global ML forecasting across many SKUs |
+| Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, the Theta method, accuracy measures (MAE, MAPE, RMSE, MASE, bias), autocorrelation (ACF/PACF), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions, pinball loss and CRPS, new-product forecasting (Bass model and analogues), global ML forecasting across many SKUs, recurrent neural networks (RNN/LSTM) |
 | Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design |
-| Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, k-means clustering and PCA |
+| Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, isolation forest, k-means clustering and PCA |
 | Statistics | R², least squares, central limit theorem, confidence intervals and the bootstrap, hypothesis tests and p-values, ANOVA and chi-square, A/B tests and power, difference-in-differences and causal impact, Bayesian updating, ridge and lasso regularisation, regression pitfalls (curves, uneven noise, outliers, extrapolation, missing drivers, collinearity), rolling up numbers (bottom-up vs averages) |
-| Machine learning | Logistic regression and the confusion matrix, overfitting and cross-validation, bias–variance, gradient descent, attention in transformers, a whole transformer block with embeddings (a tiny model trains in the browser), decision trees and random forests, gradient-boosted trees step by step, SHAP values, neural networks from scratch (perceptron to hidden layers), convolutional neural networks (draw a digit and watch a real CNN read it) |
+| Machine learning | Logistic regression and the confusion matrix, overfitting and cross-validation, bias–variance, gradient descent, attention in transformers, a whole transformer block with embeddings (a tiny model trains in the browser), decision trees and random forests, gradient-boosted trees step by step, SHAP values, neural networks from scratch (perceptron to hidden layers), convolutional neural networks (draw a digit and watch a real CNN read it), decision trees, k-nearest neighbours, naive Bayes, support vector machines, an eight-model comparison, rare events and calibration, feature engineering and leakage, hyperparameter tuning with PDP/ICE plots, model drift, how chatbots sample words, embeddings search and RAG |
 | Optimization | Linear programming, simulated annealing |
 
 A **Which method when?** page has flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model or supply chain tool, each ending at the relevant explainer.
 
-The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, and Statistics for decisions.
+The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Optimization and network design, Data quality, Statistics for decisions, Machine learning foundations, More machine-learning models, and How LLMs work.
 
 ## Run it locally
 
@@ -55,7 +55,7 @@ js/papers.js            one-line summaries shown under research-paper links
 js/glossary.js          glossary terms and their cross-links
 js/choose.js            "Which method when?" decision flowcharts
 js/cnn-data.js          weights of the small digit-reading CNN, plus sample MNIST digits
-js/gbm.js               small gradient-boosting helper (used by global ML forecasting)
+js/gbm.js               small gradient-boosting helper (used by global ML forecasting, the model zoo and tuning)
 js/explainers/*.js      one file per explainer
 ```
 

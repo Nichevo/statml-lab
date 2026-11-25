@@ -20,7 +20,10 @@
           ["Yes, sales are lumpy", L("Croston / SBA", "intermittent-demand", "Forecast the size of a sale and the gap between sales separately.")],
           ["No", Q("Do known drivers move sales (promotions, price, events)?", [
             ["Yes", Q("Many related items with the same drivers?", [
-              ["Yes", L("Global ML model", "global-forecasting", "Gradient-boosted trees on scaled sales with promo, price and calendar features.")],
+              ["Yes", Q("Which kind of global model?", [
+                ["Trees with hand-made lag and calendar features (start here)", L("Global ML model", "global-forecasting", "Gradient-boosted trees on scaled sales with promo, price and calendar features.")],
+                ["A neural network that reads the history itself", L("RNN / LSTM", "rnn-lstm", "Carries a memory from week to week; shines when trained across thousands of series.")],
+              ])],
               ["No, just this item", L("Regression with driver variables", "promo-regression", "Baseline plus a promo uplift term, estimated from this item's own history.")],
             ])],
             ["No", Q("What pattern do you see?", [
@@ -35,7 +38,7 @@
           ])],
         ])],
       ]),
-      after: [["Read the series with ACF/PACF", "acf-pacf"], ["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
+      after: [["Read the series with ACF/PACF", "acf-pacf"], ["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Retrain when the world changes", "model-drift"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
     },
     {
       key: "accuracy", name: "Forecast accuracy measure",
@@ -89,6 +92,7 @@
         ["Which data points look wrong?", Q("What kind of data?", [
           ["One set of numbers", L("Outlier rules (IQR, z, MAD)", "outliers", "Flag points far from the bulk; robust rules resist the outliers themselves.")],
           ["A time series", L("Time-series anomalies", "ts-anomalies", "Compare each point with what its recent pattern predicts.")],
+          ["Rows with several columns (invoices, orders)", L("Isolation forest", "isolation-forest", "Random cuts isolate odd rows quickly; no labels needed.")],
           ["Possibly made-up figures", L("Benford's law", "benford", "Leading digits of many real-world amounts follow a known pattern.")],
           ["Gaps and blanks", L("Missing-data handling", "missing-data", "Why values are missing decides how to fill them.")],
         ])],
@@ -102,12 +106,17 @@
       intro: "The kind of data narrows things quickly. For tables, start simple and only add complexity if cross-validation says it helps.",
       tree: Q("What does your data look like?", [
         ["Images", L("Convolutional neural network", "cnn", "Small learned filters scan the image for patterns.")],
-        ["Text or long sequences", L("Transformer", "transformer", "Embeddings, attention and feed-forward layers, stacked; each position looks back at what matters.")],
+        ["Text or long sequences", Q("What do you want to do?", [
+          ["Understand how the model works inside", L("Transformer", "transformer", "Embeddings, attention and feed-forward layers, stacked; each position looks back at what matters.")],
+          ["Use a chatbot on your own documents", L("Sampling, embeddings and RAG", "llm-sampling-rag", "Retrieve the right passages by meaning, paste them into the prompt, set the temperature.")],
+          ["Sort short messages into categories", L("Naive Bayes", "naive-bayes", "Word counts and Bayes' rule: a fast, strong baseline for text.")],
+        ])],
         ["Many related time series", L("Global ML forecasting", "global-forecasting", "One tree model across all series with lag and calendar features.")],
         ["A table of rows and columns", Q("Do you have a target to predict?", [
           ["No, I want to find structure", L("PCA and clustering", "pca-clustering", "Unsupervised: groups and main directions in the data.")],
           ["Yes, a number", Q("What matters more?", [
             ["Explaining the effect of each driver", L("Linear regression", "least-squares", "One coefficient per driver, easy to read.")],
+            ["A simple rule people can follow", L("Decision tree", "decision-tree", "A few if-then splits; easy to explain, less accurate than a forest.")],
             ["Many drivers, not much data", L("Ridge or lasso regression", "regularisation", "Penalise big coefficients; lasso also drops useless drivers.")],
             ["Accuracy, with curves and interactions", Q("How much tuning can you do?", [
               ["Little: want robust defaults", L("Random forest", "random-forest", "Many trees capture non-linear effects without hand-made features.")],
@@ -116,15 +125,20 @@
           ])],
           ["Yes, a category (yes/no, A/B/C)", Q("What matters more?", [
             ["Explaining and probabilities", L("Logistic regression", "logistic-regression", "Readable coefficients and calibrated probabilities.")],
+            ["A simple rule people can follow", L("Decision tree", "decision-tree", "A few if-then splits; easy to explain, less accurate than a forest.")],
+            ["The yes cases are rare (failures, fraud)", L("Rare events and calibration", "imbalanced-calibration", "Pick the threshold on costs, and check the probabilities mean what they say.")],
             ["Accuracy, with curves and interactions", Q("How much tuning can you do?", [
               ["Little: want robust defaults", L("Random forest", "random-forest", "Usually a strong choice for tabular data with almost no tuning.")],
               ["Some: want the best accuracy", L("Gradient-boosted trees", "gradient-boosting", "Often the most accurate for tabular data once tuned.")],
             ])],
+            ["Few columns, similar cases behave alike", L("k-nearest neighbours", "knn", "Vote among the most similar past cases; scale the columns first.")],
+            ["A clean boundary, small or medium data", L("Support vector machine", "svm", "Widest-margin boundary; kernels bend it.")],
             ["Learning raw patterns from scratch", L("Neural network", "neural-net", "Hidden layers build their own features; needs more data.")],
+            ["Not sure: compare several", L("The model zoo", "model-zoo", "Eight classifiers on the same data, scored on a test set.")],
           ])],
         ])],
       ]),
-      after: [["Explain a model's predictions with SHAP", "shap"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
+      after: [["Build features without leaking the answer", "feature-engineering"], ["Tune settings and read what the model learned", "hyperparameter-tuning"], ["Explain a model's predictions with SHAP", "shap"], ["Watch for drift once it's live", "model-drift"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
     },
     {
       key: "supply", name: "Inventory and supply decision",
