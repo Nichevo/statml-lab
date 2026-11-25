@@ -401,6 +401,10 @@ Lab.terms = [
   ["Exploration (ε-greedy)", "Taking a random action a small share of the time (ε) so the agent keeps trying options it might be wrong about.", "rl-ordering"],
   ["Value iteration", "Solving a decision problem exactly by repeatedly updating the value of each state from the best action's expected cost, until nothing changes.", "rl-ordering"],
   ["Protection period", "The time one order has to cover before the next order can arrive: the lead time plus the review period. Safety stock is sized for forecast error over this whole span.", "case-cold-brew"],
+  ["Permutation importance", "How much a model's error rises when one feature's values are shuffled on test data, breaking its link to the answer. No refit needed. Shared between features that carry the same information.", "case-ml-project"],
+  ["Drop-column importance", "How much a model's error rises when it is refitted without a feature. The most direct measure of what a feature adds, but needs one refit per feature.", "case-ml-project"],
+  ["Log loss", "The average of −ln(probability the model gave to what actually happened). Rewards honest probabilities and punishes confident mistakes heavily. Lower is better.", "case-ml-project"],
+  ["Cost-based threshold", "The probability above which you act, chosen to minimise expected cost. With calibrated probabilities, act when p > cost of acting ÷ cost of a miss.", "case-ml-project"],
   ["Order-up-to level (S)", "In a periodic review rule, the target for stock on hand plus on order. Each review you order the gap between S and what you have.", "case-cold-brew"],
 ];
 

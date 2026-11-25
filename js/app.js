@@ -44,6 +44,8 @@
   const PATHS = [
     ["Start-to-finish case studies", "Real planning chains methods together. Follow one product through every step, with the numbers carried along.",
       ["case-cold-brew", "outliers", "exponential-smoothing", "forecast-accuracy", "lead-time-error", "inventory-policies", "service-level-cost", "monte-carlo-risk"]],
+    ["A machine-learning project, start to finish", "One prediction problem taken from the business question to a model that is watched after launch, with each step's own explainer.",
+      ["case-ml-project", "feature-engineering", "cross-validation", "logistic-regression", "gradient-boosting", "hyperparameter-tuning", "shap", "imbalanced-calibration", "model-drift"]],
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
       ["exponential-smoothing", "seasonal-decomposition", "theta", "forecast-accuracy", "acf-pacf", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "conformal-prediction", "pinball-crps", "kalman-filter", "dynamic-regression", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
@@ -132,7 +134,7 @@
     const btn = document.createElement("button");
     btn.id = "settingsBtn"; btn.className = "settings-btn"; btn.type = "button"; btn.setAttribute("aria-expanded", "false"); btn.setAttribute("aria-controls", "settingsPop");
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/></svg><span class="lbl">Settings</span>`; btn.setAttribute("aria-label", "Settings");
-    nav.appendChild(btn);
+    wrap.insertBefore(btn, nav.nextSibling);
     const pop = document.createElement("div");
     pop.id = "settingsPop"; pop.className = "settings-pop"; pop.hidden = true; pop.setAttribute("role", "dialog"); pop.setAttribute("aria-label", "Display settings");
     const chips = (k) => ({ calm: ["#0a6c88", "#cf5f22", "#6a4cc0", "#2c8549"], contrast: ["#1f5fd1", "#d62828", "#222b33", "#1a7f37"], cvd: ["#0072b2", "#d55e00", "#cc79a7", "#009e73"] })[k];

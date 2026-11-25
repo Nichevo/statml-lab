@@ -248,6 +248,41 @@ Object.assign(Lab.maths, {
 <h3>A caution</h3>
 <p>PDPs evaluate the model at combinations that may never occur (e.g. very high temperature in winter). With strongly correlated features, accumulated local effects (ALE) plots, which only use nearby data, are more reliable.</p>`,
 
+  "case-ml-project": String.raw`
+<h3>Scoring probabilities</h3>
+<p>For orders \(i = 1,\dots,n\) with outcome \(y_i \in \{0,1\}\) and predicted probability \(p_i\):</p>
+\[ \begin{aligned} \text{log loss} = -\frac{1}{n}\sum_{i=1}^{n}\big[\,& y_i \ln p_i \\ & + (1-y_i)\ln(1-p_i)\,\big] \end{aligned} \]
+<p>The base-rate model gives everyone \(\bar y\) from the training weeks. AUC is the share of (late, on-time) pairs where the late order has the higher score, counting ties as half.</p>
+<h3>Logistic regression with a ridge penalty</h3>
+<p>Features are standardised with training means and SDs, \(z_j = (x_j - \mu_j)/\sigma_j\). The coefficients maximise</p>
+\[ \begin{aligned} &\sum_i \big[\,y_i \ln p_i + (1-y_i)\ln(1-p_i)\,\big] - \frac{\lambda}{2}\sum_{j\ge 1}\beta_j^2 \\ &p_i = \frac{1}{1+e^{-(\beta_0 + \beta^\top z_i)}} \end{aligned} \]
+<p>with \(\lambda = 1\), solved by Newton steps (iteratively reweighted least squares).</p>
+<h3>Boosted trees and early stopping</h3>
+<p>\(F_0 = \bar y\), then \(F_t = F_{t-1} + \eta\,h_t\) where each depth-3 tree \(h_t\) fits the residuals \(y - F_{t-1}\) and \(\eta = 0.1\). The number of trees is</p>
+\[ T^\ast = \arg\min_{t \le 250} \text{log loss}_{\text{valid}}(F_t) \]
+<p>The test weeks are not used in this choice.</p>
+<h3>Feature value</h3>
+<p>Let \(L\) be test log loss and \(G\) a feature group (carrier = its two dummy columns).</p>
+<ul>
+<li>Drop-column: refit without \(G\), then \[ \Delta_G = L_{\text{without } G} - L \]</li>
+<li>Permutation: shuffle \(G\) in the test rows \(K = 5\) times, \[ \Delta_G = \frac{1}{K}\sum_{k=1}^{K} L_{G\text{ shuffled},\,k} - L \]</li>
+<li>Shapley: for a random ordering of the groups, switch each group from a background order's value to the test order's value; its contribution is the change in \(p\). Averaging \(|\text{contribution}|\) over 12 orderings and 150 orders estimates the mean absolute SHAP value.</li>
+<li>Partial dependence: \(\text{PD}(v) = \frac{1}{m}\sum_{i=1}^{m} f(x_i \text{ with } x_{G} = v)\); each ICE curve is one term of that sum.</li>
+</ul>
+<h3>The cost-optimal threshold</h3>
+<p>Expediting costs \(c_a\); an unexpedited late order costs \(c_m\). For an order with true chance \(p\) of being late, expediting is cheaper when</p>
+\[ c_a < p\,c_m \quad\Longleftrightarrow\quad p > \frac{c_a}{c_m} \]
+<p>The page also searches thresholds \(t\) on the validation weeks for the lowest \(\frac{1}{n}\sum_i \big[c_a\,\mathbb{1}(p_i \ge t) + c_m\,y_i\,\mathbb{1}(p_i &lt; t)\big]\). The two agree when the probabilities are calibrated.</p>
+<h3>Monitoring after launch</h3>
+<p>Weekly cost \(x_k\) is compared with the test-weeks cost \(\mu_0\), scaled by \(\sigma\) (the larger of the weekly test SD and one missed order's cost per week, \(c_m/n_{\text{week}}\)):</p>
+\[ S_k = \max\!\Big(0,\; S_{k-1} + \frac{x_k - \mu_0}{\sigma} - 0.25\Big) \]<p>Alarm when \(S_k > 5\).</p>
+<p>Population stability index over ten training-decile bins, comparing the last 13 live weeks (\(a\)) with the same 13 weeks a year earlier (\(e\)):</p>
+\[ \text{PSI} = \sum_{b}(a_b - e_b)\ln\frac{a_b}{e_b} \]
+<p>Rule of thumb: below 0.1 stable, 0.1–0.25 watch, above 0.25 shifted.</p>
+<h3>How the data are made</h3>
+<p>Each order is late with probability \(1/(1+e^{-z})\), where</p>
+\[ \begin{aligned} z = {} & -3.3 + 1.2\,d + 0.12(\ell - 5) + \gamma_{\text{carrier}} \\ & + 0.6\,\text{fri} + 16\max(0,\,\text{load} - 0.8) \\ & + 1.3\,r + 1.2\,r\max(0,d) \end{aligned} \]
+<p>with \(d = \ln(\text{km}/300)\), \(\ell\) order lines, \(r\) rain, \(\gamma = 0, 0.6, 1.4\) for carriers A, B, C. The hinge in load and the rain × distance term are what straight-line models miss. The delay scan is the outcome plus noise, which is why it leaks.</p>`,
   "model-drift": String.raw`
 <h3>Kinds of drift</h3>
 <p>Write the joint distribution as \(P(\mathbf x, y) = P(y\mid\mathbf x)\,P(\mathbf x)\).</p>

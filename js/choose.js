@@ -148,7 +148,7 @@
           ])],
         ])],
       ]),
-      after: [["Build features without leaking the answer", "feature-engineering"], ["Put a guaranteed range around any prediction", "conformal-prediction"], ["Tune settings and read what the model learned", "hyperparameter-tuning"], ["Explain a model's predictions with SHAP", "shap"], ["Watch for drift once it's live", "model-drift"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
+      after: [["Walk a whole ML project, step by step", "case-ml-project"], ["Build features without leaking the answer", "feature-engineering"], ["Put a guaranteed range around any prediction", "conformal-prediction"], ["Tune settings and read what the model learned", "hyperparameter-tuning"], ["Explain a model's predictions with SHAP", "shap"], ["Watch for drift once it's live", "model-drift"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
     },
     {
       key: "supply", name: "Inventory and supply decision",
