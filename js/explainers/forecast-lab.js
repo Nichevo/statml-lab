@@ -77,7 +77,7 @@ Lab.register({
         </figure>
         <div class="plot" style="padding:14px">
           <h4 style="margin:0 0 6px;font:600 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Scoreboard on the held-out periods</h4>
-          <p class="hint" style="margin:0 0 10px">Each method's parameters are tuned on the training data only. Click a column to rank by it. For 1 − xMAPE higher is better; for the rest lower is better.</p>
+          <p class="hint" style="margin:0 0 10px">Each method's parameters are tuned on the training data only. Click a column to rank by it. For 1 − xMAPE higher is better; for the rest lower is better.<span class="sm-only"> Swipe the table sideways to see every score.</span></p>
           <div style="overflow-x:auto"><table id="board" style="width:100%;border-collapse:collapse;font-size:.85rem;font-variant-numeric:tabular-nums"></table></div>
         </div>
         <div class="plot" style="padding:14px">
@@ -253,7 +253,8 @@ Lab.register({
       }
       return best.p;
     }
-    const pdesc = (p) => p.of ? "of " + p.of.join(", ") : p.members ? `of ${p.members} methods` : Object.entries(p).map(([k, v]) => `${{ a: "α", b: "β", g: "γ", k: "k" }[k]}=${v}`).join(" ");
+    const SHORT = { "Regression: trend + months": "Regression", "Simple exp. smoothing": "SES", "ML: boosted trees": "Boosted trees", "ML: neural network": "Neural net", "Seasonal naive": "S. naive", "Moving average": "Mov. avg", "ARIMA(2,1,0)": "ARIMA" };
+    const pdesc = (p) => p.of ? p.of.map((n) => SHORT[n] || n).join(" + ") : p.members ? `of ${p.members} methods` : Object.entries(p).map(([k, v]) => `${{ a: "α", b: "β", g: "γ", k: "k" }[k]}=${v}`).join(" ");
 
     function compute() {
       const h = Math.min(+$("#h").value, Math.floor(y.length / 3)), m = +$("#m").value, tr = y.slice(0, y.length - h), te = y.slice(y.length - h);
@@ -316,7 +317,7 @@ Lab.register({
       $("#board").innerHTML = `<tr><th style="text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);font-weight:500;color:var(--muted)">#</th><th style="text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);font-weight:500;color:var(--muted)">Method</th>` +
         cols.map(([k, t]) => `<th data-k="${k}" style="cursor:pointer;text-align:right;padding:5px 6px;border-bottom:1px solid var(--line);font-weight:${k === sortKey ? 700 : 500};color:${k === sortKey ? "var(--ink)" : "var(--muted)"};white-space:nowrap">${t}${k === sortKey ? " ▾" : ""}</th>`).join("") + `</tr>` +
         ok.map((r, i) => `<tr style="${i === 0 ? "background:var(--accent-soft)" : ""}"><td style="padding:5px 6px;border-bottom:1px solid var(--grid);color:var(--muted)">${i + 1}</td>
-          <td style="padding:5px 6px;border-bottom:1px solid var(--grid);white-space:nowrap"><i style="width:12px;height:4px;border-radius:2px;display:inline-block;background:${colr(r.col)};margin-right:6px;vertical-align:middle"></i>${r.name}<br><span style="font:11px var(--font-mono);color:var(--muted)">${pdesc(r.p) || "no settings"}</span></td>` +
+          <td style="padding:5px 6px;border-bottom:1px solid var(--grid);min-width:150px;max-width:220px"><span style="white-space:nowrap"><i style="width:12px;height:4px;border-radius:2px;display:inline-block;background:${colr(r.col)};margin-right:6px;vertical-align:middle"></i>${r.name}</span><br><span style="font:11px/1.35 var(--font-mono);color:var(--muted);display:inline-block">${pdesc(r.p) || "no settings"}</span></td>` +
           cols.map(([k]) => `<td style="text-align:right;padding:5px 6px;border-bottom:1px solid var(--grid);font-family:var(--font-mono);${isBest(k, r) ? "font-weight:700;color:var(--good)" : ""}">${show(k, r[k])}</td>`).join("") + `</tr>`).join("") +
         res.filter((r) => r.na).map((r) => `<tr><td></td><td colspan="8" style="padding:5px 6px;color:var(--muted)">${r.name}: ${r.na}</td></tr>`).join("");
       $("#board").querySelectorAll("th[data-k]").forEach((th) => th.addEventListener("click", () => { sortKey = th.dataset.k; draw(); }));

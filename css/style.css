@@ -351,3 +351,5 @@ footer .wrap { padding-block: 20px; }
 .fw-table td:first-child { background: transparent; color: var(--ink); }
 .fw-table th.cur { color: var(--ink); font-weight: 700; }
 .fw-table td.cur { outline: 2px solid var(--ink); outline-offset: -2px; }
+.sm-only { display: none; }
+@media (max-width: 560px) { .sm-only { display: inline; } }
