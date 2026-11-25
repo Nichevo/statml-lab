@@ -2,7 +2,7 @@ Lab.register({
   id: "forecast-lab",
   group: "Forecasting",
   title: "Forecast lab",
-  blurb: "Every forecasting method on the same data, side by side. Pick a pattern or paste your own series, then compare scores and read each method's strengths and weaknesses.",
+  blurb: "Every forecasting method on the same data, side by side, from the naive forecast to boosted trees and a neural network. Pick a pattern or paste your own series, then compare scores and read each method's strengths and weaknesses.",
   lede: "No forecasting method wins everywhere. Each one assumes something about the data: that it is flat, trending, seasonal or lumpy. Run them all on the same series, score them on months they haven't seen, and the method whose assumptions match the data comes out on top.",
   quiz: [
     ["Why score methods on months they haven't seen?", "In-sample fit rewards complexity: a flexible method can match history closely and still forecast badly. Holding out the last months tests what you actually care about."],
@@ -42,6 +42,8 @@ Lab.register({
       { id: "reg", name: "Regression: trend + months", col: "--good", dash: [8, 3] },
       { id: "arima", name: "ARIMA(2,1,0)", col: "--bad", dash: [3, 2] },
       { id: "croston", name: "Croston", col: "--warm", dash: [8, 2] },
+      { id: "gbm", name: "ML: boosted trees", col: "#8a5a2b", dash: [4, 2] },
+      { id: "nn", name: "ML: neural network", col: "#3b7dd8", dash: [10, 2, 2, 2] },
       { id: "ensall", name: "Ensemble: average of all", col: "#2f8f8f", dash: [1, 0] },
       { id: "ens3", name: "Ensemble: best 3 averaged", col: "#6b5bd6", dash: [10, 3] },
     ];
@@ -57,6 +59,8 @@ Lab.register({
       arima: ["Models changes as depending on the last two changes (fitted by least squares).", "Captures momentum and short-term correlation. Very flexible family.", "This simple version has no seasonal terms. Choosing orders takes skill; less intuitive to explain.", "Non-seasonal series with autocorrelation; seasonal ARIMA for seasonal data."],
       ensall: ["The plain average of every other method's forecast, each weighted equally.", "Errors from different methods partly cancel out, so it is rarely the worst and often near the top. Nothing to tune, and very robust.", "Bad methods drag it down: averaging in naive or Croston on seasonal data hurts. Harder to explain one number.", "When you don't know which method suits the data, or you forecast thousands of items with no time to choose."],
       ens3: ["Hold back the last stretch of training data, find the three methods that forecast it best, then average those three.", "Keeps the benefit of averaging while leaving out methods that clearly don't fit. Often beats every single method.", "The selection step can be fooled by a short validation window. Three methods that make the same mistake don't cancel.", "A strong default in practice. Forecasting competitions (M3, M4) were often won by combinations like this."],
+      gbm: ["Machine learning: 120 small decision trees (gradient boosting) learn the next month's change from the last two changes, the change a season ago, and which month it is. Forecasts are built one month at a time, each feeding the next.", "Finds non-linear patterns and interactions without being told their shape. The same set-up scales to thousands of items and extra drivers (price, promotions, weather).", "Trees can't invent values they haven't seen, so they predict changes, not levels. With only a few years of one series there is little to learn from, and errors compound as forecasts feed forward.", "Best across many related series (a 'global' model) or with useful drivers. On a single short series it rarely beats Holt-Winters."],
+      nn: ["Machine learning: a small neural network (5 inputs, 6 hidden units) learns the next month's change from the same inputs as the boosted trees, with the month coded as a point on a circle.", "Smooth, flexible fits; the building block of LSTMs, transformers and the new foundation models.", "Needs a lot of data and care: results depend on the random start and training length. With one short series it easily overfits or underfits.", "Worth it with many series, long histories or rich drivers. Here it shows why simple methods are hard to beat on small data."],
       croston: ["Smooths order size and the gap between orders separately; forecast = size ÷ gap.", "Built for lumpy demand with many zeros. Steadier than SES there.", "Slightly biased high; never notices an item has died; poor for regular demand.", "Spare parts, slow sellers, intermittent demand."],
     };
     const PRESETS = {
@@ -110,6 +114,7 @@ Lab.register({
           <ol>
             <li>Go through each data pattern and note the winner. With stable trend and season, regression or Holt-Winters usually wins; SES on flat noise; naive on a random walk; Croston on lumpy data. Press "New random draw" to see how often the winner changes.</li>
             <li>"Level shift": show only regression and Holt-Winters. Regression reads the jump as a steady upward trend and keeps climbing; Holt-Winters adapts to the new level. Which is right depends on whether the jump was a one-off.</li>
+            <li>Compare the two machine-learning methods with Holt-Winters. On the starting seasonal data they finish 4th and 5th, behind regression and Holt-Winters; on flat or lumpy data they land near the bottom. With one short series there is little for them to learn from, which is why ML forecasting pays off across many related items (see <a href="#global-forecasting">global forecasting</a>) rather than one at a time.</li>
             <li>Turn noise to 0, then to 3. With heavy noise the simple methods close the gap, because there is less real pattern to exploit.</li>
             <li>Change the held-out periods from 12 to 3. Short horizons favour adaptive methods; long horizons punish runaway trends.</li>
           </ol>
@@ -119,6 +124,7 @@ Lab.register({
           <ul>
             <li>One held-out window is a single test. Serious comparisons repeat it from several starting points (rolling-origin evaluation) and across many series.</li>
             <li>Rankings can change with the measure: MAPE punishes over-forecasts, RMSE punishes big misses.</li>
+            <li>The two ML methods predict the next change (not the level) from the last two changes, the change a season ago and the month, then feed each forecast into the next. That is a standard set-up, not a tuned one; with drivers like price or promotions, or many series trained together, they usually do much better.</li>
             <li>The simple ARIMA here has no seasonal terms, so it struggles on seasonal patterns by design.</li>
           </ul>
         </section>`,
@@ -180,6 +186,39 @@ Lab.register({
         for (let t = 3; t < n; t++) fit[t] = tr[t - 1] + w[0] + w[1] * d[t - 2] + w[2] * d[t - 3];
         const dd = d.slice(); let lv = tr[n - 1]; fc = [];
         for (let i = 0; i < h; i++) { const nd = w[0] + w[1] * dd[dd.length - 1] + w[2] * dd[dd.length - 2]; dd.push(nd); lv += nd; fc.push(lv); }
+      } else if (id === "gbm" || id === "nn") {
+        // Learn the next change d_t = y_t - y_{t-1} from: d_{t-1}, d_{t-2}, d_{t-m}, month. Forecast recursively.
+        const d = [NaN, ...tr.slice(1).map((v, i) => v - tr[i])], t0 = m + 1;
+        const feat = (dd, t) => (id === "gbm" ? [dd[t - 1], dd[t - 2], dd[t - m], t % m] : [dd[t - 1], dd[t - 2], dd[t - m], Math.sin((2 * Math.PI * t) / m), Math.cos((2 * Math.PI * t) / m)]);
+        const X = [], Y = [];
+        for (let t = t0; t < n; t++) { X.push(feat(d, t)); Y.push(d[t]); }
+        let predict;
+        if (id === "gbm") {
+          const g = Lab.gbm.fit(X, Y, { trees: 120, depth: 2, lr: 0.1, minLeaf: 4, bins: 16 });
+          predict = (x) => g.predict(x);
+        } else {
+          // one hidden layer of 6 tanh units, inputs and target standardised, full-batch Adam, fixed seed
+          const P = X[0].length, H = 6, mu = Array(P).fill(0), sd = Array(P).fill(0);
+          X.forEach((x) => x.forEach((v, j) => (mu[j] += v / X.length))); X.forEach((x) => x.forEach((v, j) => (sd[j] += (v - mu[j]) ** 2 / X.length))); sd.forEach((v, j) => (sd[j] = Math.sqrt(v) || 1));
+          const ym = mean(Y), ys = Math.sqrt(mean(Y.map((v) => (v - ym) ** 2))) || 1;
+          const Z = X.map((x) => x.map((v, j) => (v - mu[j]) / sd[j])), T = Y.map((v) => (v - ym) / ys), rr = rng(7);
+          const W1 = Array.from({ length: H }, () => Array.from({ length: P }, () => rr.normal() * 0.5)), b1 = Array(H).fill(0), W2 = Array.from({ length: H }, () => rr.normal() * 0.5); let b2 = 0;
+          const params = [W1, b1, W2], mA = new Map(), vA = new Map(); let step = 0;
+          const adam = (arr, grad, key) => { if (!mA.has(key)) { mA.set(key, grad.map(() => 0)); vA.set(key, grad.map(() => 0)); } const mm = mA.get(key), vv = vA.get(key); for (let i = 0; i < grad.length; i++) { mm[i] = 0.9 * mm[i] + 0.1 * grad[i]; vv[i] = 0.999 * vv[i] + 0.001 * grad[i] ** 2; arr[i] -= (0.02 * mm[i] / (1 - 0.9 ** step)) / (Math.sqrt(vv[i] / (1 - 0.999 ** step)) + 1e-8); } };
+          const fwd = (z) => { const hdn = W1.map((w, k) => Math.tanh(w.reduce((s, v, j) => s + v * z[j], b1[k]))); return { hdn, out: hdn.reduce((s, v, k) => s + v * W2[k], b2) }; };
+          for (let ep = 0; ep < 400; ep++) {
+            step++;
+            const gW1 = W1.map(() => Array(P).fill(0)), gb1 = Array(H).fill(0), gW2 = Array(H).fill(0); let gb2 = 0;
+            Z.forEach((z, i) => { const { hdn, out } = fwd(z), e = (out - T[i]) / Z.length; gb2 += e; hdn.forEach((hv, k) => { gW2[k] += e * hv; const gh = e * W2[k] * (1 - hv * hv); gb1[k] += gh; for (let j = 0; j < P; j++) gW1[k][j] += gh * z[j]; }); });
+            for (let k = 0; k < H; k++) { gW2[k] += 1e-3 * W2[k]; for (let j = 0; j < P; j++) gW1[k][j] += 1e-3 * W1[k][j]; }
+            W1.forEach((w, k) => adam(w, gW1[k], "w1" + k)); adam(b1, gb1, "b1"); adam(W2, gW2, "w2"); const tmp = [b2]; adam(tmp, [gb2], "b2"); b2 = tmp[0];
+          }
+          void params;
+          predict = (x) => fwd(x.map((v, j) => (v - mu[j]) / sd[j])).out * ys + ym;
+        }
+        for (let t = t0; t < n; t++) fit[t] = tr[t - 1] + predict(feat(d, t));
+        const dd = d.slice(); let lv = tr[n - 1]; fc = [];
+        for (let i = 0; i < h; i++) { const t = n + i, nd = predict(feat(dd, t)); dd.push(nd); lv += nd; fc.push(lv); }
       } else if (id === "croston") {
         const nz = tr.map((v, t) => (v > 0 ? t : -1)).filter((t) => t >= 0);
         let z = nz.length ? mean(nz.map((t) => tr[t])) : 0, q = nz.length ? n / nz.length : 1, gap = 1;
@@ -215,8 +254,9 @@ Lab.register({
       res = BASE.map((meth) => {
         if (meth.id === "hw" && tr.length < 2 * m + 2) return { ...meth, na: "needs two full seasons" };
         if ((meth.id === "snaive" || meth.id === "reg") && tr.length <= m + 2) return { ...meth, na: "needs a full season" };
+        if ((meth.id === "gbm" || meth.id === "nn") && tr.length < m + 13) return { ...meth, na: "needs a season plus a year of examples" };
         const p = tune(meth.id, tr, m), out = run(meth.id, tr, h, m, p);
-        const okV = !((meth.id === "hw" && vtr.length < 2 * m + 2) || ((meth.id === "snaive" || meth.id === "reg") && vtr.length <= m + 2));
+        const okV = !((meth.id === "hw" && vtr.length < 2 * m + 2) || ((meth.id === "snaive" || meth.id === "reg") && vtr.length <= m + 2) || ((meth.id === "gbm" || meth.id === "nn") && vtr.length < m + 13));
         if (okV) { const vf = run(meth.id, vtr, vh, m, tune(meth.id, vtr, m)).fc; valid[meth.id] = Math.sqrt(mean(vf.map((f, i) => (vte[i] - f) ** 2))); }
         return { ...meth, p, ...out };
       });

@@ -199,6 +199,12 @@ It spans exactly one full season with weights summing to 1, so any fixed seasona
 <li><b>Holt</b> and <b>Holt-Winters</b>: add trend \(b_t\) and season \(s_t\) equations (see exponential smoothing).</li>
 <li><b>Linear trend</b>: least-squares line \(a + bt\), with \(b = \frac{\sum (t - \bar t)(y_t - \bar y)}{\sum (t-\bar t)^2}\).</li>
 </ul>
+<h3>The two machine-learning methods</h3>
+<p>Both learn the next change \(d_t = y_t - y_{t-1}\) from features known one step earlier:</p>
+\[ \hat d_t = f\big(d_{t-1},\; d_{t-2},\; d_{t-m},\; \text{month}(t)\big), \qquad \hat y_t = y_{t-1} + \hat d_t \]
+<p>Boosted trees: \(f = \bar d + \eta\sum_{k=1}^{120} h_k\), each \(h_k\) a depth-2 tree fitted to the current residuals, \(\eta = 0.1\). Neural network: month enters as \(\big(\sin\tfrac{2\pi t}{m}, \cos\tfrac{2\pi t}{m}\big)\), then</p>
+\[ \hat d_t = \mathbf{w}_2^\top \tanh(W_1 \mathbf{z}_t + \mathbf{b}_1) + b_2 \]
+<p>with 6 hidden units, standardised inputs \(\mathbf{z}_t\), trained by Adam on squared error with a small weight penalty. Multi-step forecasts are recursive: each \(\hat d\) is fed back in as a lag for the next month, so early errors carry forward.</p>
 <h3>Fitting vs testing</h3>
 <p>Each method is fitted on the history before the holdout and then scored on the holdout. In-sample fit always improves with flexibility; out-of-sample error has a minimum, as in the bias–variance trade-off: \(E[(y - \hat y)^2] = \text{Bias}^2 + \text{Variance} + \sigma^2\).</p>
 <h3>Scaled errors</h3>
