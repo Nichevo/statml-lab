@@ -334,3 +334,10 @@ footer .wrap { padding-block: 20px; }
 .rs-why { font-size: .93rem; }
 .rs-rel { font-size: .86rem; color: var(--muted); }
 .rs-foot { padding-bottom: 48px; }
+.rs-imp { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 8px; font: 500 .78rem/1.2 var(--font-mono); color: var(--muted); }
+.rs-imp b { color: var(--ink); font-weight: 600; }
+.rs-bar5 { width: 70px; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; display: inline-block; }
+.rs-bar5 i { display: block; height: 100%; background: var(--accent); }
+.rs-how { margin: 0 0 12px; max-width: 78ch; font-size: .92rem; }
+.rs-how summary { cursor: pointer; color: var(--muted); }
+.rs-how ul { padding-left: 20px; }
