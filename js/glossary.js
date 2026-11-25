@@ -262,7 +262,7 @@ Lab.terms = [
   ["Residual connection", "Adding a layer's output to its input instead of replacing it, so information flows straight through and deep stacks stay trainable.", "transformer"],
   ["Feed-forward layer", "In a transformer, a small neural network applied to each position on its own, after attention has mixed information between positions.", "transformer"],
   ["Transformer block", "Attention plus a feed-forward layer, each with layer norm and a residual connection. Large language models stack dozens of them.", "transformer"],
-  ["Cross-entropy loss", "Minus the log of the probability a model gave the right answer, averaged. 0 means always certain and right.", "transformer"]
+  ["Cross-entropy loss", "Minus the log of the probability a model gave the right answer, averaged. 0 means always certain and right.", "transformer"],
   ["k-nearest neighbours (kNN)", "Predict a new case from the k most similar past cases: a majority vote for a category, an average for a number. Put the columns on the same scale first, or the widest one decides what 'similar' means.", "knn"],
   ["Curse of dimensionality", "With many columns, every point ends up roughly as far from every other, so 'nearest' stops meaning much. Distance-based methods like kNN suffer most.", "knn"],
   ["Naive Bayes", "A classifier that applies Bayes' rule and assumes the features are independent given the class. Its probabilities are often too extreme, but its rankings are usually good.", "naive-bayes"],
