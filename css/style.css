@@ -296,3 +296,19 @@ footer .wrap { padding-block: 20px; }
 .fc-after ul { margin: 6px 0 0; padding-left: 18px; columns: 2 220px; }
 @media (max-width: 560px) { .topbar nav .hide-sm { display: none; } }
 @media (max-width: 380px) { .topbar nav a[href="#forecast-lab"] { display: none; } }
+
+/* Show the maths */
+.maths { grid-column: 1 / -1; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin: 8px 0 20px; }
+.maths > summary { list-style: none; cursor: pointer; padding: 14px 18px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.maths > summary::-webkit-details-marker { display: none; }
+.maths > summary .mt { font: 700 1.05rem/1.2 var(--font-display); color: var(--ink); }
+.maths > summary .mt::before { content: "∑"; display: inline-block; width: 1.5em; color: var(--accent); }
+.maths > summary .ms { color: var(--muted); font-size: .88rem; }
+.maths > summary::after { content: "Open"; margin-left: auto; font: 500 .72rem/1.4 var(--font-mono); color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; }
+.maths[open] > summary::after { content: "Hide"; }
+.maths .mbody { padding: 4px 18px 16px; border-top: 1px dashed var(--line); max-width: 78ch; }
+.maths .mbody h3 { font: 600 .78rem/1.2 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 18px 0 6px; }
+.maths .mbody p, .maths .mbody li { line-height: 1.6; }
+.maths .mbody mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding: 4px 0; margin: 8px 0 !important; }
+.maths .mbody mjx-container { color: var(--ink); }
+.maths .mbody .eg { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; margin: 10px 0; }

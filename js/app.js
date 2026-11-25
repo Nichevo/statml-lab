@@ -22,8 +22,10 @@
     </div>`;
 
   // "Check yourself" questions and "Go deeper" links, declared on the explainer as quiz / deeper.
+  Lab.maths = Lab.maths || {};
   Lab.extras = (ex) => {
     let h = "";
+    if (Lab.maths[ex.id]) h += `<details class="maths"><summary><span class="mt">Show the maths</span><span class="ms">formulas, derivations and assumptions</span></summary><div class="mbody">${Lab.maths[ex.id]}</div></details>`;
     if (ex.diy) {
       const d = Array.isArray(ex.diy) ? { steps: ex.diy } : ex.diy;
       h += `<section class="diy"><h2>Do it yourself</h2>${d.intro ? `<p>${d.intro}</p>` : ""}<ol>${d.steps.map(([s, f]) => `<li>${s}${f ? `<div class="xl"><code>${f.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</code><button class="cp" type="button">Copy</button></div>` : ""}</li>`).join("")}</ol></section>`;
@@ -149,6 +151,26 @@
     document.addEventListener("click", (e) => { if (!pop.hidden && e.target.isConnected && !pop.contains(e.target) && !btn.contains(e.target)) { pop.hidden = true; btn.setAttribute("aria-expanded", "false"); } });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !pop.hidden) { pop.hidden = true; btn.setAttribute("aria-expanded", "false"); btn.focus(); } });
   }
+  // "Show the maths": load MathJax on first open, then typeset that panel
+  let mjLoading = null;
+  function loadMathJax() {
+    if (window.MathJax && window.MathJax.typesetPromise) return Promise.resolve();
+    if (mjLoading) return mjLoading;
+    window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, svg: { fontCache: "global" }, startup: { typeset: false } };
+    mjLoading = new Promise((res, rej) => {
+      const sc = document.createElement("script");
+      sc.src = "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"; sc.async = true;
+      sc.onload = () => window.MathJax.startup.promise.then(res, rej); sc.onerror = rej;
+      document.head.appendChild(sc);
+    });
+    return mjLoading;
+  }
+  document.addEventListener("toggle", (e) => {
+    const d = e.target; if (!(d instanceof HTMLElement) || !d.classList.contains("maths") || !d.open || d.dataset.typeset) return;
+    d.dataset.typeset = "1";
+    loadMathJax().then(() => window.MathJax.typesetPromise([d.querySelector(".mbody")])).catch(() => { d.querySelector(".mbody").insertAdjacentHTML("afterbegin", '<p class="hint">The formula renderer could not load, so formulas are shown as plain TeX.</p>'); });
+  }, true);
+
   // copy buttons on DIY formulas
   document.addEventListener("click", (e) => {
     const b = e.target.closest(".diy .cp"); if (!b) return;
