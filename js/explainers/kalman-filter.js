@@ -25,7 +25,6 @@ Lab.register({
   },
   deeper: [
     ["Kalman (1960), A new approach to linear filtering and prediction problems, Journal of Basic Engineering 82(1)", "https://doi.org/10.1115/1.3662552", "the original paper"],
-    ["Welch & Bishop, An introduction to the Kalman filter (UNC TR 95-041)", "https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf", "a short, widely used tutorial"],
     ["Labbe, Kalman and Bayesian Filters in Python", "https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python", "a free interactive book that builds intuition first"],
     ["Durbin & Koopman (2012), Time Series Analysis by State Space Methods, 2nd ed., Oxford University Press", "https://doi.org/10.1093/acprof:oso/9780199641178.001.0001", "the standard reference for state space time series"],
     ["Hyndman, Koehler, Ord & Snyder (2008), Forecasting with Exponential Smoothing: The State Space Approach, Springer", "https://doi.org/10.1007/978-3-540-71918-2", "exponential smoothing as state space models"],

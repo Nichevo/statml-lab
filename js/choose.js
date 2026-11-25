@@ -38,7 +38,7 @@
           ])],
         ])],
       ]),
-      after: [["Read the series with ACF/PACF", "acf-pacf"], ["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Retrain when the world changes", "model-drift"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
+      after: [["Read the series with ACF/PACF", "acf-pacf"], ["Combine several methods", "ensemble-forecasts"], ["Back-test on rolling origins", "backtesting"], ["Add prediction intervals", "prediction-intervals"], ["Calibrate the intervals so they keep their promise", "conformal-prediction"], ["Track a drifting level with a Kalman filter", "kalman-filter"], ["Retrain when the world changes", "model-drift"], ["Check value added over naive", "forecast-value-added"], ["Try methods side by side", "forecast-lab"]],
     },
     {
       key: "accuracy", name: "Forecast accuracy measure",
@@ -71,11 +71,14 @@
       tree: Q("What's your question?", [
         ["Is a difference real or just noise?", Q("What are you comparing?", [
           ["Two group averages", L("t-test", "hypothesis-test", "Is the gap between two means bigger than sampling noise would explain?")],
+          ["Two groups, but skewed or with outliers", L("Mann–Whitney or permutation test", "nonparametric-tests", "Compare ranks, or reshuffle the labels; no normal shape needed.")],
+          ["Many products, stores or metrics at once", L("Multiple-testing correction", "multiple-testing", "Bonferroni or Holm to avoid any false alarm; Benjamini–Hochberg to limit the share of false ones.")],
           ["Three or more group averages", L("ANOVA", "anova-chi-square", "One test across all groups before comparing pairs.")],
           ["Counts or shares across categories", L("Chi-square test", "anova-chi-square", "Do the observed counts differ from what independence predicts?")],
           ["Before vs after a change in a series", L("Change-point detection", "change-points", "Find when the level of a series shifted.")],
           ["The effect of a change, with a comparison group", L("Difference-in-differences", "diff-in-diff", "Compare how much the changed group moved with how much an untouched group moved.")],
         ])],
+        ["Is my process still running normally?", L("Control charts (SPC)", "spc-control-charts", "Plot the measure with 3-sigma limits from a stable period; investigate points outside or unusual runs.")],
         ["How big must my trial be?", L("A/B test power and sample size", "ab-power", "Stores or weeks needed to detect the lift you care about.")],
         ["How sure is my estimate?", Q("What are you estimating?", [
           ["A mean, with a decent sample", L("t confidence interval", "confidence-intervals", "Mean ± t × standard error.")],
@@ -138,7 +141,7 @@
           ])],
         ])],
       ]),
-      after: [["Build features without leaking the answer", "feature-engineering"], ["Tune settings and read what the model learned", "hyperparameter-tuning"], ["Explain a model's predictions with SHAP", "shap"], ["Watch for drift once it's live", "model-drift"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
+      after: [["Build features without leaking the answer", "feature-engineering"], ["Put a guaranteed range around any prediction", "conformal-prediction"], ["Tune settings and read what the model learned", "hyperparameter-tuning"], ["Explain a model's predictions with SHAP", "shap"], ["Watch for drift once it's live", "model-drift"], ["How attention works in detail", "attention"], ["Pick complexity with cross-validation", "cross-validation"], ["Understand over- and under-fitting", "bias-variance"], ["See how models are trained", "gradient-descent"]],
     },
     {
       key: "supply", name: "Inventory and supply decision",
@@ -172,8 +175,14 @@
         ])],
         ["How to route or schedule", Q("What kind of problem?", [
           ["Visit every stop once, shortest route", L("Travelling salesman", "tsp", "Heuristics find good routes fast.")],
-          ["Best mix under limits", L("Linear programming", "linear-programming", "Maximise profit or minimise cost subject to constraints.")],
-          ["Messy problem, many local optima", L("Simulated annealing", "simulated-annealing", "Random search that sometimes accepts worse moves to escape traps.")],
+          ["Best mix under limits", Q("Can the answers be fractions?", [
+            ["Yes (tonnes, hours, litres)", L("Linear programming", "linear-programming", "Maximise profit or minimise cost subject to constraints.")],
+            ["No: whole trucks, shifts, or open / don't open", L("Integer programming", "integer-programming", "LP plus whole-number rules, solved by branch and bound.")],
+          ])],
+          ["Messy problem, many local optima", Q("What does a solution look like?", [
+            ["A sequence or one plan to tweak step by step", L("Simulated annealing", "simulated-annealing", "Random search that sometimes accepts worse moves to escape traps.")],
+            ["A string of many yes/no choices, no neat formula", L("Genetic algorithm", "genetic-algorithm", "Evolve a population of plans by selection, crossover and mutation.")],
+          ])],
         ])],
       ]),
       after: [["What forecast error costs you", "lead-time-error"], ["Cash tied up in stock", "cash-to-cash"]],
