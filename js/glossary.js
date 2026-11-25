@@ -419,19 +419,36 @@ Lab.glossaryPage = (main) => {
       </header>
       <input id="q" type="search" placeholder="Search terms, e.g. variance" aria-label="Search terms"
         style="width:100%;max-width:520px;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)">
+      <div class="rs-topics" id="glTopics" role="group" aria-label="Filter by area" style="margin-top:14px"></div>
+      <p class="hint" id="glCount" aria-live="polite" style="margin:0"></p>
       <dl id="gl" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding-block:20px 64px;margin:0"></dl>
     </div>`;
+  // Each term's area comes from the group of the explainer it links to.
+  const AREA = { "Statistical analysis": "Statistics", Probability: "Statistics", Regression: "Statistics" };
+  const CASE = { "case-cold-brew": "Supply chain", "case-ml-project": "Machine learning" };
+  const groupOf = Object.fromEntries((Lab.explainers || []).map((e) => [e.id, e.group]));
+  const areaOf = (see) => CASE[see] || AREA[groupOf[see]] || groupOf[see] || "Other";
+  const ORDER = ["Forecasting", "Supply chain", "Machine learning", "Statistics", "Risk", "Optimization", "Data quality", "Other"];
+  const areas = ORDER.filter((a) => Lab.terms.some((t) => areaOf(t[2]) === a));
+  let area = "", query = "";
+  const chips = () => {
+    main.querySelector("#glTopics").innerHTML = `<button type="button" class="rs-chip" data-a="" aria-pressed="${!area}">All <span>${Lab.terms.length}</span></button>` +
+      areas.map((a) => `<button type="button" class="rs-chip" data-a="${a}" aria-pressed="${area === a}">${a} <span>${Lab.terms.filter((t) => areaOf(t[2]) === a).length}</span></button>`).join("");
+  };
   const render = (q) => {
-    q = q.trim().toLowerCase();
-    const list = Lab.terms.slice().sort((a, b) => a[0].localeCompare(b[0])).filter(([t, d]) => !q || t.toLowerCase().includes(q) || d.toLowerCase().includes(q));
+    if (q !== undefined) query = q;
+    q = query.trim().toLowerCase();
+    const list = Lab.terms.slice().sort((a, b) => a[0].localeCompare(b[0])).filter(([t, d, see]) => (!area || areaOf(see) === area) && (!q || t.toLowerCase().includes(q) || d.toLowerCase().includes(q)));
+    main.querySelector("#glCount").textContent = `${list.length} of ${Lab.terms.length} terms`;
     main.querySelector("#gl").innerHTML = list.length
       ? list.map(([t, d, see]) => `<div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px">
           <dt style="font:700 1rem/1.3 var(--font-display);margin-bottom:6px">${t}</dt>
           <dd style="margin:0;color:var(--muted);font-size:.93rem">${d}</dd>
           ${see ? `<dd style="margin:8px 0 0;font:500 .8rem/1 var(--font-mono)"><a href="#${see}">See it: ${Lab.titleOf(see)} →</a></dd>` : ""}
         </div>`).join("")
-      : `<p class="hint">No terms match "${q.replace(/</g, "&lt;")}".</p>`;
+      : `<p class="hint">No terms match${q ? ` "${q.replace(/</g, "&lt;")}"` : ""}${area ? ` in ${area}` : ""}.</p>`;
   };
   main.querySelector("#q").addEventListener("input", (e) => render(e.target.value));
-  render("");
+  main.querySelector("#glTopics").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; area = b.dataset.a; chips(); render(); });
+  chips(); render("");
 };
