@@ -2,7 +2,7 @@
 (function () {
   const explainers = [];
   Lab.explainers = explainers;
-  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Risk", "Optimization", "Data quality"];
+  const groups = ["Case studies", "Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Risk", "Optimization", "Data quality"];
   Lab.register = (ex) => explainers.push(ex);
   Lab.titleOf = (id) => (explainers.find((e) => e.id === id) || { title: id }).title;
 
@@ -40,6 +40,8 @@
 
   // Suggested reading orders. Ids that don't exist yet are skipped, so paths can list pages before they're built.
   const PATHS = [
+    ["Start-to-finish case studies", "Real planning chains methods together. Follow one product through every step, with the numbers carried along.",
+      ["case-cold-brew", "outliers", "exponential-smoothing", "forecast-accuracy", "lead-time-error", "inventory-policies", "service-level-cost", "monte-carlo-risk"]],
     ["Forecasting from zero", "From a moving average to choosing between methods and measuring them honestly.",
       ["exponential-smoothing", "seasonal-decomposition", "theta", "forecast-accuracy", "acf-pacf", "arima", "intermittent-demand", "ensemble-forecasts", "prediction-intervals", "conformal-prediction", "pinball-crps", "kalman-filter", "dynamic-regression", "new-product", "global-forecasting", "forecast-lab", "forecast-value-added"]],
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",

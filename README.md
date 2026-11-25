@@ -15,10 +15,11 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 - **Go deeper**: textbooks, free course notes and the original research papers (DOI or arXiv links), each with a one-line summary of what the paper found.
 - **Glossary links**: plain-language definitions of 330 terms, cross-linked to the pages that use them.
 
-## Contents (111 explainers)
+## Contents (112 explainers)
 
 | Area | Pages |
 |---|---|
+| Case studies | One product from start to finish: cleaning the sales history, choosing a forecast on a fair test, safety stock from forecast error, a year of ordering, yearly cost by service target, and supplier-delay risk |
 | Forecasting | Forecast lab, moving averages and exponential smoothing, seasonal decomposition, the Theta method, accuracy measures (MAE, MAPE, RMSE, MASE, bias), autocorrelation (ACF/PACF), ARIMA, intermittent demand and Croston, forecast value added, prediction intervals, ensembles, hierarchical reconciliation, rolling-origin backtesting, regression with promotions, pinball loss and CRPS, new-product forecasting (Bass model and analogues), global ML forecasting across many SKUs, recurrent neural networks (RNN/LSTM), conformal prediction intervals, the Kalman filter, dynamic regression (drivers with AR errors) |
 | Supply chain | Bullwhip effect, reorder point / safety stock / EOQ, lead-time error, monthly-to-weekly splits, frozen zones, demand sensing, risk pooling, multi-echelon safety stock, ABC/XYZ, service level vs cost, censored demand, level vs chase S&OP, landed cost and margin, tariffs, value of a better forecast, carrying cost, newsvendor, cost to serve, freight, cash-to-cash, MOQs and price breaks, ROI/NPV/payback, plant shutdowns, delivery routing, network design, Monte Carlo inventory simulation, (s, Q) / (s, S) / periodic review policies, MRP and bills of materials, lot sizing (Wagner–Whitin, Silver–Meal), shortage allocation, queues and Little's law |
 | Data quality | Outliers (z-score, IQR, MAD), time-series anomalies, change points (CUSUM), missing data, distributions and Q-Q plots, correlation traps, Benford's law, isolation forest, k-means clustering and PCA |
@@ -29,7 +30,7 @@ It is plain HTML, CSS and JavaScript. There is no build step, no framework and n
 
 A **Which method when?** page has flowcharts for choosing a forecasting method, accuracy measure, statistical test, ML model, supply chain tool or risk measure, each ending at the relevant explainer.
 
-The home page also groups pages into **learning paths**: Forecasting from zero, Inventory and supply chain, Supply chain money, Supply chain risk, Optimization and network design, Data quality, Statistics for decisions, Machine learning foundations, More machine-learning models, and How LLMs work.
+The home page also groups pages into **learning paths**: Start-to-finish case studies, Forecasting from zero, Inventory and supply chain, Supply chain money, Supply chain risk, Optimization and network design, Data quality, Statistics for decisions, Machine learning foundations, More machine-learning models, and How LLMs work.
 
 ## Run it locally
 

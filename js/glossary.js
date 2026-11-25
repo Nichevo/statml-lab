@@ -400,6 +400,8 @@ Lab.terms = [
   ["Q-learning", "A reinforcement learning method that keeps a table of the expected long-run cost of each action in each state, and updates it after every step.", "rl-ordering"],
   ["Exploration (ε-greedy)", "Taking a random action a small share of the time (ε) so the agent keeps trying options it might be wrong about.", "rl-ordering"],
   ["Value iteration", "Solving a decision problem exactly by repeatedly updating the value of each state from the best action's expected cost, until nothing changes.", "rl-ordering"],
+  ["Protection period", "The time one order has to cover before the next order can arrive: the lead time plus the review period. Safety stock is sized for forecast error over this whole span.", "case-cold-brew"],
+  ["Order-up-to level (S)", "In a periodic review rule, the target for stock on hand plus on order. Each review you order the gap between S and what you have.", "case-cold-brew"],
 ];
 
 Lab.glossaryPage = (main) => {
