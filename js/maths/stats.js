@@ -178,7 +178,7 @@ Object.assign(Lab.maths, {
 <h3>The estimator</h3>
 <p>Treated (T) and control (C) groups, before and after:</p>
 \[ \hat\delta = (\bar y_{T,\text{after}} - \bar y_{T,\text{before}}) - (\bar y_{C,\text{after}} - \bar y_{C,\text{before}}) . \]
-<p>Equivalently, the coefficient \(\delta\) in \(y_{it} = \alpha + \beta\,\text{Treated}_i + \gamma\,\text{After}_t + \delta\,\text{Treated}_i\times\text{After}_t + \varepsilon_{it}\).</p>
+<p>Equivalently, the coefficient \(\delta\) in \[ y_{it} = \alpha + \beta\,\text{Treated}_i + \gamma\,\text{After}_t + \delta\,\text{Treated}_i\times\text{After}_t + \varepsilon_{it} \].</p>
 <h3>Why it works: parallel trends</h3>
 <p>Write each group's outcome without treatment as group effect + time effect: \(E[y_{it}(0)] = a_i + b_t\). Then the control's change \(b_{\text{after}} - b_{\text{before}}\) is exactly what the treated group would have done without treatment, and subtracting it removes both fixed group differences and common shocks. The key assumption is that, without treatment, the two groups would have moved in parallel. Diverging trends before treatment are evidence against it.</p>
 <h3>Standard errors</h3>

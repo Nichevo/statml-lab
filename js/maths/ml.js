@@ -317,7 +317,7 @@ Object.assign(Lab.maths, {
 
   "rl-ordering": String.raw`
 <h3>The problem as a Markov decision process</h3>
-<p>State s = stock on hand, action a = order size, random demand D. Cost today \(c(s, a, D) = K\,\mathbf 1\{a > 0\} + h\,(s + a - D)^+ + p\,(D - s - a)^+\), next state \(s' = (s + a - D)^+\), discount γ.</p>
+<p>State s = stock on hand, action a = order size, random demand D. Cost today \[ c(s, a, D) = K\,\mathbf 1\{a > 0\} + h\,(s + a - D)^+ + p\,(D - s - a)^+ \], next state \(s' = (s + a - D)^+\), discount γ.</p>
 <h3>The Bellman equation</h3>
 <p>The optimal long-run cost of state s and action a satisfies</p>
 \[ Q^*(s, a) = E_D\Big[c(s, a, D) + \gamma\min_{a'}Q^*(s', a')\Big]. \]

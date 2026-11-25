@@ -362,7 +362,7 @@ Object.assign(Lab.maths, {
 <h3>Gross to net</h3>
 <p>For each item, in each period t:</p>
 \[ \text{net}_t = \max\big(0,\; \text{gross}_t - \text{projected on hand}_{t-1} - \text{scheduled receipts}_t + SS\big). \]
-<p>Projected on hand then evolves as \(\text{POH}_t = \text{POH}_{t-1} + SR_t + \text{planned receipts}_t - \text{gross}_t\).</p>
+<p>Projected on hand then evolves as \[ \text{POH}_t = \text{POH}_{t-1} + SR_t + \text{planned receipts}_t - \text{gross}_t \].</p>
 <h3>Lot sizing and offsetting</h3>
 <p>Planned order receipts cover net requirements by the lot rule (lot-for-lot, fixed quantity, minimum or multiple). Planned order releases are the receipts moved earlier by the lead time: \(\text{release}_{t} = \text{receipt}_{t + L}\).</p>
 <h3>Explosion</h3>
