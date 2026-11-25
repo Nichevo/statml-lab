@@ -2,7 +2,7 @@
 (function () {
   const explainers = [];
   Lab.explainers = explainers;
-  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Optimization", "Data quality"];
+  const groups = ["Regression", "Machine learning", "Probability", "Statistical analysis", "Forecasting", "Supply chain", "Risk", "Optimization", "Data quality"];
   Lab.register = (ex) => explainers.push(ex);
   Lab.titleOf = (id) => (explainers.find((e) => e.id === id) || { title: id }).title;
 
