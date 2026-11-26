@@ -71,6 +71,28 @@ Object.assign(Lab.maths, {
 \[ R_\alpha(T) = R(T) + \alpha\,|T|, \]
 <p>where R is training error. As α increases, weakest-link pruning removes the branch whose removal increases error least per leaf removed, giving a nested sequence of subtrees; α is chosen by cross-validation.</p>`,
 
+  "model-trees": String.raw`
+<h3>The model</h3>
+<p>A model tree with leaves \(R_1,\dots,R_J\) (intervals or boxes in x) predicts</p>
+\[ \hat y(x) = \sum_{j=1}^{J} \mathbb{1}[x \in R_j]\,\big(a_j + \mathbf{b}_j^\top x\big), \]
+<p>a linear model whose terms are switched on and off by the leaf indicators. A regression tree is the special case \(\mathbf{b}_j = 0\).</p>
+<h3>Regularised leaf models</h3>
+<p>Within a node with \(n\) points, centred sums \(S_{xx} = \sum (x_i-\bar x)^2\), \(S_{xy} = \sum (x_i-\bar x)(y_i-\bar y)\). The ridge slope used here, with penalty \(\lambda\) on the locally standardised slope, is</p>
+\[ b = \frac{S_{xy}}{S_{xx}\,(1 + \lambda/n)}, \qquad a = \bar y - b\,\bar x, \]
+<p>so small nodes are shrunk more toward a flat line. The node's error is \(\text{SSE} = S_{yy} - 2bS_{xy} + b^2 S_{xx}\).</p>
+<h3>Growing</h3>
+<p>For a node split at threshold s into left and right parts, the gain is</p>
+\[ \Delta = \text{SSE}_{\text{node}} - \text{SSE}_{\text{left}} - \text{SSE}_{\text{right}}. \]
+<p>Running sums of \(x, y, x^2, xy, y^2\) make each candidate O(1), so every split point is tried. Leaves are split best-first until the leaf budget or the minimum leaf size is reached. (M5 itself scores splits by the drop in standard deviation of y, the constant-model version of the same idea.)</p>
+<h3>Pruning (M5)</h3>
+<p>Errors on the training data are optimistic, more so with few points and more parameters \(\nu\). M5 inflates them:</p>
+\[ e^\ast = e \cdot \frac{n + \nu}{n - \nu}. \]
+<p>Bottom-up, a split is removed if \(e^\ast_{\text{node}} \le \frac{n_L e^\ast_L + n_R e^\ast_R}{n}\), where \(e\) is the node's RMSE here (M5 uses mean absolute error) and \(\nu = 2\) for a line in one input.</p>
+<h3>RuleFit</h3>
+<p>RuleFit builds rules \(r_k(x) \in \{0,1\}\) from the nodes of many shallow trees and fits</p>
+\[ \hat y(x) = \beta_0 + \sum_k \alpha_k r_k(x) + \sum_m \beta_m x_m, \quad \min \sum_i \big(y_i - \hat y(x_i)\big)^2 + \lambda\Big(\sum_k |\alpha_k| + \sum_m |\beta_m|\Big). \]
+<p>Rules overlap and add up; a model tree's rules are disjoint, each carrying its own linear model.</p>`,
+
   "random-forest": String.raw`
 <h3>Bagging</h3>
 <p>Fit B trees on bootstrap samples (n draws with replacement) and average their predictions. If each tree has variance σ² and the trees' predictions have pairwise correlation ρ:</p>

@@ -363,3 +363,12 @@ footer .wrap { padding-block: 20px; }
 .ia-table .ia-q { text-align: left; font-family: var(--font-body); color: var(--muted); }
 .ia-table tr.tot td { border-top: 2px solid var(--line); }
 @media (max-width: 560px) { .ia-table .ia-q { display: none; } }
+/* Model trees */
+.mt-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.mt-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.mt-card span { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: 6px; line-height: 1.25; }
+.mt-card span i { width: 14px; height: 4px; border-radius: 2px; flex: none; }
+.mt-card b { font: 700 1.5rem/1.1 var(--font-mono); color: var(--ink); }
+.mt-card small { font-size: .72rem; color: var(--muted); }
+.mt-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; margin-bottom: 14px; }
+.mt-two > * { min-width: 0; }

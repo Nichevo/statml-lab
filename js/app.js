@@ -63,7 +63,7 @@
     ["Machine learning foundations", "How models learn, and why they overfit.",
       ["least-squares", "logistic-regression", "bias-variance", "cross-validation", "regularisation", "gradient-descent", "decision-tree", "random-forest", "gradient-boosting", "shap", "neural-net", "cnn"]],
     ["More machine-learning models", "Other classic models, how to compare them, and the practical traps around them.",
-      ["knn", "naive-bayes", "svm", "decision-tree", "model-zoo", "imbalanced-calibration", "feature-engineering", "hyperparameter-tuning", "model-drift", "market-basket", "rl-ordering"]],
+      ["knn", "naive-bayes", "svm", "decision-tree", "model-trees", "model-zoo", "imbalanced-calibration", "feature-engineering", "hyperparameter-tuning", "model-drift", "market-basket", "rl-ordering"]],
     ["How LLMs work", "The ideas behind transformers, one piece at a time.",
       ["neural-net", "gradient-descent", "rnn-lstm", "attention", "transformer", "llm-sampling-rag"]],
   ];

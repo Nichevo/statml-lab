@@ -127,6 +127,7 @@
           ["Yes, a number", Q("What matters more?", [
             ["Explaining the effect of each driver", L("Linear regression", "least-squares", "One coefficient per driver, easy to read.")],
             ["A simple rule people can follow", L("Decision tree", "decision-tree", "A few if-then splits; easy to explain, less accurate than a forest.")],
+            ["Readable rules, but straight-line trends within each", L("Model tree (M5)", "model-trees", "A tree with a regularised line in each leaf; follows slopes and jumps with few leaves.")],
             ["Many drivers, not much data", L("Ridge or lasso regression", "regularisation", "Penalise big coefficients; lasso also drops useless drivers.")],
             ["Accuracy, with curves and interactions", Q("How much tuning can you do?", [
               ["Little: want robust defaults", L("Random forest", "random-forest", "Many trees capture non-linear effects without hand-made features.")],

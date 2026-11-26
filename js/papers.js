@@ -9,6 +9,11 @@
     "https://people.duke.edu/~charvey/Research/Published_Papers/P76_How_do_CFOs.pdf": "Surveyed 392 chief financial officers. About three quarters always or almost always use NPV and IRR; payback comes next (57%) and is used almost as much as NPV by small firms. Theory and practice mostly line up for large companies.",
     "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/internal-rate-of-return-a-cautionary-tale": "IRR quietly assumes each year's cash is reinvested at the IRR itself. For one company, projects averaging a 77% IRR earned about 16% once interim cash was reinvested at the cost of capital. Use NPV, or MIRR if a rate is needed.",
 
+    // Model trees
+    "https://sci2s.ugr.es/keel/pdf/algorithm/congreso/1992-Quinlan-AI.pdf": "Introduced M5: grow a tree, fit a linear model in each leaf, prune back and smooth. On four case studies it gave smaller trees and accuracy as good as or better than CART and other methods.",
+    "https://researchcommons.waikato.ac.nz/handle/10289/1183": "A careful rebuild of Quinlan's M5 (called M5') that also handles categorical inputs and missing values. It became Weka's M5P model tree and did better than M5 on the published test data.",
+    "https://arxiv.org/abs/0811.1679": "RuleFit: turn the nodes of many trees into simple if-then rules, then fit one lasso regression on the rules plus the raw inputs. Accuracy close to the best ensembles, with rules a person can read.",
+
     // Forecasting: classics
     "https://doi.org/10.1002/9781118619193": "The book that turned ARIMA into a practical recipe: identify the model from the data, fit it, check the residuals, repeat. Still the standard reference for ARIMA.",
     "https://doi.org/10.18637/jss.v027.i03": "Describes the algorithms behind auto.arima and ets in R, which pick a forecasting model automatically by information criteria. This is why thousands of series can be forecast without hand-tuning each one.",
