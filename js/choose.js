@@ -168,6 +168,10 @@
           ["Cost of the whole network", L("Network design", "network-design", "Trade facility, transport and inventory cost.")],
           ["Lead times at different points", L("Supply network trade-offs", "supply-network", "Where to hold stock when lead times change.")],
         ])],
+        ["Whether an investment pays off", Q("What's the question?", [
+          ["Is this one project worth doing?", L("Business case: ROI, NPV and payback", "roi", "Cash flows, discounting and the chance of losing money.")],
+          ["Which of several projects to pick", L("Comparing investments", "investment-appraisal", "NPV, IRR, PI and EAC side by side, after tax.")],
+        ])],
         ["How much to order from a supplier", Q("What's driving it?", [
           ["Minimum order quantities", L("MOQ trade-off", "moq", "Price breaks vs extra stock you'll carry.")],
           ["Cost of holding stock", L("Carrying cost", "carrying-cost", "Capital, storage, obsolescence and shrink.")],

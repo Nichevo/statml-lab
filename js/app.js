@@ -51,7 +51,7 @@
     ["Inventory and supply chain", "How forecasts become stock levels, and why supply chains amplify small changes.",
       ["prediction-intervals", "reorder-point", "inventory-policies", "inventory-simulation", "service-level-cost", "lead-time-error", "risk-pooling", "supply-network", "abc-xyz", "censored-demand", "monthly-to-weekly", "demand-sensing", "frozen-zones", "level-vs-chase", "mrp-bom", "lot-sizing", "shortage-allocation", "queues-littles-law", "bullwhip-effect", "plant-shutdown", "rl-ordering"]],
     ["Supply chain money", "Landed cost, margins and how to put a dollar value on supply chain improvements.",
-      ["cost-margin", "rollup", "tariffs", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi"]],
+      ["cost-margin", "rollup", "tariffs", "carrying-cost", "forecast-value", "newsvendor", "cost-to-serve", "freight", "moq", "cash-to-cash", "roi", "investment-appraisal"]],
     ["Supply chain risk", "Measuring how bad things could get, finding where the exposure is, and deciding what's worth fixing.",
       ["var-cvar", "monte-carlo-risk", "supplier-disruption", "risk-matrix", "stress-test", "value-of-information"]],
     ["Optimization and network design", "From a two-product LP to routing heuristics and choosing DC locations.",

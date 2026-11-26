@@ -263,6 +263,25 @@ Object.assign(Lab.maths, {
 <h3>Uncertainty</h3>
 <p>Treat benefits as ranges and simulate: the result is a distribution of NPV. Report P(NPV &lt; 0) along with the expected NPV. A one-off inventory reduction is cash in year 0, not a yearly benefit; only the carrying cost saved recurs.</p>`,
 
+  "investment-appraisal": String.raw`
+<h3>After-tax cash flow</h3>
+<p>Up-front cost I, year-1 benefit B growing at g, life T, tax rate \(\tau\), straight-line depreciation I/T:</p>
+\[ C_t = B(1+g)^{t-1}(1-\tau) + \tau\,\frac{I}{T}, \qquad t = 1,\dots,T. \]
+<h3>The measures</h3>
+\[ \text{NPV}(r) = -I + \sum_{t=1}^{T}\frac{C_t}{(1+r)^t}, \qquad \text{NPV}(\text{IRR}) = 0. \]
+\[ \text{PI} = \frac{\text{NPV} + I}{I}, \qquad \text{EAV} = \text{NPV}\cdot\frac{r}{1-(1+r)^{-T}}. \]
+<p>MIRR compounds the inflows forward at the reinvestment rate \(\rho\) and discounts the outflows at r:</p>
+\[ \text{MIRR} = \left(\frac{\sum_t C_t^{+}(1+\rho)^{T-t}}{\sum_t |C_t^{-}|\,(1+r)^{-t}}\right)^{1/T} - 1. \]
+<p>Discounted payback is the first (interpolated) t at which \(\sum_{s\le t} C_s(1+r)^{-s} \ge 0\), with \(C_0 = -I\).</p>
+<h3>Why they agree on one project</h3>
+<p>NPV is decreasing in r for a normal project (one outflow, then inflows), so NPV(r) &gt; 0 exactly when IRR &gt; r, and then PI &gt; 1 and MIRR &gt; r too.</p>
+<h3>Why they disagree on two</h3>
+<p>The crossover rate \(r^\ast\) solves \(\text{NPV}_A(r^\ast) = \text{NPV}_B(r^\ast)\), i.e. it is the IRR of the difference \(C^B_t - C^A_t\). A project that is bigger or whose cash comes later has a steeper NPV profile: it wins below \(r^\ast\) and loses above it. IRR ranks by where each line hits zero, NPV by their heights at your r.</p>
+<h3>Different lives</h3>
+<p>If each project would be repeated forever, the NPV of the chain is \(\text{EAV}/r\), so ranking by EAV is the same as ranking the infinite chains by NPV.</p>
+<h3>Sensitivity</h3>
+<p>NPV is linear in B and in I (for fixed \(\tau\)), so the break-even benefit is \(B^\ast = B\,\big(1 - \text{NPV}/\text{PV}_B\big)\), where \(\text{PV}_B\) is the present value of the after-tax benefit stream. The tornado moves one input at a time and holds the rest at base values.</p>`,
+
   "service-level-cost": String.raw`
 <h3>Two service measures</h3>
 <p>Cycle service level (CSL) is the probability of no stock-out in a replenishment cycle: \(\text{CSL} = \Phi(z)\) when \(SS = z\sigma_L\). Fill rate is the share of demand met from stock:</p>

@@ -5,6 +5,10 @@
     // Optimization
     "https://doi.org/10.1126/science.220.4598.671": "Borrowed the physics of slowly cooling metal to escape local optima: accept some worse moves early, fewer later. Simulated annealing became a go-to method for hard routing and scheduling problems.",
 
+    // Investment appraisal
+    "https://people.duke.edu/~charvey/Research/Published_Papers/P76_How_do_CFOs.pdf": "Surveyed 392 chief financial officers. About three quarters always or almost always use NPV and IRR; payback comes next (57%) and is used almost as much as NPV by small firms. Theory and practice mostly line up for large companies.",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/internal-rate-of-return-a-cautionary-tale": "IRR quietly assumes each year's cash is reinvested at the IRR itself. For one company, projects averaging a 77% IRR earned about 16% once interim cash was reinvested at the cost of capital. Use NPV, or MIRR if a rate is needed.",
+
     // Forecasting: classics
     "https://doi.org/10.1002/9781118619193": "The book that turned ARIMA into a practical recipe: identify the model from the data, fit it, check the residuals, repeat. Still the standard reference for ARIMA.",
     "https://doi.org/10.18637/jss.v027.i03": "Describes the algorithms behind auto.arima and ets in R, which pick a forecasting model automatically by information criteria. This is why thousands of series can be forecast without hand-tuning each one.",
